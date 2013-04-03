@@ -30,6 +30,11 @@ namespace cocos2d
             m_fUpZOrig = 0;
         }
 
+		protected CCActionCamera (CCActionCamera actionCamera) : base (actionCamera)
+		{ 
+			InitWithDuration(actionCamera.m_fDuration);
+		}
+
         public override void StartWithTarget(CCNode target)
         {
             base.StartWithTarget(target);
