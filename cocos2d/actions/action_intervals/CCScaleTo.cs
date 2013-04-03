@@ -11,7 +11,22 @@ namespace cocos2d
         protected float m_fStartScaleX;
         protected float m_fStartScaleY;
 
-        public bool InitWithDuration(float duration, float s)
+		public CCScaleTo (float duration, float s)
+		{
+			InitWithDuration(duration, s);
+		}
+		
+		public CCScaleTo (float duration, float sx, float sy)
+		{
+			InitWithDuration(duration, sx, sy);
+		}
+
+		protected CCScaleTo (CCScaleTo scaleTo) : base (scaleTo)
+		{
+			InitWithDuration(scaleTo.m_fDuration, scaleTo.m_fEndScaleX, scaleTo.m_fEndScaleY);
+		}
+
+        protected bool InitWithDuration(float duration, float s)
         {
             if (base.InitWithDuration(duration))
             {
@@ -24,7 +39,7 @@ namespace cocos2d
             return false;
         }
 
-        public bool InitWithDuration(float duration, float sx, float sy)
+        protected bool InitWithDuration(float duration, float sx, float sy)
         {
             if (base.InitWithDuration(duration))
             {
@@ -39,23 +54,22 @@ namespace cocos2d
 
         public override object Copy(ICopyable pZone)
         {
-            CCScaleTo pCopy;
             if (pZone != null)
             {
                 //in case of being called at sub class
-                pCopy = (CCScaleTo) (pZone);
+                var pCopy = (CCScaleTo) (pZone);
+				base.Copy(pZone);
+				
+				pCopy.InitWithDuration(m_fDuration, m_fEndScaleX, m_fEndScaleY);
+				
+				return pCopy;
             }
             else
             {
-                pCopy = new CCScaleTo();
-                pZone =  (pCopy);
+                return new CCScaleTo(this);
             }
 
-            base.Copy(pZone);
 
-            pCopy.InitWithDuration(m_fDuration, m_fEndScaleX, m_fEndScaleY);
-
-            return pCopy;
         }
 
         public override void StartWithTarget(CCNode target)
@@ -76,20 +90,5 @@ namespace cocos2d
             }
         }
 
-        public static CCScaleTo Create(float duration, float s)
-        {
-            var pScaleTo = new CCScaleTo();
-            pScaleTo.InitWithDuration(duration, s);
-            //pScaleTo->autorelease();
-
-            return pScaleTo;
-        }
-
-        public static CCScaleTo Create(float duration, float sx, float sy)
-        {
-            var pScaleTo = new CCScaleTo();
-            pScaleTo.InitWithDuration(duration, sx, sy);
-            return pScaleTo;
-        }
     }
 }

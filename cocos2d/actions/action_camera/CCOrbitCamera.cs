@@ -34,15 +34,21 @@ namespace cocos2d
             m_fRadDeltaX = 0.0f;
         }
 
-        public static CCOrbitCamera Create(float t, float radius, float deltaRadius, float angleZ, float deltaAngleZ, float angleX,
+        public CCOrbitCamera (float t, float radius, float deltaRadius, float angleZ, float deltaAngleZ, float angleX,
                                                        float deltaAngleX)
         {
-            var pRet = new CCOrbitCamera();
-            pRet.InitWithDuration(t, radius, deltaRadius, angleZ, deltaAngleZ, angleX, deltaAngleX);
-            return pRet;
+            InitWithDuration(t, radius, deltaRadius, angleZ, deltaAngleZ, angleX, deltaAngleX);
         }
 
-        public bool InitWithDuration(float t, float radius, float deltaRadius, float angleZ, float deltaAngleZ, float angleX, float deltaAngleX)
+		protected CCOrbitCamera (CCOrbitCamera orbitCamera) : base (orbitCamera)
+		{
+			InitWithDuration(orbitCamera.m_fDuration, 
+			                 orbitCamera.m_fRadius, orbitCamera.m_fDeltaRadius, 
+			                 orbitCamera.m_fAngleZ, orbitCamera.m_fDeltaAngleZ, 
+			                 orbitCamera.m_fAngleX, orbitCamera.m_fDeltaAngleX);
+		}
+
+        protected bool InitWithDuration(float t, float radius, float deltaRadius, float angleZ, float deltaAngleZ, float angleX, float deltaAngleX)
         {
             if (InitWithDuration(t))
             {
@@ -93,21 +99,22 @@ namespace cocos2d
 
         public override object Copy(ICopyable pZone)
         {
-            CCOrbitCamera pRet;
 
             if (pZone != null) //in case of being called at sub class
-                pRet = (CCOrbitCamera) (pZone);
+			{
+                var pRet = (CCOrbitCamera) (pZone);
+				base.Copy(pZone);
+				
+				pRet.InitWithDuration(m_fDuration, m_fRadius, m_fDeltaRadius, m_fAngleZ, m_fDeltaAngleZ, m_fAngleX, m_fDeltaAngleX);
+				
+				return pRet;
+			}
             else
             {
-                pRet = new CCOrbitCamera();
-				pZone = pRet;
+                return new CCOrbitCamera(this);
             }
 
-            base.Copy(pZone);
 
-            pRet.InitWithDuration(m_fDuration, m_fRadius, m_fDeltaRadius, m_fAngleZ, m_fDeltaAngleZ, m_fAngleX, m_fDeltaAngleX);
-
-            return pRet;
         }
 
         public override void StartWithTarget(CCNode target)
