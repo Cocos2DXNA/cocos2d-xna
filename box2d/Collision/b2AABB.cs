@@ -359,8 +359,8 @@ namespace Box2D.Collision
         public b2Vec2 LowerBound { get { return (m_lowerBound); } }
         public b2Vec2 UpperBound { get { return (m_upperBound); } }
 
-        private b2Vec2 m_lowerBound;    //< the lower vertex
-        private b2Vec2 m_upperBound;    //< the upper vertex
+        public b2Vec2 m_lowerBound;    //< the lower vertex
+        public b2Vec2 m_upperBound;    //< the upper vertex
 
         public static b2AABB Default = new b2AABB()
         {

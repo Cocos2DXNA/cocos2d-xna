@@ -1,7 +1,6 @@
-using FarseerPhysics.TestBed.Tests;
 using Cocos2D;
 
-namespace tests.classes.tests.Box2DTestBet
+namespace Box2D.TestBed
 {
     internal class MenuLayer : CCLayer
     {

@@ -2,73 +2,77 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
-using FarseerPhysics.Factories;
-using FarseerPhysics.TestBed.Framework;
-using Microsoft.Xna.Framework;
+using Box2D.Collision.Shapes;
+using Box2D.Common;
+using Box2D.Dynamics;
+using Box2D.Dynamics.Joints;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace Box2D.TestBed.Tests
 {
     public class Tumbler : Test
     {
-        private const int Count = 50;
+        public const int e_count = 800;
 
-        private int m_Count;
-
-        private Tumbler()
+        public Tumbler()
         {
-            var ground = BodyFactory.CreateBody(World);
+            b2Body ground;
+            {
+                b2BodyDef bd = new b2BodyDef();
+                ground = m_world.CreateBody(bd);
+            }
 
-            var body = BodyFactory.CreateBody(World);
-            body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(0.0f, 10.0f);
+            {
+                b2BodyDef bd = new b2BodyDef();
+                bd.type = b2BodyType.b2_dynamicBody;
+                bd.allowSleep = false;
+                bd.position.Set(0.0f, 10.0f);
+                b2Body body = m_world.CreateBody(bd);
 
-            PolygonShape shape = new PolygonShape(5);
-            shape.SetAsBox(0.5f, 10.0f, new Vector2(10.0f, 0.0f), 0.0f);
-            body.CreateFixture(shape);
+                b2PolygonShape shape = new b2PolygonShape();
+                shape.SetAsBox(0.5f, 10.0f, new b2Vec2(10.0f, 0.0f), 0.0f);
+                body.CreateFixture(shape, 5.0f);
+                shape.SetAsBox(0.5f, 10.0f, new b2Vec2(-10.0f, 0.0f), 0.0f);
+                body.CreateFixture(shape, 5.0f);
+                shape.SetAsBox(10.0f, 0.5f, new b2Vec2(0.0f, 10.0f), 0.0f);
+                body.CreateFixture(shape, 5.0f);
+                shape.SetAsBox(10.0f, 0.5f, new b2Vec2(0.0f, -10.0f), 0.0f);
+                body.CreateFixture(shape, 5.0f);
 
-            shape.SetAsBox(0.5f, 10.0f, new Vector2(-10.0f, 0.0f), 0.0f);
-            body.CreateFixture(shape);
+                b2RevoluteJointDef jd = new b2RevoluteJointDef();
+                jd.BodyA = ground;
+                jd.BodyB = body;
+                jd.localAnchorA.Set(0.0f, 10.0f);
+                jd.localAnchorB.Set(0.0f, 0.0f);
+                jd.referenceAngle = 0.0f;
+                jd.motorSpeed = 0.05f * b2Settings.b2_pi;
+                jd.maxMotorTorque = 1e8f;
+                jd.enableMotor = true;
+                m_joint = (b2RevoluteJoint) m_world.CreateJoint(jd);
+            }
 
-            shape.SetAsBox(10.0f, 0.5f, new Vector2(0.0f, 10.0f), 0.0f);
-            body.CreateFixture(shape);
-
-            shape.SetAsBox(10.0f, 0.5f, new Vector2(0.0f, -10.0f), 0.0f);
-            body.CreateFixture(shape);
-
-            var jd = new RevoluteJoint(ground, body, new Vector2(0.0f, 10.0f), new Vector2(0.0f, 0.0f));
-            jd.ReferenceAngle = 0.0f;
-            jd.MotorSpeed = 0.05f * MathHelper.Pi;
-            jd.MaxMotorTorque = 1e8f;
-            jd.MotorEnabled = true;
-
-            World.AddJoint(jd);
+            m_count = 0;
         }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
+        public override void Step(Settings settings)
         {
-            base.Update(settings, gameTime);
+            base.Step(settings);
 
-            if (m_Count < Count)
+            if (m_count < e_count)
             {
-                var body = BodyFactory.CreateBody(World, new Vector2(0.0f, 10.0f));
-                body.BodyType = BodyType.Dynamic;
-                
-                PolygonShape shape = new PolygonShape(5);
+                b2BodyDef bd = new b2BodyDef();
+                bd.type = b2BodyType.b2_dynamicBody;
+                bd.position.Set(0.0f, 10.0f);
+                b2Body body = m_world.CreateBody(bd);
+
+                b2PolygonShape shape = new b2PolygonShape();
                 shape.SetAsBox(0.125f, 0.125f);
+                body.CreateFixture(shape, 1.0f);
 
-                body.CreateFixture(shape);
-
-                m_Count++;
+                ++m_count;
             }
         }
 
-        
-        internal static Tumbler Create()
-        {
-            return new Tumbler();
-        }
+        public b2RevoluteJoint m_joint;
+        public int m_count;
     }
 }

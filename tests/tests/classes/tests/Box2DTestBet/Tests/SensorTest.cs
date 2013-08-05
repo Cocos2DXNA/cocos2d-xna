@@ -1,151 +1,159 @@
-/*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
-* 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
-* Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.gphysics.com 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Box2D.Collision.Shapes;
+using Box2D.Common;
+using Box2D.Dynamics;
+using Box2D.Dynamics.Contacts;
 
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Factories;
-using FarseerPhysics.TestBed.Framework;
-using Microsoft.Xna.Framework;
-
-namespace FarseerPhysics.TestBed.Tests
+namespace Box2D.TestBed.Tests
 {
     public class SensorTest : Test
     {
-        private const int Count = 7;
-        private Body[] _bodies = new Body[Count];
-        private Fixture _sensor;
-        private bool[] _touching = new bool[Count];
+        public const int e_count = 7;
 
-        private SensorTest()
+        public SensorTest()
         {
             {
-                Body ground = BodyFactory.CreateBody(World);
+                b2BodyDef bd = new b2BodyDef();
+                b2Body ground = m_world.CreateBody(bd);
 
                 {
-                    EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                    ground.CreateFixture(shape);
+                    b2EdgeShape shape = new b2EdgeShape();
+                    shape.Set(new b2Vec2(-40.0f, 0.0f), new b2Vec2(40.0f, 0.0f));
+                    ground.CreateFixture(shape, 0.0f);
                 }
 
+#if false
+            {
+                b2FixtureDef sd = new b2FixtureDef();
+                sd.SetAsBox(10.0f, 2.0f, new b2Vec2(0.0f, 20.0f), 0.0f);
+                sd.isSensor = true;
+                m_sensor = ground.CreateFixture(sd);
+            }
+#else
                 {
-                    CircleShape shape = new CircleShape(5.0f, 1);
-                    shape.Position = new Vector2(0.0f, 10.0f);
+                    b2CircleShape shape = new b2CircleShape();
+                    shape.Radius = 5.0f;
+                    shape.Position = new b2Vec2(0.0f, 10.0f);
 
-                    _sensor = ground.CreateFixture(shape);
-                    _sensor.IsSensor = true;
+                    b2FixtureDef fd = new b2FixtureDef();
+                    fd.shape = shape;
+                    fd.isSensor = true;
+                    m_sensor = ground.CreateFixture(fd);
                 }
+#endif
             }
 
             {
-                CircleShape shape = new CircleShape(1.0f, 1);
+                b2CircleShape shape = new b2CircleShape();
+                shape.Radius = 1.0f;
 
-                for (int i = 0; i < Count; ++i)
+                for (int i = 0; i < e_count; ++i)
                 {
-                    _touching[i] = false;
-                    _bodies[i] = BodyFactory.CreateBody(World);
-                    _bodies[i].BodyType = BodyType.Dynamic;
-                    _bodies[i].Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
-                    _bodies[i].UserData = i;
+                    b2BodyDef bd = new b2BodyDef();
+                    bd.type = b2BodyType.b2_dynamicBody;
+                    bd.position.Set(-10.0f + 3.0f * i, 20.0f);
+                    bd.userData = m_touching[i];
 
-                    _bodies[i].CreateFixture(shape);
+                    m_touching[i] = false;
+                    m_bodies[i] = m_world.CreateBody(bd);
+
+                    m_bodies[i].CreateFixture(shape, 1.0f);
                 }
             }
         }
 
         // Implement contact listener.
-        protected override bool BeginContact(Contact contact)
+        public override void BeginContact(b2Contact contact)
         {
-            Fixture fixtureA = contact.FixtureA;
-            Fixture fixtureB = contact.FixtureB;
+            b2Fixture fixtureA = contact.GetFixtureA();
+            b2Fixture fixtureB = contact.GetFixtureB();
 
-            if (fixtureA == _sensor && fixtureB.Body.UserData != null)
+            if (fixtureA == m_sensor)
             {
-                _touching[(int)(fixtureB.Body.UserData)] = true;
+                object userData = fixtureB.Body.UserData;
+                if (userData != null)
+                {
+                    bool touching = (bool) userData;
+                    touching = true;
+                }
             }
 
-            if (fixtureB == _sensor && fixtureA.Body.UserData != null)
+            if (fixtureB == m_sensor)
             {
-                _touching[(int)(fixtureA.Body.UserData)] = true;
+                object userData = fixtureA.Body.UserData;
+                if (userData != null)
+                {
+                    bool touching = (bool) userData;
+                    touching = true;
+                }
             }
-
-            return true;
         }
 
         // Implement contact listener.
-        protected override void EndContact(Contact contact)
+        public override void EndContact(b2Contact contact)
         {
-            Fixture fixtureA = contact.FixtureA;
-            Fixture fixtureB = contact.FixtureB;
+            b2Fixture fixtureA = contact.GetFixtureA();
+            b2Fixture fixtureB = contact.GetFixtureB();
 
-            if (fixtureA == _sensor && fixtureB.Body.UserData != null)
+            if (fixtureA == m_sensor)
             {
-                _touching[(int)(fixtureB.Body.UserData)] = false;
+                object userData = fixtureB.Body.UserData;
+                if (userData != null)
+                {
+                    bool touching = (bool) userData;
+                    touching = false;
+                }
             }
 
-            if (fixtureB == _sensor && fixtureA.Body.UserData != null)
+            if (fixtureB == m_sensor)
             {
-                _touching[(int)(fixtureA.Body.UserData)] = false;
+                object userData = fixtureA.Body.UserData;
+                if (userData != null)
+                {
+                    bool touching = (bool) userData;
+                    touching = false;
+                }
             }
         }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
+        public override void Step(Settings settings)
         {
-            base.Update(settings, gameTime);
+            base.Step(settings);
 
             // Traverse the contact results. Apply a force on shapes
             // that overlap the sensor.
-            for (int i = 0; i < Count; ++i)
+            for (int i = 0; i < e_count; ++i)
             {
-                if (_touching[i] == false)
+                if (m_touching[i] == false)
                 {
                     continue;
                 }
 
-                Body body = _bodies[i];
-                Body ground = _sensor.Body;
+                b2Body body = m_bodies[i];
+                b2Body ground = m_sensor.Body;
 
-                CircleShape circle = (CircleShape)_sensor.Shape;
-                Vector2 center = ground.GetWorldPoint(circle.Position);
+                b2CircleShape circle = (b2CircleShape) m_sensor.Shape;
+                b2Vec2 center = ground.GetWorldPoint(circle.Position);
 
-                Vector2 position = body.Position;
+                b2Vec2 position = body.Position;
 
-                Vector2 d = center - position;
-                if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
+                b2Vec2 d = center - position;
+                if (d.LengthSquared < float.Epsilon * float.Epsilon)
                 {
                     continue;
                 }
 
                 d.Normalize();
-                Vector2 f = 100.0f * d;
-                body.ApplyForce(f, position);
+                b2Vec2 F = 100.0f * d;
+                body.ApplyForce(F, position);
             }
         }
 
-        internal static Test Create()
-        {
-            return new SensorTest();
-        }
+        public b2Fixture m_sensor = new b2Fixture();
+        public b2Body[] m_bodies = new b2Body[e_count];
+        public bool[] m_touching = new bool[e_count];
     }
 }
