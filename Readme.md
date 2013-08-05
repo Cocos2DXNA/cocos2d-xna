@@ -1,6 +1,6 @@
 # Cocos2D-XNA
 
-is a 2D/3D game developer’s framework that is written specifically for XNA. XNA is the game API developed by Microsoft for independently published games on Xbox Live Arcade. To support other platforms than the now deprecated Microsoft XNA targets, Cocos2D-XNA supports the MonoGame runtime.
+is a 2D/3D game developerâ€™s framework that is written specifically for XNA. XNA is the game API developed by Microsoft for independently published games on Xbox Live Arcade. To support other platforms than the now deprecated Microsoft XNA targets, Cocos2D-XNA supports the MonoGame runtime.
 
 This project is open source, freely available, and free of royalties or encumberance. The software is released under the highly permissive MIT License.
 
@@ -108,7 +108,7 @@ You can find those in the [tests directory](https://github.com/Cocos2DXNA/cocos2
 
 ### Samples
 
-[Xamarin’s Angry Ninjas](https://github.com/xamarin/AngryNinjas "Xamarin’s Angry Ninjas") sample application. We worked hard on converting that cocos2d-iphone game over to Cocos2D-XNA. Take a look at how it deploys raw assets and utilizes box2d. 
+[Xamarin's Angry Ninjas](https://github.com/xamarin/AngryNinjas "Xamarinâ€™s Angry Ninjas") sample application. We worked hard on converting that cocos2d-iphone game over to Cocos2D-XNA. Take a look at how it deploys raw assets and utilizes box2d. 
 
 Additional samples will be forthcoming as we find time to add more for you. 
 
