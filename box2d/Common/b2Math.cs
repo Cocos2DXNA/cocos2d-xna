@@ -140,7 +140,19 @@ namespace Box2D.Common
 #if AGGRESSIVE_INLINING
         [MethodImpl(MethodImplOptions.AggressiveInlining)] 
 #endif
-        public static b2Vec2 b2Cross(ref b2Vec2 a, float s)
+        public static b2Vec2 b2Cross(float s, b2Vec2 a)
+        {
+            b2Vec2 b = b2Vec2.Zero;
+            b.Set(s * a.m_y, -s * a.m_x);
+            return b;
+        }
+		
+		/// Perform the cross product on a vector and a scalar. In 2D this produces
+        /// a vector.
+#if AGGRESSIVE_INLINING
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] 
+#endif
+        public static b2Vec2 b2Cross(float s, ref b2Vec2 a)
         {
             b2Vec2 b = b2Vec2.Zero;
             b.Set(s * a.m_y, -s * a.m_x);
@@ -154,19 +166,6 @@ namespace Box2D.Common
         {
             b2Vec2 b = b2Vec2.Zero;
             b.Set(s * ay, -s * ax);
-            return b;
-        }
-
-        /// Perform the cross product on a scalar and a vector. In 2D this produces
-        /// a vector.
-#if AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] 
-#endif
-        public static b2Vec2 b2Cross(float s, ref b2Vec2 a)
-        {
-            b2Vec2 b = b2Vec2.Zero;
-            b.m_x = -s * a.m_y;
-            b.m_y = s * a.m_x;
             return b;
         }
 

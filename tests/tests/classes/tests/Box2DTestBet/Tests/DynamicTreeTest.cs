@@ -1,100 +1,60 @@
-﻿/*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
-* 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
-* Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.gphysics.com 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Collision;
-using FarseerPhysics.TestBed.Framework;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using System.Linq;
+using System.Text;
+using Box2D.Collision;
+using Box2D.Common;
+using Box2D.Dynamics;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace Box2D.TestBed.Tests
 {
-    public class DynamicTreeTest : Test
+    public class DynamicTreeTest : Test, Ib2QueryCallback, Ib2RayCastCallback
     {
-        private const int ActorCount = 128;
-        private Actor[] _actors = new Actor[ActorCount];
-        private bool _automated;
-        private float _proxyExtent;
-        private AABB _queryAABB;
-        private Actor _rayActor = new Actor();
-        private RayCastInput _rayCastInput;
-        private RayCastOutput _rayCastOutput;
-        private int _stepCount;
-        private DynamicTree<Actor> _tree = new DynamicTree<Actor>();
-        private float _worldExtent;
 
-        private DynamicTreeTest()
+        public const int e_actorCount = 128;
+
+        public DynamicTreeTest()
         {
-            _worldExtent = 15.0f;
-            _proxyExtent = 0.5f;
+            m_worldExtent = 15.0f;
+            m_proxyExtent = 0.5f;
 
-            Rand.Random = new Random(888);
+            Rand.Randomize(888);
 
-            for (int i = 0; i < ActorCount; ++i)
+            for (int i = 0; i < e_actorCount; ++i)
             {
-                _actors[i] = new Actor();
-
-                Actor actor = _actors[i];
-                GetRandomAABB(out actor.AABB);
-                actor.ProxyId = _tree.AddProxy(ref actor.AABB, actor);
+                Actor actor = m_actors[i];
+                GetRandomAABB(actor.aabb);
+                actor.proxyId = m_tree.CreateProxy(actor.aabb, actor);
             }
 
-            _stepCount = 0;
+            m_stepCount = 0;
 
-            float h = _worldExtent;
-            _queryAABB.LowerBound = new Vector2(-3.0f, -4.0f + h);
-            _queryAABB.UpperBound = new Vector2(5.0f, 6.0f + h);
-            _queryAABB.UpdatePerimeter();
+            float h = m_worldExtent;
+            m_queryAABB.m_lowerBound = new b2Vec2(-3.0f, -4.0f + h);
+            m_queryAABB.m_upperBound = new b2Vec2(5.0f, 6.0f + h);
 
-            _rayCastInput.Point1 = new Vector2(-5.0f, 5.0f + h);
-            _rayCastInput.Point2 = new Vector2(7.0f, -4.0f + h);
-            //_rayCastInput.p1 = new Vector2(0.0f, 2.0f + h);
-            //_rayCastInput.p2 = new Vector2(0.0f, -2.0f + h);
-            _rayCastInput.MaxFraction = 1.0f;
+            m_rayCastInput.p1.Set(-5.0f, 5.0f + h);
+            m_rayCastInput.p2.Set(7.0f, -4.0f + h);
+            //m_rayCastInput.p1.Set(0.0f, 2.0f + h);
+            //m_rayCastInput.p2.Set(0.0f, -2.0f + h);
+            m_rayCastInput.maxFraction = 1.0f;
 
-            _automated = false;
+            m_automated = false;
         }
 
-        internal static Test Create()
+        public override void Step(Settings settings)
         {
-            return new DynamicTreeTest();
-        }
-
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            _rayActor = null;
-            for (int i = 0; i < ActorCount; ++i)
+            m_rayActor = null;
+            for (int i = 0; i < e_actorCount; ++i)
             {
-                _actors[i].Fraction = 1.0f;
-                _actors[i].Overlap = false;
+                m_actors[i].fraction = 1.0f;
+                m_actors[i].overlap = false;
             }
 
-            if (_automated)
+            if (m_automated == true)
             {
-                int actionCount = Math.Max(1, ActorCount >> 2);
+                int actionCount = Math.Max(1, e_actorCount >> 2);
 
                 for (int i = 0; i < actionCount; ++i)
                 {
@@ -105,143 +65,152 @@ namespace FarseerPhysics.TestBed.Tests
             Query();
             RayCast();
 
-            DebugView.BeginCustomDraw();
-            for (int i = 0; i < ActorCount; ++i)
+            for (int i = 0; i < e_actorCount; ++i)
             {
-                Actor actor = _actors[i];
-                if (actor.ProxyId == -1)
+                Actor actor = m_actors[i];
+                if (actor.proxyId == b2TreeNode.b2_nullNode)
                     continue;
 
-                Color ca = new Color(0.9f, 0.9f, 0.9f);
-                if (actor == _rayActor && actor.Overlap)
+                b2Color c = new b2Color(0.9f, 0.9f, 0.9f);
+                if (actor == m_rayActor && actor.overlap)
                 {
-                    ca = new Color(0.9f, 0.6f, 0.6f);
+                    c.Set(0.9f, 0.6f, 0.6f);
                 }
-                else if (actor == _rayActor)
+                else if (actor == m_rayActor)
                 {
-                    ca = new Color(0.6f, 0.9f, 0.6f);
+                    c.Set(0.6f, 0.9f, 0.6f);
                 }
-                else if (actor.Overlap)
+                else if (actor.overlap)
                 {
-                    ca = new Color(0.6f, 0.6f, 0.9f);
+                    c.Set(0.6f, 0.6f, 0.9f);
                 }
 
-                DebugView.DrawAABB(ref actor.AABB, ca);
+                m_debugDraw.DrawAABB(actor.aabb, c);
             }
 
-            Color c = new Color(0.7f, 0.7f, 0.7f);
-            DebugView.DrawAABB(ref _queryAABB, c);
+            b2Color cc = new b2Color(0.7f, 0.7f, 0.7f);
+            m_debugDraw.DrawAABB(m_queryAABB, cc);
 
-            DebugView.DrawSegment(_rayCastInput.Point1, _rayCastInput.Point2, c);
+            m_debugDraw.DrawSegment(m_rayCastInput.p1, m_rayCastInput.p2, cc);
 
-            Color c1 = new Color(0.2f, 0.9f, 0.2f);
-            Color c2 = new Color(0.9f, 0.2f, 0.2f);
-            DebugView.DrawPoint(_rayCastInput.Point1, 0.1f, c1);
-            DebugView.DrawPoint(_rayCastInput.Point2, 0.1f, c2);
+            b2Color c1 = new b2Color(0.2f, 0.9f, 0.2f);
+            b2Color c2 = new b2Color(0.9f, 0.2f, 0.2f);
+            m_debugDraw.DrawPoint(m_rayCastInput.p1, 6.0f, c1);
+            m_debugDraw.DrawPoint(m_rayCastInput.p2, 6.0f, c2);
 
-            if (_rayActor != null)
+            if (m_rayActor != null)
             {
-                Color cr = new Color(0.2f, 0.2f, 0.9f);
-                Vector2 p = _rayCastInput.Point1 + _rayActor.Fraction * (_rayCastInput.Point2 - _rayCastInput.Point1);
-                DebugView.DrawPoint(p, 0.1f, cr);
-            }
-            DebugView.EndCustomDraw();
-            {
-                int height = _tree.ComputeHeight();
-                DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}", height);
-                TextLine += 15;
+                b2Color cr = new b2Color(0.2f, 0.2f, 0.9f);
+                b2Vec2 p = m_rayCastInput.p1 + m_rayActor.fraction * (m_rayCastInput.p2 - m_rayCastInput.p1);
+                m_debugDraw.DrawPoint(p, 6.0f, cr);
             }
 
-            ++_stepCount;
+            {
+                int height = m_tree.GetHeight();
+                m_debugDraw.DrawString(5, m_textLine, "dynamic tree height = %d", height);
+                m_textLine += 15;
+            }
+
+            ++m_stepCount;
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(char key)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.A))
+            switch (key)
             {
-                _automated = !_automated;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.C))
-            {
-                CreateProxy();
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
-                DestroyProxy();
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.M))
-            {
-                MoveProxy();
+                case 'a':
+                    m_automated = !m_automated;
+                    break;
+
+                case 'c':
+                    CreateProxy();
+                    break;
+
+                case 'd':
+                    DestroyProxy();
+                    break;
+
+                case 'm':
+                    MoveProxy();
+                    break;
             }
         }
 
-        private bool QueryCallback(int proxyid)
+        public bool QueryCallback(int proxyId)
         {
-            Actor actor = _tree.GetUserData(proxyid);
-            actor.Overlap = AABB.TestOverlap(ref _queryAABB, ref actor.AABB);
+            Actor actor = (Actor) m_tree.GetUserData(proxyId);
+            actor.overlap = b2Collision.b2TestOverlap(ref m_queryAABB, ref actor.aabb);
             return true;
         }
 
-        private float RayCastCallback(RayCastInput input, int proxyid)
+        public float RayCastCallback(b2RayCastInput input, int proxyId)
         {
-            Actor actor = _tree.GetUserData(proxyid);
+            Actor actor = (Actor) m_tree.GetUserData(proxyId);
 
-            RayCastOutput output;
-            bool hit = actor.AABB.RayCast(out output, ref input);
+            b2RayCastOutput output = new b2RayCastOutput();
+            bool hit = actor.aabb.RayCast(out output, input);
 
             if (hit)
             {
-                _rayCastOutput = output;
-                _rayActor = actor;
-                actor.Fraction = output.Fraction;
-                return output.Fraction;
+                m_rayCastOutput = output;
+                m_rayActor = actor;
+                m_rayActor.fraction = output.fraction;
+                return output.fraction;
             }
 
-            return input.MaxFraction;
+            return input.maxFraction;
         }
 
-        private void GetRandomAABB(out AABB aabb)
+        private class Actor
         {
-            aabb = new AABB();
+            public b2AABB aabb;
+            public float fraction;
+            public bool overlap;
+            public int proxyId;
+        };
 
-            Vector2 w = new Vector2(2.0f * _proxyExtent, 2.0f * _proxyExtent);
-            //aabb.LowerBound.x = -_proxyExtent;
-            //aabb.LowerBound.y = -_proxyExtent + _worldExtent;
-            aabb.LowerBound.X = Rand.RandomFloat(-_worldExtent, _worldExtent);
-            aabb.LowerBound.Y = Rand.RandomFloat(0.0f, 2.0f * _worldExtent);
-            aabb.UpperBound = aabb.LowerBound + w;
-            aabb.UpdatePerimeter();
+        private void GetRandomAABB(b2AABB aabb)
+        {
+            b2Vec2 w = new b2Vec2();
+            w.Set(2.0f * m_proxyExtent, 2.0f * m_proxyExtent);
+            //aabb->lowerBound.x = -m_proxyExtent;
+            //aabb->lowerBound.y = -m_proxyExtent + m_worldExtent;
+            aabb.m_lowerBound.x = Rand.RandomFloat(-m_worldExtent, m_worldExtent);
+            aabb.m_lowerBound.y = Rand.RandomFloat(0.0f, 2.0f * m_worldExtent);
+            aabb.m_upperBound = aabb.m_lowerBound + w;
         }
 
-        private void MoveAABB(ref AABB aabb)
+        private void MoveAABB(b2AABB aabb)
         {
-            Vector2 d = Vector2.Zero;
-            d.X = Rand.RandomFloat(-0.5f, 0.5f);
-            d.Y = Rand.RandomFloat(-0.5f, 0.5f);
+            b2Vec2 d = new b2Vec2();
+            d.x = Rand.RandomFloat(-0.5f, 0.5f);
+            d.y = Rand.RandomFloat(-0.5f, 0.5f);
             //d.x = 2.0f;
             //d.y = 0.0f;
-            aabb.LowerBound += d;
-            aabb.UpperBound += d;
+            aabb.m_lowerBound += d;
+            aabb.m_upperBound += d;
 
-            Vector2 c0 = 0.5f * (aabb.LowerBound + aabb.UpperBound);
-            Vector2 min = new Vector2(-_worldExtent, 0.0f);
-            Vector2 max = new Vector2(_worldExtent, 2.0f * _worldExtent);
-            Vector2 c = Vector2.Clamp(c0, min, max);
+            b2Vec2 c0 = 0.5f * (aabb.m_lowerBound + aabb.m_upperBound);
+            b2Vec2 min = new b2Vec2();
+            min.Set(-m_worldExtent, 0.0f);
+            b2Vec2 max = new b2Vec2();
+            max.Set(m_worldExtent, 2.0f * m_worldExtent);
+            b2Vec2 c = b2Math.b2Clamp(c0, min, max);
 
-            aabb.LowerBound += c - c0;
-            aabb.UpperBound += c - c0;
+            aabb.m_lowerBound += c - c0;
+            aabb.m_upperBound += c - c0;
         }
 
         private void CreateProxy()
         {
-            for (int i = 0; i < ActorCount; ++i)
+            for (int i = 0; i < e_actorCount; ++i)
             {
-                int j = Rand.Random.Next() % ActorCount;
-                Actor actor = _actors[j];
-                if (actor.ProxyId == -1)
+                int j = Rand.Random.Next() % e_actorCount;
+                Actor actor = m_actors[j];
+                if (actor.proxyId == b2TreeNode.b2_nullNode)
                 {
-                    GetRandomAABB(out actor.AABB);
-                    actor.ProxyId = _tree.AddProxy(ref actor.AABB, actor);
+                    GetRandomAABB(actor.aabb);
+                    actor.proxyId = m_tree.CreateProxy(actor.aabb, actor);
                     return;
                 }
             }
@@ -249,14 +218,14 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void DestroyProxy()
         {
-            for (int i = 0; i < ActorCount; ++i)
+            for (int i = 0; i < e_actorCount; ++i)
             {
-                int j = Rand.Random.Next() % ActorCount;
-                Actor actor = _actors[j];
-                if (actor.ProxyId != -1)
+                int j = Rand.Random.Next() % e_actorCount;
+                Actor actor = m_actors[j];
+                if (actor.proxyId != b2TreeNode.b2_nullNode)
                 {
-                    _tree.RemoveProxy(actor.ProxyId);
-                    actor.ProxyId = -1;
+                    m_tree.DestroyProxy(actor.proxyId);
+                    actor.proxyId = b2TreeNode.b2_nullNode;
                     return;
                 }
             }
@@ -264,19 +233,19 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void MoveProxy()
         {
-            for (int i = 0; i < ActorCount; ++i)
+            for (int i = 0; i < e_actorCount; ++i)
             {
-                int j = Rand.Random.Next() % ActorCount;
-                Actor actor = _actors[j];
-                if (actor.ProxyId == -1)
+                int j = Rand.Random.Next() % e_actorCount;
+                Actor actor = m_actors[j];
+                if (actor.proxyId == b2TreeNode.b2_nullNode)
                 {
                     continue;
                 }
 
-                AABB aabb0 = actor.AABB;
-                MoveAABB(ref actor.AABB);
-                Vector2 displacement = actor.AABB.Center - aabb0.Center;
-                _tree.MoveProxy(actor.ProxyId, ref actor.AABB, displacement);
+                b2AABB aabb0 = actor.aabb;
+                MoveAABB(actor.aabb);
+                b2Vec2 displacement = actor.aabb.Center - aabb0.Center;
+                m_tree.MoveProxy(actor.proxyId, actor.aabb, displacement);
                 return;
             }
         }
@@ -303,65 +272,65 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void Query()
         {
-            _tree.Query(QueryCallback, ref _queryAABB);
+            m_tree.Query(this, m_queryAABB);
 
-            for (int i = 0; i < ActorCount; ++i)
+            for (int i = 0; i < e_actorCount; ++i)
             {
-                if (_actors[i].ProxyId == -1)
+                if (m_actors[i].proxyId == b2TreeNode.b2_nullNode)
                 {
                     continue;
                 }
 
-                bool overlap = AABB.TestOverlap(ref _queryAABB, ref _actors[i].AABB);
-                Debug.Assert(overlap == _actors[i].Overlap);
+                bool overlap = b2Collision.b2TestOverlap(ref m_queryAABB, ref m_actors[i].aabb);
+                Debug.Assert(overlap == m_actors[i].overlap);
             }
         }
 
         private void RayCast()
         {
-            _rayActor = null;
+            m_rayActor = null;
 
-            RayCastInput input = _rayCastInput;
+            b2RayCastInput input = m_rayCastInput;
 
             // Ray cast against the dynamic tree.
-            _tree.RayCast(RayCastCallback, ref input);
+            m_tree.RayCast(this, input);
 
             // Brute force ray cast.
             Actor bruteActor = null;
-            RayCastOutput bruteOutput = new RayCastOutput();
-            for (int i = 0; i < ActorCount; ++i)
+            b2RayCastOutput bruteOutput = new b2RayCastOutput();
+            for (int i = 0; i < e_actorCount; ++i)
             {
-                if (_actors[i].ProxyId == -1)
+                if (m_actors[i].proxyId == b2TreeNode.b2_nullNode)
                 {
                     continue;
                 }
 
-                RayCastOutput output;
-                bool hit = _actors[i].AABB.RayCast(out output, ref input);
+                b2RayCastOutput output;
+                bool hit = m_actors[i].aabb.RayCast(out output, input);
                 if (hit)
                 {
-                    bruteActor = _actors[i];
+                    bruteActor = m_actors[i];
                     bruteOutput = output;
-                    input.MaxFraction = output.Fraction;
+                    input.maxFraction = output.fraction;
                 }
             }
 
             if (bruteActor != null)
             {
-                Debug.Assert(bruteOutput.Fraction == _rayCastOutput.Fraction);
+                Debug.Assert(bruteOutput.fraction == m_rayCastOutput.fraction);
             }
         }
 
-        #region Nested type: Actor
+        private float m_worldExtent;
+        private float m_proxyExtent;
 
-        private sealed class Actor
-        {
-            internal AABB AABB;
-            internal float Fraction;
-            internal bool Overlap;
-            internal int ProxyId;
-        }
-
-        #endregion
+        private b2DynamicTree m_tree = new b2DynamicTree();
+        private b2AABB m_queryAABB;
+        private b2RayCastInput m_rayCastInput;
+        private b2RayCastOutput m_rayCastOutput;
+        private Actor m_rayActor = new Actor();
+        private Actor[] m_actors = new Actor[e_actorCount];
+        private int m_stepCount;
+        private bool m_automated;
     }
 }

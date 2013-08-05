@@ -1,6 +1,7 @@
 ﻿using Cocos2D;
+using tests;
 
-namespace tests.classes.tests.Box2DTestBet
+namespace Box2D.TestBed
 {
     public class Box2dTestBedScene : TestScene
     {

@@ -8,6 +8,7 @@ namespace Box2D.Common
     [Flags]
     public enum b2DrawFlags
     {
+        e_none = 0,
         e_shapeBit = 0x1,
         e_jointBit = 0x2,
         e_aabbBit = 0x4,
