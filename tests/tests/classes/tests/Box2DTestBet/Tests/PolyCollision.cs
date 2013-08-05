@@ -8,45 +8,32 @@ using Box2D.Common;
 
 namespace Box2D.TestBed.Tests
 {
-    public class DistanceTest : Test
+    public class PolyCollision : Test
     {
-
-        public DistanceTest()
+        public PolyCollision()
         {
             {
-                m_transformA.SetIdentity();
-                m_transformA.p.Set(0.0f, -0.2f);
-                m_polygonA.SetAsBox(10.0f, 0.2f);
+                m_polygonA.SetAsBox(0.2f, 0.4f);
+                m_transformA.Set(new b2Vec2(0.0f, 0.0f), 0.0f);
             }
 
             {
-                m_positionB.Set(12.017401f, 0.13678508f);
-                m_angleB = -0.0109265f;
+                m_polygonB.SetAsBox(0.5f, 0.5f);
+                m_positionB.Set(19.345284f, 1.5632932f);
+                m_angleB = 1.9160721f;
                 m_transformB.Set(m_positionB, m_angleB);
-
-                m_polygonB.SetAsBox(2.0f, 0.1f);
             }
         }
 
-        public override void Step(Settings settings)
+        private void Step(Settings settings)
         {
-            base.Step(settings);
+            b2Manifold manifold = new b2Manifold();
+            b2Collision.b2CollidePolygons(ref manifold, m_polygonA, ref m_transformA, m_polygonB, ref m_transformB);
 
-            b2DistanceInput input = new b2DistanceInput();
-            input.proxyA.Set(m_polygonA, 0);
-            input.proxyB.Set(m_polygonB, 0);
-            input.transformA = m_transformA;
-            input.transformB = m_transformB;
-            input.useRadii = true;
-            b2SimplexCache cache = new b2SimplexCache();
-            cache.count = 0;
-            b2DistanceOutput output = new b2DistanceOutput();
-            b2Simplex.b2Distance(ref output, ref cache, ref input);
+            b2WorldManifold worldManifold = new b2WorldManifold();
+            worldManifold.Initialize(ref manifold, m_transformA, m_polygonA.Radius, m_transformB, m_polygonB.Radius);
 
-            m_debugDraw.DrawString(5, m_textLine, "distance = %g", output.distance);
-            m_textLine += 15;
-
-            m_debugDraw.DrawString(5, m_textLine, "iterations = %d", output.iterations);
+            m_debugDraw.DrawString(5, m_textLine, "point count = %d", manifold.pointCount);
             m_textLine += 15;
 
             {
@@ -65,14 +52,10 @@ namespace Box2D.TestBed.Tests
                 m_debugDraw.DrawPolygon(v, m_polygonB.VertexCount, color);
             }
 
-            b2Vec2 x1 = output.pointA;
-            b2Vec2 x2 = output.pointB;
-
-            b2Color c1 = new b2Color(1.0f, 0.0f, 0.0f);
-            m_debugDraw.DrawPoint(x1, 4.0f, c1);
-
-            b2Color c2 = new b2Color(1.0f, 1.0f, 0.0f);
-            m_debugDraw.DrawPoint(x2, 4.0f, c2);
+            for (int i = 0; i < manifold.pointCount; ++i)
+            {
+                m_debugDraw.DrawPoint(worldManifold.points[i], 4.0f, new b2Color(0.9f, 0.3f, 0.3f));
+            }
         }
 
         public override void Keyboard(char key)
@@ -107,12 +90,13 @@ namespace Box2D.TestBed.Tests
             m_transformB.Set(m_positionB, m_angleB);
         }
 
-        public b2Vec2 m_positionB = new b2Vec2();
-        public float m_angleB;
+        public b2PolygonShape m_polygonA = new b2PolygonShape();
+        public b2PolygonShape m_polygonB = new b2PolygonShape();
 
         public b2Transform m_transformA = new b2Transform();
         public b2Transform m_transformB = new b2Transform();
-        public b2PolygonShape m_polygonA = new b2PolygonShape();
-        public b2PolygonShape m_polygonB = new b2PolygonShape();
+
+        public b2Vec2 m_positionB = new b2Vec2();
+        public float m_angleB;
     }
 }

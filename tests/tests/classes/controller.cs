@@ -6,7 +6,7 @@ using Cocos2D;
 using tests.Clipping;
 using tests.FontTest;
 using tests.Extensions;
-using tests.classes.tests.Box2DTestBet;
+using Box2D.TestBed;
 
 namespace tests
 {
