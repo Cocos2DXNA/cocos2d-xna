@@ -1,147 +1,118 @@
-/*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
-* 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
-* Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.gphysics.com 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Box2D.Collision;
+using Box2D.Collision.Shapes;
+using Box2D.Common;
 
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.TestBed.Framework;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-
-namespace FarseerPhysics.TestBed.Tests
+namespace Box2D.TestBed.Tests
 {
     public class DistanceTest : Test
     {
-        private float _angleB;
-        private PolygonShape _polygonA;
-        private PolygonShape _polygonB;
-        private Vector2 _positionB = Vector2.Zero;
-        private Transform _transformA;
-        private Transform _transformB;
 
-        private DistanceTest()
+        public DistanceTest()
         {
             {
-                _transformA.SetIdentity();
-                _transformA.Position = new Vector2(0.0f, -0.2f);
-                Vertices vertices = PolygonTools.CreateRectangle(10.0f, 0.2f);
-                _polygonA = new PolygonShape(vertices, 1);
+                m_transformA.SetIdentity();
+                m_transformA.p.Set(0.0f, -0.2f);
+                m_polygonA.SetAsBox(10.0f, 0.2f);
             }
 
             {
-                _positionB = new Vector2(12.017401f, 0.13678508f);
-                _angleB = -0.0109265f;
-                _transformB.Set(_positionB, _angleB);
+                m_positionB.Set(12.017401f, 0.13678508f);
+                m_angleB = -0.0109265f;
+                m_transformB.Set(m_positionB, m_angleB);
 
-                Vertices vertices = PolygonTools.CreateRectangle(2.0f, 0.1f);
-                _polygonB = new PolygonShape(vertices, 1);
+                m_polygonB.SetAsBox(2.0f, 0.1f);
             }
         }
 
-        internal static Test Create()
+        public override void Step(Settings settings)
         {
-            return new DistanceTest();
-        }
+            base.Step(settings);
 
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            base.Update(settings, gameTime);
+            b2DistanceInput input = new b2DistanceInput();
+            input.proxyA.Set(m_polygonA, 0);
+            input.proxyB.Set(m_polygonB, 0);
+            input.transformA = m_transformA;
+            input.transformB = m_transformB;
+            input.useRadii = true;
+            b2SimplexCache cache = new b2SimplexCache();
+            cache.count = 0;
+            b2DistanceOutput output = new b2DistanceOutput();
+            b2Simplex.b2Distance(ref output, ref cache, ref input);
 
-            DistanceInput input = new DistanceInput();
-            input.ProxyA.Set(_polygonA, 0);
-            input.ProxyB.Set(_polygonB, 0);
-            input.TransformA = _transformA;
-            input.TransformB = _transformB;
-            input.UseRadii = true;
-            SimplexCache cache;
-            cache.Count = 0;
-            DistanceOutput output;
-            Distance.ComputeDistance(out output, out cache, input);
+            m_debugDraw.DrawString(5, m_textLine, "distance = %g", output.distance);
+            m_textLine += 15;
 
-            DebugView.DrawString(50, TextLine, "Distance = {0:n7}", output.Distance);
-            TextLine += 15;
+            m_debugDraw.DrawString(5, m_textLine, "iterations = %d", output.iterations);
+            m_textLine += 15;
 
-            DebugView.DrawString(50, TextLine, "Iterations = {0:n0}", output.Iterations);
-            TextLine += 15;
-
-            DebugView.BeginCustomDraw();
             {
-                Color color = new Color(0.9f, 0.9f, 0.9f);
-                Vector2[] v = new Vector2[Settings.MaxPolygonVertices];
-                for (int i = 0; i < _polygonA.Vertices.Count; ++i)
+                b2Color color = new b2Color(0.9f, 0.9f, 0.9f);
+                b2Vec2[] v = new b2Vec2[b2Settings.b2_maxPolygonVertices];
+                for (int i = 0; i < m_polygonA.VertexCount; ++i)
                 {
-                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
+                    v[i] = b2Math.b2Mul(m_transformA, m_polygonA.Vertices[i]);
                 }
-                DebugView.DrawPolygon(v, _polygonA.Vertices.Count, color);
+                m_debugDraw.DrawPolygon(v, m_polygonA.VertexCount, color);
 
-                for (int i = 0; i < _polygonB.Vertices.Count; ++i)
+                for (int i = 0; i < m_polygonB.VertexCount; ++i)
                 {
-                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
+                    v[i] = b2Math.b2Mul(m_transformB, m_polygonB.Vertices[i]);
                 }
-                DebugView.DrawPolygon(v, _polygonB.Vertices.Count, color);
+                m_debugDraw.DrawPolygon(v, m_polygonB.VertexCount, color);
             }
 
-            Vector2 x1 = output.PointA;
-            Vector2 x2 = output.PointB;
+            b2Vec2 x1 = output.pointA;
+            b2Vec2 x2 = output.pointB;
 
+            b2Color c1 = new b2Color(1.0f, 0.0f, 0.0f);
+            m_debugDraw.DrawPoint(x1, 4.0f, c1);
 
-            DebugView.DrawPoint(x1, 0.5f, new Color(1.0f, 0.0f, 0.0f));
-            DebugView.DrawPoint(x2, 0.5f, new Color(1.0f, 0.0f, 0.0f));
-
-            DebugView.DrawSegment(x1, x2, new Color(1.0f, 1.0f, 0.0f));
-            DebugView.EndCustomDraw();
+            b2Color c2 = new b2Color(1.0f, 1.0f, 0.0f);
+            m_debugDraw.DrawPoint(x2, 4.0f, c2);
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(char key)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.A))
+            switch (key)
             {
-                _positionB.X -= 0.1f;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
-                _positionB.X += 0.1f;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.S))
-            {
-                _positionB.Y -= 0.1f;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.W))
-            {
-                _positionB.Y += 0.1f;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.Q))
-            {
-                _angleB += 0.1f * Settings.Pi;
-            }
-            if (keyboardManager.IsNewKeyPress(Keys.E))
-            {
-                _angleB -= 0.1f * Settings.Pi;
+                case 'a':
+                    m_positionB.x -= 0.1f;
+                    break;
+
+                case 'd':
+                    m_positionB.x += 0.1f;
+                    break;
+
+                case 's':
+                    m_positionB.y -= 0.1f;
+                    break;
+
+                case 'w':
+                    m_positionB.y += 0.1f;
+                    break;
+
+                case 'q':
+                    m_angleB += 0.1f * b2Settings.b2_pi;
+                    break;
+
+                case 'e':
+                    m_angleB -= 0.1f * b2Settings.b2_pi;
+                    break;
             }
 
-            _transformB.Set(_positionB, _angleB);
+            m_transformB.Set(m_positionB, m_angleB);
         }
+
+        public b2Vec2 m_positionB = new b2Vec2();
+        public float m_angleB;
+
+        public b2Transform m_transformA = new b2Transform();
+        public b2Transform m_transformB = new b2Transform();
+        public b2PolygonShape m_polygonA = new b2PolygonShape();
+        public b2PolygonShape m_polygonB = new b2PolygonShape();
     }
 }

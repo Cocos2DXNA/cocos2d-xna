@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FarseerPhysics.TestBed.Framework;
-using FarseerPhysics.TestBed.Tests;
+using Box2D.Common;
 using Microsoft.Xna.Framework;
 using Cocos2D;
 
-namespace tests.classes.tests.Box2DTestBet
+namespace Box2D.TestBed
 {
     public class Box2DView : CCLayer
     {
@@ -15,7 +14,7 @@ namespace tests.classes.tests.Box2DTestBet
         private Test m_test;
         private int m_entryID;
 
-        private GameSettings settings = new GameSettings();
+        private Settings settings = new Settings();
 
         public bool initWithEntryID(int entryId)
         {
@@ -26,7 +25,6 @@ namespace tests.classes.tests.Box2DTestBet
 
             m_entry = TestEntries.TestList[entryId];
             m_test = m_entry.CreateFcn();
-            m_test.Initialize();
 
             return true;
         }
@@ -38,17 +36,18 @@ namespace tests.classes.tests.Box2DTestBet
 
         public void tick(float dt)
         {
-            m_test.TextLine = 30;
-            m_test.Update(settings, CCApplication.SharedApplication.GameTime);
+            m_test.Step(settings);
         }
 
         public override void Draw()
         {
             base.Draw();
 
+            m_test.Draw();
+
             //CCDrawManager.PushMatrix();
 
-            m_test.DebugView.RenderDebugData();
+            //m_test.m_debugDraw.RenderDebugData();
 
             //CCDrawManager.PopMatrix();
         }
@@ -66,7 +65,7 @@ namespace tests.classes.tests.Box2DTestBet
             CCPoint nodePosition = ConvertToNodeSpace(touchLocation);
             //    NSLog(@"pos: %f,%f -> %f,%f", touchLocation.x, touchLocation.y, nodePosition.x, nodePosition.y);
 
-            m_test.MouseDown(new Vector2(nodePosition.X, nodePosition.Y));
+            m_test.MouseDown(new b2Vec2(nodePosition.X, nodePosition.Y));
 
             return true;
         }
@@ -76,7 +75,7 @@ namespace tests.classes.tests.Box2DTestBet
             CCPoint touchLocation = touch.Location;
             CCPoint nodePosition = ConvertToNodeSpace(touchLocation);
 
-            m_test.MouseMove(new Vector2(nodePosition.X, nodePosition.Y));
+            m_test.MouseMove(new b2Vec2(nodePosition.X, nodePosition.Y));
         }
 
         public override void TouchEnded(CCTouch touch)
@@ -84,7 +83,7 @@ namespace tests.classes.tests.Box2DTestBet
             CCPoint touchLocation = touch.Location;
             CCPoint nodePosition = ConvertToNodeSpace(touchLocation);
 
-            m_test.MouseUp();
+            m_test.MouseUp(new b2Vec2(nodePosition.X, nodePosition.Y));
         }
 
         //virtual void accelerometer(UIAccelerometer* accelerometer, CCAcceleration* acceleration);

@@ -24,48 +24,27 @@
 */
 
 using System;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
-using FarseerPhysics.DebugViews;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Dynamics.Joints;
+using Box2D.Collision;
+using Box2D.Collision.Shapes;
+using Box2D.Common;
+using Box2D.Dynamics;
+using Box2D.Dynamics.Contacts;
+using Box2D.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Cocos2D;
 using Random = System.Random;
 
-namespace FarseerPhysics.TestBed.Framework
+namespace Box2D.TestBed
 {
-    public class KeyboardManager
-    {
-        internal KeyboardState _newKeyboardState;
-        internal KeyboardState _oldKeyboardState;
-
-        public bool IsNewKeyPress(Keys key)
-        {
-            if (_newKeyboardState.IsKeyDown(key) && _oldKeyboardState.IsKeyUp(key))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool IsKeyDown(Keys key)
-        {
-            return _newKeyboardState.IsKeyDown(key);
-        }
-
-        internal bool IsKeyUp(Keys key)
-        {
-            return _newKeyboardState.IsKeyUp(key);
-        }
-    }
-
     public static class Rand
     {
         public static Random Random = new Random(0x2eed2eed);
+
+        public static void Randomize(int seed)
+        {
+            Random = new Random(seed);
+        }
 
         /// <summary>
         /// Random number in range [-1,1]
@@ -90,169 +69,532 @@ namespace FarseerPhysics.TestBed.Framework
         }
     }
 
-    public class GameSettings
-    {
-        public bool Pause;
-        public bool SingleStep;
-    }
-
     public struct TestEntry
     {
         public Func<Test> CreateFcn;
         public string Name;
     }
 
-    public class Test
+    public class DestructionListener : b2DestructionListener
     {
-        internal DebugViewXNA DebugView;
-        internal int StepCount;
-        internal int TextLine;
-        internal World World;
-        private FixedMouseJoint _fixedMouseJoint;
-
-        protected Test()
+        public override void SayGoodbye(b2Fixture fixture)
         {
-            World = new World(new Vector2(0.0f, -10.0f));
-
-            TextLine = 30;
-
-            World.JointRemoved += JointRemoved;
-            World.ContactManager.PreSolve += PreSolve;
-            World.ContactManager.PostSolve += PostSolve;
-            World.ContactManager.BeginContact += BeginContact;
-            World.ContactManager.EndContact += EndContact;
-
-            StepCount = 0;
         }
 
-        public virtual void Initialize()
+        public override void SayGoodbye(b2Joint joint)
         {
-            Settings.EnableDiagnostics = true;
-            DebugView = new DebugViewXNA(World);
-            DebugView.LoadContent(CCDrawManager.GraphicsDevice, CCApplication.SharedApplication.Content);
-        }
-
-        protected virtual void JointRemoved(Joint joint)
-        {
-            if (_fixedMouseJoint == joint)
+            if (test.m_mouseJoint == joint)
             {
-                _fixedMouseJoint = null;
+                test.m_mouseJoint = null;
             }
+            else
+            {
+                test.JointDestroyed(joint);
+            }
+        }
+
+        public Test test;
+    };
+
+    public class Settings
+    {
+
+        public b2Vec2 viewCenter = new b2Vec2(0.0f, 20.0f);
+        public float hz = 60.0f;
+        public int velocityIterations = 8;
+        public int positionIterations = 3;
+        public bool drawShapes = true;
+        public bool drawJoints = true;
+        public bool drawAABBs = false;
+        public bool drawPairs = false;
+        public bool drawContactPoints = false;
+        public int drawContactNormals = 0;
+        public int drawContactForces = 0;
+        public int drawFrictionForces = 0;
+        public bool drawCOMs = false;
+        public bool drawStats = true;
+        public bool drawProfile = false;
+        public int enableWarmStarting = 1;
+        public int enableContinuous = 1;
+        public int enableSubStepping = 0;
+        public bool pause = false;
+        public bool singleStep = false;
+    }
+
+
+    public class ContactPoint
+    {
+        public b2Fixture fixtureA;
+        public b2Fixture fixtureB;
+        public b2Vec2 normal;
+        public b2Vec2 position;
+        public b2PointState state;
+    };
+
+    public class QueryCallback : b2QueryCallback
+    {
+        public QueryCallback(b2Vec2 point)
+        {
+            m_point = point;
+            m_fixture = null;
+        }
+
+        public override bool ReportFixture(b2Fixture fixture)
+        {
+            b2Body body = fixture.Body;
+            if (body.BodyType == b2BodyType.b2_dynamicBody)
+            {
+                bool inside = fixture.TestPoint(m_point);
+                if (inside)
+                {
+                    m_fixture = fixture;
+
+                    // We are done, terminate the query.
+                    return false;
+                }
+            }
+
+            // Continue the query.
+            return true;
+        }
+
+        public b2Vec2 m_point;
+        public b2Fixture m_fixture;
+    }
+
+    public class Test : b2ContactListener
+    {
+        public const int k_maxContactPoints = 2048;
+        public b2Body m_groundBody;
+        public b2AABB m_worldAABB;
+        public ContactPoint[] m_points = new ContactPoint[k_maxContactPoints];
+        public int m_pointCount;
+        public DestructionListener m_destructionListener;
+        public Cocos2DDebugDraw m_debugDraw;
+        public int m_textLine;
+        public b2World m_world;
+        public b2Body m_bomb;
+        public b2MouseJoint m_mouseJoint;
+        public b2Vec2 m_bombSpawnPoint;
+        public bool m_bombSpawning;
+        public b2Vec2 m_mouseWorld;
+        public int m_stepCount;
+
+        public b2Profile m_maxProfile;
+        public b2Profile m_totalProfile;
+        
+
+        public Test()
+        {
+            m_destructionListener = new DestructionListener();
+            m_debugDraw = new Cocos2DDebugDraw();
+
+            b2Vec2 gravity = new b2Vec2();
+            gravity.Set(0.0f, -10.0f);
+            m_world = new b2World(gravity);
+            m_bomb = null;
+            m_textLine = 30;
+            m_mouseJoint = null;
+            m_pointCount = 0;
+
+            m_destructionListener.test = this;
+            m_world.SetDestructionListener(m_destructionListener);
+            m_world.SetContactListener(this);
+            m_world.SetDebugDraw(m_debugDraw);
+
+            m_bombSpawning = false;
+
+            m_stepCount = 0;
+
+            b2BodyDef bodyDef = new b2BodyDef();
+            m_groundBody = m_world.CreateBody(bodyDef);
+        }
+
+        public virtual void JointDestroyed(b2Joint joint)
+        {
         }
 
         public void DrawTitle(int x, int y, string title)
         {
-            DebugView.DrawString(x, y, title);
+            m_debugDraw.DrawString(x, y, title);
         }
 
-        public virtual void Update(GameSettings settings, GameTime gameTime)
-        {
-            // added
-            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
-            if (settings.Pause)
+        public virtual bool MouseDown(b2Vec2 p)
+        {
+            m_mouseWorld = p;
+
+            if (m_mouseJoint != null)
             {
-                if (settings.SingleStep)
+                return false;
+            }
+
+            // Make a small box.
+            b2AABB aabb = new b2AABB();
+            b2Vec2 d = new b2Vec2();
+            d.Set(0.001f, 0.001f);
+            aabb.m_lowerBound = p - d;
+            aabb.m_upperBound = p + d;
+
+            // Query the world for overlapping shapes.
+            QueryCallback callback = new QueryCallback(p);
+            m_world.QueryAABB(callback, aabb);
+
+            if (callback.m_fixture != null)
+            {
+                b2Body body = callback.m_fixture.Body;
+                b2MouseJointDef md = new b2MouseJointDef();
+                md.BodyA = m_groundBody;
+                md.BodyB = body;
+                md.target = p;
+                md.maxForce = 1000.0f * body.Mass;
+                m_mouseJoint = (b2MouseJoint) m_world.CreateJoint(md);
+                body.SetAwake(true);
+                return true;
+            }
+            return false;
+        }
+
+        public void SpawnBomb(b2Vec2 worldPt)
+        {
+            m_bombSpawnPoint = worldPt;
+            m_bombSpawning = true;
+        }
+
+        public void CompleteBombSpawn(b2Vec2 p)
+        {
+            if (m_bombSpawning == false)
+            {
+                return;
+            }
+
+            const float multiplier = 30.0f;
+            b2Vec2 vel = m_bombSpawnPoint - p;
+            vel *= multiplier;
+            LaunchBomb(m_bombSpawnPoint, vel);
+            m_bombSpawning = false;
+        }
+
+        public void ShiftMouseDown(b2Vec2 p)
+        {
+            m_mouseWorld = p;
+
+            if (m_mouseJoint != null)
+            {
+                return;
+            }
+
+            SpawnBomb(p);
+        }
+
+
+        public virtual void MouseUp(b2Vec2 p)
+        {
+            if (m_mouseJoint != null)
+            {
+                m_world.DestroyJoint(m_mouseJoint);
+                m_mouseJoint = null;
+            }
+
+            if (m_bombSpawning)
+            {
+                CompleteBombSpawn(p);
+            }
+        }
+
+        public void MouseMove(b2Vec2 p)
+        {
+            m_mouseWorld = p;
+
+            if (m_mouseJoint != null)
+            {
+                m_mouseJoint.SetTarget(p);
+            }
+        }
+
+        public void LaunchBomb()
+        {
+            b2Vec2 p = new b2Vec2(Rand.RandomFloat(-15.0f, 15.0f), 30.0f);
+            b2Vec2 v = -5.0f * p;
+            LaunchBomb(p, v);
+        }
+
+        public void LaunchBomb(b2Vec2 position, b2Vec2 velocity)
+        {
+            if (m_bomb != null)
+            {
+                m_world.DestroyBody(m_bomb);
+                m_bomb = null;
+            }
+
+            b2BodyDef bd = new b2BodyDef();
+            bd.type = b2BodyType.b2_dynamicBody;
+            bd.position = position;
+            bd.bullet = true;
+            m_bomb = m_world.CreateBody(bd);
+            m_bomb.LinearVelocity = velocity;
+
+            b2CircleShape circle = new b2CircleShape();
+            circle.Radius = 0.3f;
+
+            b2FixtureDef fd = new b2FixtureDef();
+            fd.shape = circle;
+            fd.density = 20.0f;
+            fd.restitution = 0.0f;
+
+            b2Vec2 minV = position - new b2Vec2(0.3f, 0.3f);
+            b2Vec2 maxV = position + new b2Vec2(0.3f, 0.3f);
+
+            b2AABB aabb = new b2AABB();
+            aabb.m_lowerBound = minV;
+            aabb.m_lowerBound = maxV;
+
+            m_bomb.CreateFixture(fd);
+        }
+
+        public void Draw()
+        {
+            m_debugDraw.Begin();
+            m_world.DrawDebugData();
+            m_debugDraw.End();
+        }
+
+        public virtual void Step(Settings settings)
+        {
+            float timeStep = settings.hz > 0.0f ? 1.0f / settings.hz : 0.0f;
+
+            if (settings.pause)
+            {
+                if (settings.singleStep)
                 {
-                    settings.SingleStep = false;
+                    settings.singleStep = false;
                 }
                 else
                 {
                     timeStep = 0.0f;
                 }
 
-                DebugView.DrawString(50, TextLine, "****PAUSED****");
-                TextLine += 15;
+                m_debugDraw.DrawString(5, m_textLine, "****PAUSED****");
+                m_textLine += 15;
             }
 
-            World.Step(timeStep);
+            b2DrawFlags flags = b2DrawFlags.e_none;
+            if (settings.drawShapes) flags |= b2DrawFlags.e_shapeBit;
+            if (settings.drawJoints) flags |= b2DrawFlags.e_jointBit;
+            if (settings.drawAABBs) flags |= b2DrawFlags.e_aabbBit;
+            if (settings.drawPairs) flags |= b2DrawFlags.e_pairBit;
+            if (settings.drawCOMs) flags |= b2DrawFlags.e_centerOfMassBit;
+            m_debugDraw.SetFlags(flags);
+
+            m_world.SetWarmStarting(settings.enableWarmStarting > 0);
+            m_world.SetContinuousPhysics(settings.enableContinuous > 0);
+            m_world.SetSubStepping(settings.enableSubStepping > 0);
+
+            m_pointCount = 0;
+
+            m_world.Step(timeStep, settings.velocityIterations, settings.positionIterations);
 
             if (timeStep > 0.0f)
             {
-                ++StepCount;
+                ++m_stepCount;
             }
-        }
 
-        
-        public virtual void Keyboard(KeyboardManager keyboardManager)
-        {
-        }
-        
-
-        public virtual void Gamepad(GamePadState state, GamePadState oldState)
-        {
-        }
-
-        public virtual void Mouse(MouseState state, MouseState oldState)
-        {
-            var p = CCDrawManager.ScreenToWorld(state.X, state.Y);
-            Vector2 position = new Vector2(p.X, p.Y);
-
-            if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+            if (settings.drawStats)
             {
-                MouseUp();
+                int bodyCount = m_world.BodyCount;
+                int contactCount = m_world.ContactCount;
+                int jointCount = m_world.JointCount;
+                m_debugDraw.DrawString(5, m_textLine, "bodies/contacts/joints = {0}{1}{2}", bodyCount, contactCount,
+                                       jointCount);
+                m_textLine += 15;
+
+                int proxyCount = m_world.GetProxyCount();
+                int height = m_world.GetTreeHeight();
+                int balance = m_world.GetTreeBalance();
+                float quality = m_world.GetTreeQuality();
+                m_debugDraw.DrawString(5, m_textLine, "proxies/height/balance/quality = {0}{1}{2}{3}", proxyCount,
+                                       height, balance, quality);
+                m_textLine += 15;
             }
-            else if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
+
+            // Track maximum profile times
             {
-                MouseDown(position);
+                b2Profile p = m_world.Profile;
+                m_maxProfile.step = Math.Max(m_maxProfile.step, p.step);
+                m_maxProfile.collide = Math.Max(m_maxProfile.collide, p.collide);
+                m_maxProfile.solve = Math.Max(m_maxProfile.solve, p.solve);
+                m_maxProfile.solveInit = Math.Max(m_maxProfile.solveInit, p.solveInit);
+                m_maxProfile.solveVelocity = Math.Max(m_maxProfile.solveVelocity, p.solveVelocity);
+                m_maxProfile.solvePosition = Math.Max(m_maxProfile.solvePosition, p.solvePosition);
+                m_maxProfile.solveTOI = Math.Max(m_maxProfile.solveTOI, p.solveTOI);
+                m_maxProfile.broadphase = Math.Max(m_maxProfile.broadphase, p.broadphase);
+
+                m_totalProfile.step += p.step;
+                m_totalProfile.collide += p.collide;
+                m_totalProfile.solve += p.solve;
+                m_totalProfile.solveInit += p.solveInit;
+                m_totalProfile.solveVelocity += p.solveVelocity;
+                m_totalProfile.solvePosition += p.solvePosition;
+                m_totalProfile.solveTOI += p.solveTOI;
+                m_totalProfile.broadphase += p.broadphase;
             }
 
-            MouseMove(position);
-        }
-        
+            if (settings.drawProfile)
+            {
+                b2Profile p = m_world.Profile;
 
-        public void MouseDown(Vector2 p)
+                b2Profile aveProfile = new b2Profile();
+                if (m_stepCount > 0)
+                {
+                    float scale = 1.0f / m_stepCount;
+                    aveProfile.step = scale * m_totalProfile.step;
+                    aveProfile.collide = scale * m_totalProfile.collide;
+                    aveProfile.solve = scale * m_totalProfile.solve;
+                    aveProfile.solveInit = scale * m_totalProfile.solveInit;
+                    aveProfile.solveVelocity = scale * m_totalProfile.solveVelocity;
+                    aveProfile.solvePosition = scale * m_totalProfile.solvePosition;
+                    aveProfile.solveTOI = scale * m_totalProfile.solveTOI;
+                    aveProfile.broadphase = scale * m_totalProfile.broadphase;
+                }
+
+                m_debugDraw.DrawString(5, m_textLine, "step [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.step,
+                                       aveProfile.step, m_maxProfile.step);
+                m_textLine += 15;
+                m_debugDraw.DrawString(5, m_textLine, "collide [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.collide,
+                                       aveProfile.collide, m_maxProfile.collide);
+                m_textLine += 15;
+                m_debugDraw.DrawString(5, m_textLine, "solve [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.solve,
+                                       aveProfile.solve, m_maxProfile.solve);
+                m_textLine += 15;
+                m_debugDraw.DrawString(5, m_textLine, "solve init [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.solveInit,
+                                       aveProfile.solveInit, m_maxProfile.solveInit);
+                m_textLine += 15;
+                m_debugDraw.DrawString(5, m_textLine, "solve velocity [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+                                       p.solveVelocity, aveProfile.solveVelocity, m_maxProfile.solveVelocity);
+                m_textLine += 15;
+                m_debugDraw.DrawString(5, m_textLine, "solve position [ave] (max) = %5.2f [%6.2f] (%6.2f)",
+                                       p.solvePosition, aveProfile.solvePosition, m_maxProfile.solvePosition);
+                m_textLine += 15;
+                m_debugDraw.DrawString(5, m_textLine, "solveTOI [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.solveTOI,
+                                       aveProfile.solveTOI, m_maxProfile.solveTOI);
+                m_textLine += 15;
+                m_debugDraw.DrawString(5, m_textLine, "broad-phase [ave] (max) = %5.2f [%6.2f] (%6.2f)", p.broadphase,
+                                       aveProfile.broadphase, m_maxProfile.broadphase);
+                m_textLine += 15;
+            }
+
+            if (m_mouseJoint != null)
+            {
+                b2Vec2 p1 = m_mouseJoint.GetAnchorB();
+                b2Vec2 p2 = m_mouseJoint.GetTarget();
+
+                b2Color c = new b2Color();
+                c.Set(0.0f, 1.0f, 0.0f);
+                m_debugDraw.DrawPoint(p1, 4.0f, c);
+                m_debugDraw.DrawPoint(p2, 4.0f, c);
+
+                c.Set(0.8f, 0.8f, 0.8f);
+                m_debugDraw.DrawSegment(p1, p2, c);
+            }
+
+            if (m_bombSpawning)
+            {
+                b2Color c = new b2Color();
+                c.Set(0.0f, 0.0f, 1.0f);
+                m_debugDraw.DrawPoint(m_bombSpawnPoint, 4.0f, c);
+
+                c.Set(0.8f, 0.8f, 0.8f);
+                m_debugDraw.DrawSegment(m_mouseWorld, m_bombSpawnPoint, c);
+            }
+
+            if (settings.drawContactPoints)
+            {
+                //const float32 k_impulseScale = 0.1f;
+                float k_axisScale = 0.3f;
+
+                for (int i = 0; i < m_pointCount; ++i)
+                {
+                    ContactPoint point = m_points[i];
+
+                    if (point.state == b2PointState.b2_addState)
+                    {
+                        // Add
+                        m_debugDraw.DrawPoint(point.position, 10.0f, new b2Color(0.3f, 0.95f, 0.3f));
+                    }
+                    else if (point.state == b2PointState.b2_persistState)
+                    {
+                        // Persist
+                        m_debugDraw.DrawPoint(point.position, 5.0f, new b2Color(0.3f, 0.3f, 0.95f));
+                    }
+
+                    if (settings.drawContactNormals == 1)
+                    {
+                        b2Vec2 p1 = point.position;
+                        b2Vec2 p2 = p1 + k_axisScale * point.normal;
+                        m_debugDraw.DrawSegment(p1, p2, new b2Color(0.9f, 0.9f, 0.9f));
+                    }
+                    else if (settings.drawContactForces == 1)
+                    {
+                        //b2Vec2 p1 = point->position;
+                        //b2Vec2 p2 = p1 + k_forceScale * point->normalForce * point->normal;
+                        //DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+                    }
+
+                    if (settings.drawFrictionForces == 1)
+                    {
+                        //b2Vec2 tangent = b2Cross(point->normal, 1.0f);
+                        //b2Vec2 p1 = point->position;
+                        //b2Vec2 p2 = p1 + k_forceScale * point->tangentForce * tangent;
+                        //DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+                    }
+                }
+            }
+        }
+
+        public virtual void Keyboard(char key)
         {
-            if (_fixedMouseJoint != null)
+        }
+
+        public virtual void KeyboardUp(char key)
+        {
+        }
+
+        public override void PreSolve(b2Contact contact, ref b2Manifold oldManifold)
+        {
+            b2Manifold manifold = contact.GetManifold();
+
+            if (manifold.pointCount == 0)
             {
                 return;
             }
 
-            Fixture fixture = World.TestPoint(p);
+            b2Fixture fixtureA = contact.GetFixtureA();
+            b2Fixture fixtureB = contact.GetFixtureB();
 
-            if (fixture != null)
+            b2PointState[] state1 = new b2PointState[b2Settings.b2_maxManifoldPoints]; 
+            b2PointState[] state2 = new b2PointState[b2Settings.b2_maxManifoldPoints];
+            b2Collision.b2GetPointStates(state1, state2, ref oldManifold, ref manifold);
+
+            b2WorldManifold worldManifold = new b2WorldManifold();
+            contact.GetWorldManifold(worldManifold);
+
+            for (int i = 0; i < manifold.pointCount && m_pointCount < k_maxContactPoints; ++i)
             {
-                Body body = fixture.Body;
-                _fixedMouseJoint = new FixedMouseJoint(body, p);
-                _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
-                World.AddJoint(_fixedMouseJoint);
-                body.Awake = true;
+                ContactPoint cp = m_points[m_pointCount];
+                cp.fixtureA = fixtureA;
+                cp.fixtureB = fixtureB;
+                cp.position = worldManifold.points[i];
+                cp.normal = worldManifold.normal;
+                cp.state = state2[i];
+                ++m_pointCount;
             }
         }
 
-        public void MouseUp()
-        {
-            if (_fixedMouseJoint != null)
-            {
-                World.RemoveJoint(_fixedMouseJoint);
-                _fixedMouseJoint = null;
-            }
-        }
-
-        public void MouseMove(Vector2 p)
-        {
-            if (_fixedMouseJoint != null)
-            {
-                _fixedMouseJoint.WorldAnchorB = p;
-            }
-        }
-
-        // Callbacks for derived classes.
-        protected virtual bool BeginContact(Contact contact)
-        {
-            return true;
-        }
-
-        protected virtual void EndContact(Contact contact)
+        public override void PostSolve(b2Contact contact, ref b2ContactImpulse impulse)
         {
         }
 
-        protected virtual void PreSolve(Contact contact, ref Manifold oldManifold)
-        {
-        }
-
-        protected virtual void PostSolve(Contact contact, ContactConstraint impulse)
-        {
-        }
+        public override void BeginContact(b2Contact contact) {}
+        public override void EndContact(b2Contact contact)  {}
     }
 }
