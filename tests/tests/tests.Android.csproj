@@ -263,6 +263,7 @@
     <Compile Include="Classes\tests\CocosDenshionTest\CocosDenshionTest.cs" />
     <Compile Include="Classes\tests\FontTest\SystemFontTest.cs" />
     <Compile Include="Classes\tests\LabelTest\GitHubIssue5.cs" />
+    <Compile Include="classes\tests\MultiTouchTest\MultiTouchTest.cs" />
     <Compile Include="Classes\tests\NodeTest\CameraCenterTest.cs" />
     <Compile Include="Classes\tests\NodeTest\CameraOrbitTest.cs" />
     <Compile Include="Classes\tests\NodeTest\CameraZoomTest.cs" />
@@ -551,7 +552,6 @@
     <Compile Include="classes\tests\ExtensionsTest\CocosBuilderTest\TimelineCallbackTestLayer.cs" />
     <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\Box2dTestBedScene.cs" />
     <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\Box2DView.cs" />
-    <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\Cocos2DDebugDraw.cs" />
     <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\MenuLayer.cs" />
     <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\Test.cs" />
     <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\TestEntries.cs" />
@@ -600,6 +600,8 @@
     <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\Tests\VaryingRestitution.cs" />
     <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\Tests\VerticalStack.cs" />
     <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\Tests\Web.cs" />
+    <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\Tests\CircleStress.cs" />
+    <Compile Include="Classes\tests\Box2DTestBet%28Box2D%29\Tests\LiquidTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\animations\animations-2.plist.xnb">
@@ -2039,6 +2041,36 @@
     <AndroidAsset Include="Assets\Content\hd\TileMaps\tmw_desert_spacing.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\hole_effect.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\hole_stencil.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\blocks9.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\blocks9r.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\blocks9ss.plist.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\blocks9ss.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\bButton.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\aButton.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\ui.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="Assets\Content\Images\ui.plist.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -2092,7 +2124,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Classes\tests\Box2DTestBet%28Box2D%29\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

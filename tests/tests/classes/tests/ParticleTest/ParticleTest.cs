@@ -186,7 +186,7 @@ namespace tests
 
             CCSize s = CCDirector.SharedDirector.WinSize;
             CCLabelTTF label = new CCLabelTTF(title(), "arial", 28);
-            AddChild(label, 100, 1000);
+            AddChild(label, 100, kLabelTag);
             label.Position = new CCPoint(s.Width / 2, s.Height - 50);
 
             CCLabelTTF tapScreen = new CCLabelTTF(subtitle(), "arial", 20);
@@ -213,7 +213,7 @@ namespace tests
 
             AddChild(menu, 100);
 
-            CCLabelAtlas labelAtlas = new CCLabelAtlas("0000", "Images/fps_Images", 16, 24, '.');
+            CCLabelAtlas labelAtlas = new CCLabelAtlas("0000", "Images/fps_Images", 12, 32, '.');
             AddChild(labelAtlas, 100, ParticleTestScene.kTagLabelAtlas);
             labelAtlas.Position = new CCPoint(s.Width - 66, 50);
 
@@ -239,11 +239,13 @@ namespace tests
         {
         }
 
+        private const int kLabelTag = 9000;
+
         public override void OnEnter()
         {
             base.OnEnter();
 
-            var pLabel = (CCLabelTTF) (GetChildByTag(1000));
+            var pLabel = (CCLabelTTF) (GetChildByTag(kLabelTag));
             pLabel.Text = (title());
         }
 

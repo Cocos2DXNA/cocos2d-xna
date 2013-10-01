@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.Xna.Framework;
 using Cocos2D;
+using Microsoft.Xna.Framework.Graphics;
 
 
 namespace tests
@@ -18,6 +19,7 @@ namespace tests
 #endif
             game.Window.AllowUserResizing = true;
             graphics.PreferMultiSampling = false;
+
 #if WINDOWS || WINDOWSGL || WINDOWSDX || MACOS
             graphics.PreferredBackBufferWidth = 1024;
             graphics.PreferredBackBufferHeight = 768;
@@ -45,6 +47,7 @@ namespace tests
             CCDirector pDirector = CCDirector.SharedDirector;
             pDirector.SetOpenGlView();
 
+            CCSpriteFontCache.FontScale = 0.6f;
             CCSpriteFontCache.RegisterFont("arial", 12, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 38, 50, 64);
             CCSpriteFontCache.RegisterFont("MarkerFelt", 16, 18, 22);
             CCSpriteFontCache.RegisterFont("MarkerFelt-Thin", 12, 18);
@@ -59,7 +62,6 @@ namespace tests
             pDirector.DisplayStats = true;
             // set FPS. the default value is 1.0/60 if you don't call this
             pDirector.AnimationInterval = 1.0 / 60;
-
             CCSize designSize = new CCSize(480, 320);
 
             if (CCDrawManager.FrameSize.Height > 320)

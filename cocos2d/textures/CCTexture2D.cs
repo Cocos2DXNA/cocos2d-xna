@@ -175,19 +175,35 @@ namespace Cocos2D
         {
             var saveState = m_samplerState;
 
-            if (m_bAntialiased)
+            if (m_bAntialiased && m_samplerState.Filter != TextureFilter.Linear)
             {
+                if (m_samplerState == SamplerState.PointClamp)
+                {
+                    m_samplerState = SamplerState.LinearClamp;
+                    return;
+                }
+
                 m_samplerState = new SamplerState
                 {
                     Filter = TextureFilter.Linear
                 };
             }
-            else
+            else if (!m_bAntialiased && m_samplerState.Filter != TextureFilter.Point)
             {
+                if (m_samplerState == SamplerState.LinearClamp)
+                {
+                    m_samplerState = SamplerState.PointClamp;
+                    return;
+                }
+                
                 m_samplerState = new SamplerState
                 {
                     Filter = TextureFilter.Point
                 };
+            }
+            else
+            {
+                return;
             }
 
             m_samplerState.AddressU = saveState.AddressU;
@@ -463,7 +479,7 @@ namespace Cocos2D
                 
                 if (loadedSize != 0)
                 {
-                    scale = fontSize / loadedSize;
+                    scale = fontSize / loadedSize * CCSpriteFontCache.FontScale;
                 }
 
                 if (dimensions.Equals(CCSize.Zero))
@@ -499,11 +515,7 @@ namespace Cocos2D
                             {
                                 firstWord = true;
                                 textList.Add(nextText.ToString());
-#if XBOX || XBOX360
                                 nextText.Length = 0;
-#else
-                                nextText.Clear();
-#endif
                             }
                             else
                             {
@@ -612,6 +624,11 @@ namespace Cocos2D
                 CCLog.Log(ex.ToString());
             }
             return false;
+        }
+
+        public bool InitWithTexture(Texture2D texture)
+        {
+            return InitWithTexture(texture, texture.Format, true, false);
         }
 
         internal bool InitWithTexture(Texture2D texture, SurfaceFormat format, bool premultipliedAlpha, bool managed)
@@ -816,7 +833,7 @@ namespace Cocos2D
 
             var renderTarget = new RenderTarget2D(
                 CCDrawManager.GraphicsDevice,
-                PixelsWide, PixelsHigh, m_bHasMipmaps, format,
+                texture.Width, texture.Height, m_bHasMipmaps, format,
                 DepthFormat.None, 0, RenderTargetUsage.DiscardContents
                 );
 

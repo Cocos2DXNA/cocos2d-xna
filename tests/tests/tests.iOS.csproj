@@ -647,6 +647,7 @@
     <Compile Include="classes\tests\MotionStreakTest\MotionStreakTestScene.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="classes\tests\MultiTouchTest\MultiTouchTest.cs" />
     <Compile Include="classes\tests\NodeTest\CameraCenterTest.cs" />
     <Compile Include="classes\tests\NodeTest\CameraOrbitTest.cs" />
     <Compile Include="classes\tests\NodeTest\CameraZoomTest.cs" />
@@ -1119,7 +1120,6 @@
     <Compile Include="classes\tests\FontTest\SystemFontTest.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Box2DView.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Box2dTestBedScene.cs" />
-    <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Cocos2DDebugDraw.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\MenuLayer.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Test.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\TestEntries.cs" />
@@ -1168,6 +1168,8 @@
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\VaryingRestitution.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\VerticalStack.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\Web.cs" />
+    <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\CircleStress.cs" />
+    <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\LiquidTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.iOS.plist">

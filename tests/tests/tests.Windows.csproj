@@ -105,7 +105,6 @@
     <Compile Include="classes\tests\ActionsTest\ActionsTest.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Box2dTestBedScene.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Box2DView.cs" />
-    <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Cocos2DDebugDraw.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\MenuLayer.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Test.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\TestEntries.cs" />
@@ -119,6 +118,7 @@
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\Car.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\Chain.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\CharacterCollision.cs" />
+    <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\CircleStress.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\CollisionFiltering.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\CollisionProcessing.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\CompoundShapes.cs" />
@@ -131,6 +131,7 @@
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\EdgeShapes.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\EdgeTest.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\Gears.cs" />
+    <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\LiquidTest.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\OneSidedPlatform.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\Pinball.cs" />
     <Compile Include="classes\tests\Box2DTestBet%28Box2D%29\Tests\PolyCollision.cs" />
@@ -448,6 +449,7 @@
     <Compile Include="classes\tests\MotionStreakTest\MotionStreakTest1.cs" />
     <Compile Include="classes\tests\MotionStreakTest\MotionStreakTest2.cs" />
     <Compile Include="classes\tests\MotionStreakTest\MotionStreakTestScene.cs" />
+    <Compile Include="classes\tests\MultiTouchTest\MultiTouchTest.cs" />
     <Compile Include="classes\tests\NodeTest\CameraCenterTest.cs" />
     <Compile Include="classes\tests\NodeTest\CameraOrbitTest.cs" />
     <Compile Include="classes\tests\NodeTest\CameraZoomTest.cs" />
