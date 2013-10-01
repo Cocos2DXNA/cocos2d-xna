@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 
 namespace Cocos2D
@@ -100,7 +101,6 @@ namespace Cocos2D
 
             // no lazy alloc in this node
             m_pChildren = new CCRawList<CCNode>(capacity);
-
             m_pobDescendants = new CCRawList<CCSprite>(capacity);
 
             return true;
@@ -148,7 +148,7 @@ namespace Cocos2D
             //kmGLPopMatrix();
             CCDrawManager.PopMatrix();
 
-            m_uOrderOfArrival = 0;
+            //m_uOrderOfArrival = 0;
         }
 
         public override void AddChild(CCNode child, int zOrder, int tag)
@@ -214,54 +214,6 @@ namespace Cocos2D
             m_pobTextureAtlas.RemoveAllQuads();
         }
 
-        // Quick sort taken from http://snipd.net/quicksort-in-c
-        public static void Quicksort(CCNode[] elements, int left, int right)
-        {
-            int i = left, j = right;
-            CCNode pivot = elements[(left + right) / 2];
-
-            while (i <= j)
-            {
-                /*
-                           (pivot.m_nZOrder < elements[i].m_nZOrder ||
-                            (pivot.m_nZOrder == elements[i].m_nZOrder && pivot.m_uOrderOfArrival < elements[i].m_uOrderOfArrival)))
-                 */
-                while ((elements[i].m_nZOrder < pivot.m_nZOrder ||
-                            (pivot.m_nZOrder == elements[i].m_nZOrder && elements[i].m_uOrderOfArrival < pivot.m_uOrderOfArrival)))
-                {
-                    i++;
-                }
-
-                while ((elements[j].m_nZOrder > pivot.m_nZOrder ||
-                            (pivot.m_nZOrder == elements[j].m_nZOrder && elements[j].m_uOrderOfArrival > pivot.m_uOrderOfArrival)))
-                {
-                    j--;
-                }
-
-                if (i <= j)
-                {
-                    // Swap
-                    CCNode tmp = elements[i];
-                    elements[i] = elements[j];
-                    elements[j] = tmp;
-
-                    i++;
-                    j--;
-                }
-            }
-
-            // Recursive calls
-            if (left < j)
-            {
-                Quicksort(elements, left, j);
-            }
-
-            if (i < right)
-            {
-                Quicksort(elements, i, right);
-            }
-        }
-
         //override sortAllChildren
         public override void SortAllChildren()
         {
@@ -269,29 +221,8 @@ namespace Cocos2D
             {
                 int j = 0, count = m_pChildren.count;
                 CCNode[] elements = m_pChildren.Elements;
-                // CCNode tempItem;
-                
-                //insertion sort - change to qsort per RIQ
-                CCNode.Quicksort(elements, 0, count - 1);
 
-                /*
-                for (int i = 1; i < count; i++)
-                {
-                    tempItem = elements[i];
-                    j = i - 1;
-
-                    //continue moving element downwards while zOrder is smaller or when zOrder is the same but orderOfArrival is smaller
-                    while (j >= 0 &&
-                           (tempItem.m_nZOrder < elements[j].m_nZOrder ||
-                            (tempItem.m_nZOrder == elements[j].m_nZOrder && tempItem.m_uOrderOfArrival < elements[j].m_uOrderOfArrival)))
-                    {
-                        elements[j + 1] = elements[j];
-                        j--;
-                    }
-
-                    elements[j + 1] = tempItem;
-                }
-                */
+                Array.Sort(elements, 0, count, this);
 
                 //sorted now check all children
                 if (count > 0)

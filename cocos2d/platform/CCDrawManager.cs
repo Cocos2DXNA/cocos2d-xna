@@ -222,23 +222,51 @@ namespace Cocos2D
             }
         }
 
+        private static List<RasterizerState> _rasterizerStatesCache = new List<RasterizerState>();
+
+        private static RasterizerState GetScissorRasterizerState(bool scissorEnabled)
+        {
+            var currentState = graphicsDevice.RasterizerState;
+            
+            for (int i = 0; i < _rasterizerStatesCache.Count; i++)
+            {
+                var state = _rasterizerStatesCache[i];
+                if (
+                    state.ScissorTestEnable == scissorEnabled &&
+                    currentState.CullMode == state.CullMode &&
+                    currentState.DepthBias == state.DepthBias &&
+                    currentState.FillMode == state.FillMode &&
+                    currentState.MultiSampleAntiAlias == state.MultiSampleAntiAlias &&
+                    currentState.SlopeScaleDepthBias == state.SlopeScaleDepthBias
+                    )
+                {
+                    return state;
+                }
+            }
+
+            var newState = new RasterizerState
+            {
+                ScissorTestEnable = scissorEnabled,
+                CullMode = currentState.CullMode,
+                DepthBias = currentState.DepthBias,
+                FillMode = currentState.FillMode,
+                MultiSampleAntiAlias = currentState.MultiSampleAntiAlias,
+                SlopeScaleDepthBias = currentState.SlopeScaleDepthBias
+            };
+
+            _rasterizerStatesCache.Add(newState);
+
+            return newState;
+        }
+
         public static bool ScissorRectEnabled
         {
             get { return graphicsDevice.RasterizerState.ScissorTestEnable; }
             set
             {
-                var currentState = graphicsDevice.RasterizerState;
-                if (currentState.ScissorTestEnable != value)
+                if (graphicsDevice.RasterizerState.ScissorTestEnable != value)
                 {
-                    graphicsDevice.RasterizerState = new RasterizerState
-                    {
-                        ScissorTestEnable = value,
-                        CullMode = currentState.CullMode,
-                        DepthBias = currentState.DepthBias,
-                        FillMode = currentState.FillMode,
-                        MultiSampleAntiAlias = currentState.MultiSampleAntiAlias,
-                        SlopeScaleDepthBias = currentState.SlopeScaleDepthBias
-                    };
+                    graphicsDevice.RasterizerState = GetScissorRasterizerState(value);
                 }
             }
         }
@@ -256,6 +284,93 @@ namespace Cocos2D
         public static float ScaleY
         {
             get { return m_fScaleY; }
+        }
+
+        private static IGraphicsDeviceService m_graphicsService;
+        private static PresentationParameters m_presentationParameters = new PresentationParameters();
+        private static GraphicsDeviceManager m_GraphicsDeviceMgr;
+
+        private static void UpdatePresentationParametrs(GraphicsDeviceManager manager)
+        {
+            var pp = m_presentationParameters;
+
+            pp.BackBufferWidth = manager.PreferredBackBufferWidth;
+            pp.BackBufferHeight = manager.PreferredBackBufferHeight;
+            pp.BackBufferFormat = manager.PreferredBackBufferFormat;
+            pp.DepthStencilFormat = manager.PreferredDepthStencilFormat;
+            pp.RenderTargetUsage = RenderTargetUsage.PreserveContents; //??? DiscardContents fast
+        }
+
+        public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
+        {
+            m_GraphicsDeviceMgr = graphics;
+
+            SetOrientation(supportedOrientations, false);
+
+#if ANDROID || WINDOWS_PHONE
+            graphics.IsFullScreen = true;
+#endif
+
+#if WINDOWS || WINDOWSGL || MACOS
+            game.IsMouseVisible = true;
+            graphics.IsFullScreen = false;
+#endif
+        }
+
+        public static void Init(IGraphicsDeviceService service)
+        {
+            m_graphicsService = service;
+
+            m_presentationParameters = new PresentationParameters()
+            {
+                RenderTargetUsage = RenderTargetUsage.PreserveContents,
+                DepthStencilFormat = DepthFormat.Depth24Stencil8,
+                BackBufferFormat = SurfaceFormat.Color
+            };
+
+            service.DeviceCreated += GraphicsDeviceDeviceCreated;
+
+            var manager = service as GraphicsDeviceManager;
+
+            if (manager != null)
+            {
+                UpdatePresentationParametrs(manager);
+
+                manager.PreparingDeviceSettings += GraphicsPreparingDeviceSettings;
+            }
+            else
+            {
+                if (service.GraphicsDevice != null)
+                {
+                    Init(service.GraphicsDevice);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called just before the graphics device for the presentation is created. This method callback is used to setup
+        /// the device settings. The WindowSetup is used to set the presentation parameters.
+        /// </summary>
+        static void GraphicsPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
+        {
+            var gdipp = e.GraphicsDeviceInformation.PresentationParameters;
+            var pp = m_presentationParameters;
+
+            gdipp.RenderTargetUsage = pp.RenderTargetUsage;
+            gdipp.DepthStencilFormat = pp.DepthStencilFormat;
+            gdipp.BackBufferFormat = pp.BackBufferFormat;
+            
+            //if (graphicsDevice == null)
+            {
+                // Only set the buffer dimensions when the device was not created
+                gdipp.BackBufferWidth = pp.BackBufferWidth;
+                gdipp.BackBufferHeight = pp.BackBufferHeight;
+            }
+        }
+
+        static void GraphicsDeviceDeviceCreated(object sender, EventArgs e)
+        {
+            Init(m_graphicsService.GraphicsDevice);
         }
 
         public static void Init(GraphicsDevice graphicsDevice)
@@ -306,14 +421,23 @@ namespace Cocos2D
 #endif
             PresentationParameters pp = graphicsDevice.PresentationParameters;
             //pp.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-            //_renderTarget = new RenderTarget2D(graphicsDevice, pp.BackBufferWidth, (int)pp.BackBufferHeight, false, pp.BackBufferFormat, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.PreserveContents);
+            //m_renderTarget = new RenderTarget2D(graphicsDevice, pp.BackBufferWidth, (int)pp.BackBufferHeight, false, pp.BackBufferFormat, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.PreserveContents);
 
-            m_fScaleY = 1.0f;
-            m_fScaleX = 1.0f;
-            m_eResolutionPolicy = CCResolutionPolicy.UnKnown;
-
+            //m_eResolutionPolicy = CCResolutionPolicy.UnKnown;
             m_obViewPortRect = new CCRect(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
-            m_obScreenSize = m_obDesignResolutionSize = m_obViewPortRect.Size;
+            m_obScreenSize = m_obViewPortRect.Size;
+
+            if (m_eResolutionPolicy != CCResolutionPolicy.UnKnown)
+            {
+                SetDesignResolutionSize(m_obDesignResolutionSize.Width, m_obDesignResolutionSize.Height, m_eResolutionPolicy);
+            }
+            else
+            {
+                m_fScaleY = 1.0f;
+                m_fScaleX = 1.0f;
+
+                m_obDesignResolutionSize = m_obScreenSize;
+            }
 
             m_projectionMatrix = Matrix.Identity;
             m_viewMatrix = Matrix.Identity;
@@ -374,13 +498,17 @@ namespace Cocos2D
 //#if ANDROID
             CCGraphicsResource.DisposeAllResources();
             CCSpriteFontCache.SharedInstance.Clear();
+#if XNA
+            CCContentManager.SharedContentManager.ReloadGraphicsAssets();
+#endif
+            m_bNeedReinitResources = true;
 //#endif
         }
 
         static void GraphicsDeviceDeviceReset(object sender, EventArgs e)
         {
 //#if ANDROID
-            m_bNeedReinitResources = true;
+        //m_bNeedReinitResources = true;
 //#endif
         }
 
@@ -464,7 +592,7 @@ namespace Cocos2D
             }
 
             ResetDevice();
-            graphicsDevice.Clear(Color.Black);
+            Clear(Color.Black);
             DrawCount = 0;
         }
 
@@ -896,8 +1024,7 @@ namespace Cocos2D
 
         public static void DrawQuadsBuffer<T>(CCVertexBuffer<T> vertexBuffer, int start, int n) where T : struct, IVertexType
         {
-            if (n == 0)
-            {
+            if (n == 0)         {
                 return;
             }
 
@@ -1047,8 +1174,6 @@ namespace Cocos2D
             CCDirector.SharedDirector.SetGlDefaultValues();
         }
 
-        private static GraphicsDeviceManager m_GraphicsDeviceMgr;
-
         public static void SetOrientation(DisplayOrientation supportedOrientations)
         {
             SetOrientation(supportedOrientations, true);
@@ -1118,13 +1243,13 @@ namespace Cocos2D
             {
                 if (onlyLandscape)
                 {
-                    m_GraphicsDeviceMgr.PreferredBackBufferWidth = 840;
+                    m_GraphicsDeviceMgr.PreferredBackBufferWidth = 800;
                     m_GraphicsDeviceMgr.PreferredBackBufferHeight = 480;
                 }
                 else if (onlyPortrait)
                 {
                     m_GraphicsDeviceMgr.PreferredBackBufferWidth = 480;
-                    m_GraphicsDeviceMgr.PreferredBackBufferHeight = 840;
+                    m_GraphicsDeviceMgr.PreferredBackBufferHeight = 800;
                 }
             }
             m_GraphicsDeviceMgr.SupportedOrientations = supportedOrientations;
@@ -1162,29 +1287,9 @@ namespace Cocos2D
                 }
             }
 #endif
+            UpdatePresentationParametrs(m_GraphicsDeviceMgr);
+
             m_GraphicsDeviceMgr.ApplyChanges();
-        }
-
-        public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
-        {
-            m_GraphicsDeviceMgr = graphics;
-            SetOrientation(supportedOrientations, false);
-
-            //graphics.PreparingDeviceSettings += PreparingDeviceSettings;
-
-
-#if ANDROID
-            graphics.IsFullScreen = true;
-#endif
-
-#if WINDOWS || WINDOWSGL || WINDOWS_PHONE
-            graphics.IsFullScreen = true;
-#endif
-
-#if WINDOWS || WINDOWSGL || MACOS
-            game.IsMouseVisible = true;
-            graphics.IsFullScreen = false;
-#endif
         }
 
         public static CCPoint ScreenToWorld(float x, float y)
@@ -1262,8 +1367,130 @@ namespace Cocos2D
 
         private struct MaskState
         {
+            public int Layer;
             public bool Inverted;
             public float AlphaTreshold;
+        }
+
+        private struct MaskDepthStencilStateCacheEntry
+        {
+            public DepthStencilState Clear;
+            public DepthStencilState ClearInvert;
+            public DepthStencilState DrawMask;
+            public DepthStencilState DrawMaskInvert;
+            public DepthStencilState DrawContent;
+            public DepthStencilState DrawContentDepth;
+
+            public DepthStencilState GetClearState(MaskState maskState)
+            {
+                DepthStencilState result = maskState.Inverted ? ClearInvert : Clear;
+
+                if (result == null)
+                {
+                    int maskLayer = 1 << maskState.Layer;
+
+                    result = new DepthStencilState()
+                    {
+                        DepthBufferEnable = false,
+
+                        StencilEnable = true,
+
+                        StencilFunction = CompareFunction.Never,
+
+                        StencilMask = maskLayer,
+                        StencilWriteMask = maskLayer,
+                        ReferenceStencil = maskLayer,
+
+                        StencilFail = !maskState.Inverted ? StencilOperation.Zero : StencilOperation.Replace
+                    };
+
+                    if (maskState.Inverted)
+                    {
+                        ClearInvert = result;
+                    }
+                    else
+                    {
+                        Clear = result;
+                    }
+                }
+
+                return result;
+            }
+
+            public DepthStencilState GetDrawMaskState(MaskState maskState)
+            {
+                DepthStencilState result = maskState.Inverted ? DrawMaskInvert : DrawMask;
+
+                if (result == null)
+                {
+                    int maskLayer = 1 << maskState.Layer;
+
+                    result = new DepthStencilState()
+                    {
+                        DepthBufferEnable = false,
+
+                        StencilEnable = true,
+
+                        StencilFunction = CompareFunction.Never,
+
+                        StencilMask = maskLayer,
+                        StencilWriteMask = maskLayer,
+                        ReferenceStencil = maskLayer,
+
+                        StencilFail = !maskState.Inverted ? StencilOperation.Replace : StencilOperation.Zero,
+                    };
+
+                    if (maskState.Inverted)
+                    {
+                        DrawMaskInvert = result;
+                    }
+                    else
+                    {
+                        DrawMask = result;
+                    }
+                }
+
+                return result;
+            }
+
+            public DepthStencilState GetDrawContentState(MaskState maskState, bool depth)
+            {
+                DepthStencilState result = depth ? DrawContentDepth : DrawContent;
+
+                if (result == null)
+                {
+                    int maskLayer = 1 << maskState.Layer;
+                    int maskLayerL = maskLayer - 1;
+                    int maskLayerLe = maskLayer | maskLayerL;
+
+                    result = new DepthStencilState()
+                    {
+                        DepthBufferEnable = _maskSavedStencilStates[_maskLayer].DepthBufferEnable,
+
+                        StencilEnable = true,
+
+                        StencilMask = maskLayerLe,
+                        StencilWriteMask = 0,
+                        ReferenceStencil = maskLayerLe,
+
+                        StencilFunction = CompareFunction.Equal,
+
+                        StencilPass = StencilOperation.Keep,
+                        StencilFail = StencilOperation.Keep,
+                    };
+
+                    if (depth)
+                    {
+                        DrawContentDepth = result;
+                    }
+                    else
+                    {
+                        DrawContent = result;
+                    }
+                }
+
+                return result;
+            }
         }
 
         private static int _maskLayer = -1;
@@ -1271,6 +1498,7 @@ namespace Cocos2D
         private static DepthStencilState[] _maskSavedStencilStates = new DepthStencilState[8];
         private static AlphaTestEffect _maskAlphaTest;
         private static MaskState[] _maskStates = new MaskState[8];
+        private static MaskDepthStencilStateCacheEntry[] _maskStatesCache = new MaskDepthStencilStateCacheEntry[8];
 
         public static bool BeginDrawMask(bool inverted, float alphaTreshold)
         {
@@ -1287,9 +1515,9 @@ namespace Cocos2D
                 return false;
             }
 
-            var maskState = new MaskState() { Inverted = inverted, AlphaTreshold = alphaTreshold };
-
             _maskLayer++;
+
+            var maskState = new MaskState() { Layer = _maskLayer, Inverted = inverted, AlphaTreshold = alphaTreshold };
 
             _maskStates[_maskLayer] = maskState;
             _maskSavedStencilStates[_maskLayer] = DepthStencilState;
@@ -1299,22 +1527,7 @@ namespace Cocos2D
             ///////////////////////////////////
             // CLEAR STENCIL BUFFER
 
-            var stencilState = new DepthStencilState()
-            {
-                DepthBufferEnable = false,
-
-                StencilEnable = true,
-
-                StencilFunction = CompareFunction.Never,
-
-                StencilMask = maskLayer,
-                StencilWriteMask = maskLayer,
-                ReferenceStencil = maskLayer,
-
-                StencilFail = !maskState.Inverted ? StencilOperation.Zero : StencilOperation.Replace
-            };
-            
-            DepthStencilState = stencilState;
+            DepthStencilState = _maskStatesCache[_maskLayer].GetClearState(maskState);
 
             // draw a fullscreen solid rectangle to clear the stencil buffer
             var size = CCDirector.SharedDirector.WinSize;
@@ -1331,22 +1544,7 @@ namespace Cocos2D
             ///////////////////////////////////
             // PREPARE TO DRAW MASK
 
-            stencilState = new DepthStencilState()
-            {
-                DepthBufferEnable = false,
-
-                StencilEnable = true,
-
-                StencilFunction = CompareFunction.Never,
-
-                StencilMask = maskLayer,
-                StencilWriteMask = maskLayer,
-                ReferenceStencil = maskLayer,
-
-                StencilFail = !maskState.Inverted ? StencilOperation.Replace : StencilOperation.Zero,
-            };
-            
-            DepthStencilState = stencilState;
+            DepthStencilState = _maskStatesCache[_maskLayer].GetDrawMaskState(maskState);
 
             if (maskState.AlphaTreshold < 1)
             {
@@ -1376,27 +1574,7 @@ namespace Cocos2D
                 PopEffect();
             }
 
-            int maskLayer = 1 << _maskLayer;
-            int maskLayerL = maskLayer - 1;
-            int maskLayerLe = maskLayer | maskLayerL; 
-
-            var stencilState = new DepthStencilState()
-            {
-                DepthBufferEnable = _maskSavedStencilStates[_maskLayer].DepthBufferEnable,
-
-                StencilEnable = true,
-
-                StencilMask = maskLayerLe,
-                StencilWriteMask = 0,
-                ReferenceStencil = maskLayerLe,
-
-                StencilFunction = CompareFunction.Equal,
-
-                StencilPass = StencilOperation.Keep,
-                StencilFail = StencilOperation.Keep,
-            };
-            
-            DepthStencilState = stencilState;
+            DepthStencilState = _maskStatesCache[_maskLayer].GetDrawContentState(maskState, _maskSavedStencilStates[_maskLayer].DepthBufferEnable);
         }
 
         public static void EndMask()
@@ -1411,6 +1589,8 @@ namespace Cocos2D
 
     public enum CCResolutionPolicy
     {
+        UnKnown,
+
         // The entire application is visible in the specified area without trying to preserve the original aspect ratio. 
         // Distortion can occur, and the application may appear stretched or compressed.
         ExactFit,
@@ -1429,9 +1609,7 @@ namespace Cocos2D
         // canvas so that it fits the aspect ratio of the device
         // no distortion will occur however you must make sure your application works on different
         // aspect ratios
-        FixedWidth,
-
-        UnKnown,
+        FixedWidth
     }
 
 
@@ -1441,6 +1619,8 @@ namespace Cocos2D
 
         private bool _isDisposed;
 
+        private WeakReference _wr;
+
         public bool IsDisposed
         {
             get { return _isDisposed; }
@@ -1448,24 +1628,24 @@ namespace Cocos2D
 
         public CCGraphicsResource()
         {
-            _createdResources.Add(new WeakReference(this));
+            _wr = new WeakReference(this);
+
+            lock (_createdResources)
+            {
+                _createdResources.Add(_wr);
+            }
         }
 
         ~CCGraphicsResource()
         {
-            var resources = _createdResources.Elements;
-            for (int i = 0, count = _createdResources.Count; i < count; i++)
-            {
-                if (resources[i].Target == this)
-                {
-                    _createdResources.RemoveAt(i);
-                    return;
-                }
-            }
-
             if (!IsDisposed)
             {
                 Dispose();
+            }
+
+            lock (_createdResources)
+            {
+                _createdResources.Remove(_wr);
             }
         }
 
@@ -1480,24 +1660,30 @@ namespace Cocos2D
 
         internal static void ReinitAllResources()
         {
-            var resources = _createdResources.Elements;
-            for (int i = 0, count = _createdResources.Count; i < count; i++)
+            lock (_createdResources)
             {
-                if (resources[i].IsAlive)
+                var resources = _createdResources.Elements;
+                for (int i = 0, count = _createdResources.Count; i < count; i++)
                 {
-                    ((CCGraphicsResource) resources[i].Target).Reinit();
+                    if (resources[i].IsAlive)
+                    {
+                        ((CCGraphicsResource) resources[i].Target).Reinit();
+                    }
                 }
             }
         }
 
         internal static void DisposeAllResources()
         {
-            var resources = _createdResources.Elements;
-            for (int i = 0, count = _createdResources.Count; i < count; i++)
+            lock (_createdResources)
             {
-                if (resources[i].IsAlive)
+                var resources = _createdResources.Elements;
+                for (int i = 0, count = _createdResources.Count; i < count; i++)
                 {
-                    ((CCGraphicsResource) resources[i].Target).Dispose();
+                    if (resources[i].IsAlive)
+                    {
+                        ((CCGraphicsResource) resources[i].Target).Dispose();
+                    }
                 }
             }
         }
@@ -1709,12 +1895,26 @@ namespace Cocos2D
         {
             UpdateBuffer(0, _data.Count);
         }
-
+#if PSM
+		private ushort[] _PSMTmpBuffer;
+#endif
+		
         public void UpdateBuffer(int startIndex, int elementCount)
         {
             if (elementCount > 0)
             {
+#if PSM
+				// HACK! PSM vertexbuffer only allows for ushort so we have to convert to ushort here.
+				if(_PSMTmpBuffer == null || _PSMTmpBuffer.Length < elementCount) {
+					_PSMTmpBuffer = new ushort[elementCount];
+				}
+				for(int i=0; i < elementCount; i++) {
+					_PSMTmpBuffer[i] = (ushort)Convert.ChangeType(_data.Elements[startIndex+i], TypeCode.UInt16);
+				}
+                _indexBuffer.SetData(_PSMTmpBuffer, 0, elementCount);
+#else
                 _indexBuffer.SetData(_data.Elements, startIndex, elementCount);
+#endif
             }
         }
 

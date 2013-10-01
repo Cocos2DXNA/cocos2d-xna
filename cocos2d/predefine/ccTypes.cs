@@ -167,6 +167,16 @@ namespace Cocos2D
         {
             return new Color(point.R, point.G, point.B, point.A);
         }
+
+        public static implicit operator CCColor3B(CCColor4B point)
+        {
+            return new CCColor3B(point.R, point.G, point.B);
+        }
+
+        public static implicit operator CCColor4B(CCColor3B point)
+        {
+            return new CCColor4B(point.R, point.G, point.B, 255);
+        }
     }
 
     /// <summary>
@@ -381,6 +391,52 @@ namespace Cocos2D
         {
             return new CCPoint(p.X, p.Y);
         }
+
+        #region Operator Overloads
+
+        public static bool operator ==(CCPointI p1, CCPointI p2)
+        {
+            return p1.X == p2.X && p1.Y == p2.Y;
+        }
+
+        public static bool operator !=(CCPointI p1, CCPointI p2)
+        {
+            return p1.X != p2.X || p1.Y != p2.Y;
+        }
+
+        public static CCPointI operator -(CCPointI p1, CCPointI p2)
+        {
+            CCPointI pt;
+            pt.X = p1.X - p2.X;
+            pt.Y = p1.Y - p2.Y;
+            return pt;
+        }
+
+        public static CCPointI operator -(CCPointI p1)
+        {
+            CCPointI pt;
+            pt.X = -p1.X;
+            pt.Y = -p1.Y;
+            return pt;
+        }
+
+        public static CCPointI operator +(CCPointI p1, CCPointI p2)
+        {
+            CCPointI pt;
+            pt.X = p1.X + p2.X;
+            pt.Y = p1.Y + p2.Y;
+            return pt;
+        }
+
+        public static CCPointI operator +(CCPointI p1)
+        {
+            CCPointI pt;
+            pt.X = +p1.X;
+            pt.Y = +p1.Y;
+            return pt;
+        }
+
+        #endregion
     }
 
     public struct CCSizeI
