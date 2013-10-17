@@ -97,17 +97,17 @@ namespace Cocos2D
             for (int i = start; i < end; i++)
             {
                 // bottom-left vertex:
-                quads[i].BottomLeft.TexCoords.U = left;
-                quads[i].BottomLeft.TexCoords.V = bottom;
+                quads[i].BottomLeft.TextureCoordinate.X = left;
+                quads[i].BottomLeft.TextureCoordinate.Y = bottom;
                 // bottom-right vertex:
-                quads[i].BottomRight.TexCoords.U = right;
-                quads[i].BottomRight.TexCoords.V = bottom;
+                quads[i].BottomRight.TextureCoordinate.X = right;
+                quads[i].BottomRight.TextureCoordinate.Y = bottom;
                 // top-left vertex:
-                quads[i].TopLeft.TexCoords.U = left;
-                quads[i].TopLeft.TexCoords.V = top;
+                quads[i].TopLeft.TextureCoordinate.X = left;
+                quads[i].TopLeft.TextureCoordinate.Y = top;
                 // top-right vertex:
-                quads[i].TopRight.TexCoords.U = right;
-                quads[i].TopRight.TexCoords.V = top;
+                quads[i].TopRight.TextureCoordinate.X = right;
+                quads[i].TopRight.TextureCoordinate.Y = top;
             }
         }
 
@@ -184,10 +184,10 @@ namespace Cocos2D
                 color.A = (byte)(particle.color.A * 255);
             }
 
-            quad.BottomLeft.Colors = color;
-            quad.BottomRight.Colors = color;
-            quad.TopLeft.Colors = color;
-            quad.TopRight.Colors = color;
+            quad.BottomLeft.Color = color;
+            quad.BottomRight.Color = color;
+            quad.TopLeft.Color = color;
+            quad.TopRight.Color = color;
 
             // vertices
             float size_2 = particle.size / 2;
@@ -214,38 +214,38 @@ namespace Cocos2D
                 float dy = x1 * sr + y2 * cr + y;
 
                 // bottom-left
-                quad.BottomLeft.Vertices.X = ax;
-                quad.BottomLeft.Vertices.Y = ay;
+                quad.BottomLeft.Position.X = ax;
+                quad.BottomLeft.Position.Y = ay;
 
                 // bottom-right vertex:
-                quad.BottomRight.Vertices.X = bx;
-                quad.BottomRight.Vertices.Y = by;
+                quad.BottomRight.Position.X = bx;
+                quad.BottomRight.Position.Y = by;
 
                 // top-left vertex:
-                quad.TopLeft.Vertices.X = dx;
-                quad.TopLeft.Vertices.Y = dy;
+                quad.TopLeft.Position.X = dx;
+                quad.TopLeft.Position.Y = dy;
 
                 // top-right vertex:
-                quad.TopRight.Vertices.X = cx;
-                quad.TopRight.Vertices.Y = cy;
+                quad.TopRight.Position.X = cx;
+                quad.TopRight.Position.Y = cy;
             }
             else
             {
                 // bottom-left vertex:
-                quad.BottomLeft.Vertices.X = newPosition.X - size_2;
-                quad.BottomLeft.Vertices.Y = newPosition.Y - size_2;
+                quad.BottomLeft.Position.X = newPosition.X - size_2;
+                quad.BottomLeft.Position.Y = newPosition.Y - size_2;
 
                 // bottom-right vertex:
-                quad.BottomRight.Vertices.X = newPosition.X + size_2;
-                quad.BottomRight.Vertices.Y = newPosition.Y - size_2;
+                quad.BottomRight.Position.X = newPosition.X + size_2;
+                quad.BottomRight.Position.Y = newPosition.Y - size_2;
 
                 // top-left vertex:
-                quad.TopLeft.Vertices.X = newPosition.X - size_2;
-                quad.TopLeft.Vertices.Y = newPosition.Y + size_2;
+                quad.TopLeft.Position.X = newPosition.X - size_2;
+                quad.TopLeft.Position.Y = newPosition.Y + size_2;
 
                 // top-right vertex:
-                quad.TopRight.Vertices.X = newPosition.X + size_2;
-                quad.TopRight.Vertices.Y = newPosition.Y + size_2;
+                quad.TopRight.Position.X = newPosition.X + size_2;
+                quad.TopRight.Position.Y = newPosition.Y + size_2;
             }
         }
 

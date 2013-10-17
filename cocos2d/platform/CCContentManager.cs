@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -136,6 +137,9 @@ namespace Cocos2D
         private List<string> _searchPaths = new List<string>();
         private List<string> _searchResolutionsOrder = new List<string>(); 
 
+        private string _assetListFileName = "assets.txt"; 
+        private Dictionary<string, string> _assetList; 
+
         private Dictionary<string, string> _failedAssets = new Dictionary<string, string>();
 
         public CCContentManager(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -193,6 +197,11 @@ namespace Cocos2D
 
         public T Load<T>(string assetName, bool weakReference)
         {
+            if (_assetList == null)
+            {
+                LoadAssetList();
+            }
+
             if (string.IsNullOrEmpty(assetName))
             {
                 throw new ArgumentNullException("assetName");
@@ -214,6 +223,38 @@ namespace Cocos2D
 
             var realName = GetRealName(assetName);
 
+            string path;
+
+            if (_assetList.Count > 0)
+            {
+                if (_assetList.TryGetValue(realName, out path))
+                {
+                    try
+                    {
+                        //TODO: for platforms with access to the file system, first check for the existence of the file 
+                        return InternalLoad<T>(assetName, path, weakReference);
+                    }
+                    catch (ContentLoadException)
+                    {
+                        // try other path
+                    }
+                }
+
+                if (!Path.HasExtension(realName))
+                {
+                    if (_assetList.TryGetValue(realName + ".xbn", out path))
+                    {
+                        try
+                        {
+                            return InternalLoad<T>(assetName, path, weakReference);
+                        }
+                        catch (ContentLoadException)
+                        {
+                        }
+                    }
+                }
+            }
+
             CheckDefaultPath(_searchPaths);
             CheckDefaultPath(_searchResolutionsOrder);
 
@@ -221,7 +262,7 @@ namespace Cocos2D
             {
                 foreach (string resolutionOrder  in _searchResolutionsOrder)
                 {
-                    var path = Path.Combine(Path.Combine(searchPath, resolutionOrder), realName);
+                    path = Path.Combine(Path.Combine(searchPath, resolutionOrder), realName);
 
                     try
                     {
@@ -281,10 +322,26 @@ namespace Cocos2D
             {
                 try
                 {
-                    if (typeof (T) == typeof (PlistDocument))
-                    {
                         string assetPath = Path.Combine(RootDirectory, path);
 
+                    if (typeof (T) == typeof (string))
+                    {
+                        using (var stream = TitleContainer.OpenStream(assetPath))
+                        {
+                            var reader = new StreamReader(stream);
+                            var sb = new StringBuilder();
+                            string line;
+
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                sb.AppendLine(line);
+                            }
+
+                            return (T) (object) sb.ToString();
+                        }
+                    }
+                    else if (typeof(T) == typeof(PlistDocument))
+                    {
                         try
                         {
                             using (var streamContent = TitleContainer.OpenStream(assetPath))
@@ -304,8 +361,6 @@ namespace Cocos2D
 #if XNA
                     else if (typeof (T) == typeof (Texture2D) && Path.HasExtension(path))
                     {
-                        string assetPath = Path.Combine(RootDirectory, path);
-
                         var service =
                             (IGraphicsDeviceService) ServiceProvider.GetService(typeof (IGraphicsDeviceService));
 
@@ -449,6 +504,40 @@ namespace Cocos2D
             }
 
             paths.Add("");
+        }
+
+        private void LoadAssetList()
+        {
+            if (_assetList == null)
+            {
+                _assetList = new Dictionary<string, string>();
+
+                if (!String.IsNullOrEmpty(_assetListFileName))
+                {
+                    try
+                    {
+                        using (var stream = TitleContainer.OpenStream(Path.Combine(RootDirectory, _assetListFileName)))
+                        {
+                            var reader = new StreamReader(stream);
+
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                _assetListFileName = Path.GetFileName(line);
+
+                                if (!_assetList.ContainsKey(_assetListFileName))
+                                {
+                                    _assetList.Add(_assetListFileName, line);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        _assetList.Clear();
+                    }
+                }
+            }
         }
     }
 }

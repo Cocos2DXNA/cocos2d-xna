@@ -184,15 +184,15 @@ namespace Cocos2D
                     {
                         vertArray[l1[i]].vertices = l2[i];
 
-                        vertArray[tex1[i]].texCoords.U = tex2[i].X / width;
+                        vertArray[tex1[i]].texCoords.X = tex2[i].X / width;
 
                         if (m_bIsTextureFlipped)
                         {
-                            vertArray[tex1[i]].texCoords.V = tex2[i].Y / height;
+                            vertArray[tex1[i]].texCoords.Y = tex2[i].Y / height;
                         }
                         else
                         {
-                            vertArray[tex1[i]].texCoords.V = (imageH - tex2[i].Y) / height;
+                            vertArray[tex1[i]].texCoords.Y = (imageH - tex2[i].Y) / height;
                         }
                     }
                 }

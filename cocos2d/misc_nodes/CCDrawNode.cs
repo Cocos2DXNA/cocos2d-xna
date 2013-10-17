@@ -9,7 +9,7 @@ namespace Cocos2D
 {
     public class CCDrawNode : CCNode
     {
-        private CCRawList<VertexPositionColor> m_pVertices;
+        private CCRawList<VertexPositionColorTexture> m_pVertices;
         private CCBlendFunc m_sBlendFunc;
         private bool m_bDirty;
 
@@ -29,7 +29,7 @@ namespace Cocos2D
             base.Init();
 
             m_sBlendFunc = CCBlendFunc.AlphaBlend;
-            m_pVertices = new CCRawList<VertexPositionColor>(512);
+            m_pVertices = new CCRawList<VertexPositionColorTexture>(512);
 
             return true;
         }
@@ -40,10 +40,10 @@ namespace Cocos2D
         {
             var cl = new Color(color.R, color.G, color.B, color.A);
 
-            var a = new VertexPositionColor(new Vector3(pos.X - radius, pos.Y - radius, 0), cl); //{-1.0, -1.0}
-            var b = new VertexPositionColor(new Vector3(pos.X - radius, pos.Y + radius, 0), cl); //{-1.0,  1.0}
-            var c = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y + radius, 0), cl); //{ 1.0,  1.0}
-            var d = new VertexPositionColor(new Vector3(pos.X + radius, pos.Y - radius, 0), cl); //{ 1.0, -1.0}
+            var a = new VertexPositionColorTexture(new Vector3(pos.X - radius, pos.Y - radius, 0), cl, new Vector2(-1f, -1f)); //{-1.0, -1.0}
+            var b = new VertexPositionColorTexture(new Vector3(pos.X - radius, pos.Y + radius, 0), cl, new Vector2(-1f, 1f)); //{-1.0,  1.0}
+            var c = new VertexPositionColorTexture(new Vector3(pos.X + radius, pos.Y + radius, 0), cl, new Vector2(1f, 1f)); //{ 1.0,  1.0}
+            var d = new VertexPositionColorTexture(new Vector3(pos.X + radius, pos.Y - radius, 0), cl, new Vector2(1f, -1f)); //{ 1.0, -1.0}
 
             m_pVertices.Add(a);
             m_pVertices.Add(b);
@@ -79,29 +79,29 @@ namespace Cocos2D
             var v6 = a - (nw - tw);
             var v7 = a + (nw + tw);
 
-            m_pVertices.Add(new VertexPositionColor(v0, cl)); //__t(v2fneg(v2fadd(n, t)))
-            m_pVertices.Add(new VertexPositionColor(v1, cl)); //__t(v2fsub(n, t))
-            m_pVertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))}
+            m_pVertices.Add(new VertexPositionColorTexture(v0, cl, -(n + t))); //__t(v2fneg(v2fadd(n, t)))
+            m_pVertices.Add(new VertexPositionColorTexture(v1, cl, n - t)); //__t(v2fsub(n, t))
+            m_pVertices.Add(new VertexPositionColorTexture(v2, cl, -n)); //__t(v2fneg(n))}
 
-            m_pVertices.Add(new VertexPositionColor(v3, cl)); //__t(n)
-            m_pVertices.Add(new VertexPositionColor(v1, cl)); //__t(v2fsub(n, t))
-            m_pVertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))
+            m_pVertices.Add(new VertexPositionColorTexture(v3, cl, n)); //__t(n)
+            m_pVertices.Add(new VertexPositionColorTexture(v1, cl, n - t)); //__t(v2fsub(n, t))
+            m_pVertices.Add(new VertexPositionColorTexture(v2, cl, -n)); //__t(v2fneg(n))
 
-            m_pVertices.Add(new VertexPositionColor(v3, cl)); //__t(n)
-            m_pVertices.Add(new VertexPositionColor(v4, cl)); //__t(v2fneg(n))
-            m_pVertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))
+            m_pVertices.Add(new VertexPositionColorTexture(v3, cl, n)); //__t(n)
+            m_pVertices.Add(new VertexPositionColorTexture(v4, cl, -n)); //__t(v2fneg(n))
+            m_pVertices.Add(new VertexPositionColorTexture(v2, cl, -n)); //__t(v2fneg(n))
 
-            m_pVertices.Add(new VertexPositionColor(v3, cl)); //__t(n)
-            m_pVertices.Add(new VertexPositionColor(v4, cl)); //__t(v2fneg(n))
-            m_pVertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
+            m_pVertices.Add(new VertexPositionColorTexture(v3, cl, n)); //__t(n)
+            m_pVertices.Add(new VertexPositionColorTexture(v4, cl, -n)); //__t(v2fneg(n))
+            m_pVertices.Add(new VertexPositionColorTexture(v5, cl, n)); //__t(n)
 
-            m_pVertices.Add(new VertexPositionColor(v6, cl)); //__t(v2fsub(t, n))
-            m_pVertices.Add(new VertexPositionColor(v4, cl)); //__t(v2fneg(n))
-            m_pVertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
+            m_pVertices.Add(new VertexPositionColorTexture(v6, cl, t - n)); //__t(v2fsub(t, n))
+            m_pVertices.Add(new VertexPositionColorTexture(v4, cl, -n)); //__t(v2fneg(n))
+            m_pVertices.Add(new VertexPositionColorTexture(v5, cl, n)); //__t(n)
 
-            m_pVertices.Add(new VertexPositionColor(v6, cl)); //__t(v2fsub(t, n))
-            m_pVertices.Add(new VertexPositionColor(v7, cl)); //__t(v2fadd(n, t))
-            m_pVertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
+            m_pVertices.Add(new VertexPositionColorTexture(v6, cl, t - n)); //__t(v2fsub(t, n))
+            m_pVertices.Add(new VertexPositionColorTexture(v7, cl, n + t)); //__t(v2fadd(n, t))
+            m_pVertices.Add(new VertexPositionColorTexture(v5, cl, n)); //__t(n)
 
             m_bDirty = true;
         }
@@ -180,9 +180,9 @@ namespace Cocos2D
                 var v1 = verts[i + 1] - (extrude[i + 1].offset * inset);
                 var v2 = verts[i + 2] - (extrude[i + 2].offset * inset);
 
-                m_pVertices.Add(new VertexPositionColor(v0, fillColor)); //__t(v2fzero)
-                m_pVertices.Add(new VertexPositionColor(v1, fillColor)); //__t(v2fzero)
-                m_pVertices.Add(new VertexPositionColor(v2, fillColor)); //__t(v2fzero)
+                m_pVertices.Add(new VertexPositionColorTexture(v0, fillColor, Vector2.Zero)); //__t(v2fzero)
+                m_pVertices.Add(new VertexPositionColorTexture(v1, fillColor, Vector2.Zero)); //__t(v2fzero)
+                m_pVertices.Add(new VertexPositionColorTexture(v2, fillColor, Vector2.Zero)); //__t(v2fzero)
             }
 
             for (int i = 0; i < count; i++)
@@ -203,13 +203,13 @@ namespace Cocos2D
                     var outer0 = (v0 + (offset0 * borderWidth));
                     var outer1 = (v1 + (offset1 * borderWidth));
 
-                    m_pVertices.Add(new VertexPositionColor(inner0, borderColor)); //__t(v2fneg(n0))
-                    m_pVertices.Add(new VertexPositionColor(inner1, borderColor)); //__t(v2fneg(n0))
-                    m_pVertices.Add(new VertexPositionColor(outer1, borderColor)); //__t(n0)
+                    m_pVertices.Add(new VertexPositionColorTexture(inner0, borderColor, -n0)); //__t(v2fneg(n0))
+                    m_pVertices.Add(new VertexPositionColorTexture(inner1, borderColor, -n0)); //__t(v2fneg(n0))
+                    m_pVertices.Add(new VertexPositionColorTexture(outer1, borderColor, n0)); //__t(n0)
 
-                    m_pVertices.Add(new VertexPositionColor(inner0, borderColor)); //__t(v2fneg(n0))
-                    m_pVertices.Add(new VertexPositionColor(outer0, borderColor)); //__t(n0)
-                    m_pVertices.Add(new VertexPositionColor(outer1, borderColor)); //__t(n0)
+                    m_pVertices.Add(new VertexPositionColorTexture(inner0, borderColor, -n0)); //__t(v2fneg(n0))
+                    m_pVertices.Add(new VertexPositionColorTexture(outer0, borderColor, n0)); //__t(n0)
+                    m_pVertices.Add(new VertexPositionColorTexture(outer1, borderColor, n0)); //__t(n0)
                 }
                 else
                 {
@@ -218,13 +218,13 @@ namespace Cocos2D
                     var outer0 = (v0 + (offset0 * 0.5f));
                     var outer1 = (v1 + (offset1 * 0.5f));
 
-                    m_pVertices.Add(new VertexPositionColor(inner0, fillColor)); //__t(v2fzero)
-                    m_pVertices.Add(new VertexPositionColor(inner1, fillColor)); //__t(v2fzero)
-                    m_pVertices.Add(new VertexPositionColor(outer1, fillColor)); //__t(n0)
+                    m_pVertices.Add(new VertexPositionColorTexture(inner0, fillColor, Vector2.Zero)); //__t(v2fzero)
+                    m_pVertices.Add(new VertexPositionColorTexture(inner1, fillColor, Vector2.Zero)); //__t(v2fzero)
+                    m_pVertices.Add(new VertexPositionColorTexture(outer1, fillColor, n0)); //__t(n0)
 
-                    m_pVertices.Add(new VertexPositionColor(inner0, fillColor)); //__t(v2fzero)
-                    m_pVertices.Add(new VertexPositionColor(outer0, fillColor)); //__t(n0)
-                    m_pVertices.Add(new VertexPositionColor(outer1, fillColor)); //__t(n0)
+                    m_pVertices.Add(new VertexPositionColorTexture(inner0, fillColor, Vector2.Zero)); //__t(v2fzero)
+                    m_pVertices.Add(new VertexPositionColorTexture(outer0, fillColor, n0)); //__t(n0)
+                    m_pVertices.Add(new VertexPositionColorTexture(outer1, fillColor, n0)); //__t(n0)
                 }
             }
 

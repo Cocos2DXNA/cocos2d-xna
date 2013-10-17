@@ -4,82 +4,33 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Cocos2D
 {
-    public class CCPrimitiveBatch : IDisposable
+    public class CCPrimitiveBatch
     {
         private const int DefaultBufferSize = 500;
 
-        // a basic effect, which contains the shaders that we will use to draw our
-        // primitives.
-        private readonly BasicEffect _basicEffect;
-
-        // the device that we will issue draw calls to.
-        private readonly GraphicsDevice _device;
-        private readonly VertexPositionColor[] _lineVertices;
-        private readonly VertexPositionColor[] _triangleVertices;
+        private readonly Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture[] _lineVertices;
+        private readonly Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture[] _triangleVertices;
 
         // hasBegun is flipped to true once Begin is called, and is used to make
         // sure users don't call End before Begin is called.
         private bool _hasBegun;
 
-        private bool _isDisposed;
-
         private int _lineVertsCount;
-
         private int _triangleVertsCount;
-
-        //private VertexPositionColorTexture[] _textureVertices = new VertexPositionColorTexture[8192];
-        //private int _textureVertsCount;
 
         /// <summary>
         /// the constructor creates a new PrimitiveBatch and sets up all of the internals
         /// that PrimitiveBatch will need.
         /// </summary>
-        /// <param name="graphicsDevice">The graphics device.</param>
-        public CCPrimitiveBatch(GraphicsDevice graphicsDevice)
-            : this(graphicsDevice, DefaultBufferSize)
+        public CCPrimitiveBatch()
+            : this(DefaultBufferSize)
         {
         }
 
-        public CCPrimitiveBatch(GraphicsDevice graphicsDevice, int bufferSize)
-        {
-            if (graphicsDevice == null)
+        public CCPrimitiveBatch(int bufferSize)
             {
-                throw new ArgumentNullException("graphicsDevice");
-            }
-            _device = graphicsDevice;
-
-            _triangleVertices = new VertexPositionColor[bufferSize - bufferSize % 3];
-            _lineVertices = new VertexPositionColor[bufferSize - bufferSize % 2];
-
-            // set up a new basic effect, and enable vertex colors.
-            _basicEffect = new BasicEffect(graphicsDevice);
-            _basicEffect.VertexColorEnabled = true;
-        }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
-
-        public void SetProjection(ref Matrix projection)
-        {
-            _basicEffect.Projection = projection;
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing && !_isDisposed)
-            {
-                if (_basicEffect != null)
-                    _basicEffect.Dispose();
-
-                _isDisposed = true;
-            }
+            _triangleVertices = new Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture[bufferSize - bufferSize % 3];
+            _lineVertices = new Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture[bufferSize - bufferSize % 2];
         }
 
         /// <summary>
@@ -95,20 +46,9 @@ namespace Cocos2D
                 throw new InvalidOperationException("End must be called before Begin can be called again.");
             }
 
-            //tell our basic effect to begin.
-            UpdateMatrix();
-
             // flip the error checking boolean. It's now ok to call AddVertex, Flush,
             // and End.
             _hasBegun = true;
-        }
-
-        public void UpdateMatrix()
-        {
-            _basicEffect.Projection = CCDrawManager.ProjectionMatrix; ;
-            _basicEffect.View = CCDrawManager.ViewMatrix;
-            _basicEffect.World = CCDrawManager.WorldMatrix;
-            _basicEffect.CurrentTechnique.Passes[0].Apply();
         }
 
         public bool IsReady()
@@ -186,16 +126,12 @@ namespace Cocos2D
             if (_triangleVertsCount >= 3)
             {
                 int primitiveCount = _triangleVertsCount / 3;
-                // submit the draw call to the graphics card
-#if NETFX_CORE
-                _device.SamplerStates[0] = SamplerState.LinearClamp;
-#else
-                _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
-#endif
-                _device.DrawUserPrimitives(PrimitiveType.TriangleList, _triangleVertices, 0, primitiveCount);
-                _triangleVertsCount -= primitiveCount * 3;
 
-                CCDrawManager.DrawCount++;
+                // submit the draw call to the graphics card
+                CCDrawManager.TextureEnabled = false;
+                CCDrawManager.DrawPrimitives(PrimitiveType.TriangleList, _triangleVertices, 0, primitiveCount);
+
+                _triangleVertsCount -= primitiveCount * 3;
             }
         }
 
@@ -209,16 +145,12 @@ namespace Cocos2D
             if (_lineVertsCount >= 2)
             {
                 int primitiveCount = _lineVertsCount / 2;
-                // submit the draw call to the graphics card
-#if NETFX_CORE
-                _device.SamplerStates[0] = SamplerState.LinearClamp;
-#else
-                _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
-#endif
-                _device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, primitiveCount);
-                _lineVertsCount -= primitiveCount * 2;
 
-                CCDrawManager.DrawCount++;
+                // submit the draw call to the graphics card
+                CCDrawManager.TextureEnabled = false;
+                CCDrawManager.DrawPrimitives(PrimitiveType.LineList, _lineVertices, 0, primitiveCount);
+
+                _lineVertsCount -= primitiveCount * 2;
             }
         }
     }

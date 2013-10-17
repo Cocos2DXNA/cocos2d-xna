@@ -37,7 +37,7 @@ namespace Cocos2D
 
         public CCBox2dDraw(string spriteFontName)
         {
-            _primitiveBatch = new CCPrimitiveBatch(CCDrawManager.GraphicsDevice, 5000);
+            _primitiveBatch = new CCPrimitiveBatch(5000);
             _spriteFont = CCApplication.SharedApplication.Content.Load<SpriteFont>(spriteFontName);
             _stringData = new List<StringData>();
             _stringBuilder = new StringBuilder();

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Cocos2D
 {
@@ -440,10 +441,10 @@ namespace Cocos2D
             CCV3F_C4B_T2F_Quad[] quads = TextureAtlas.m_pQuads.Elements;
             TextureAtlas.Dirty = true;
 
-            quads[particleIndex].BottomRight.Vertices = CCVertex3F.Zero;
-            quads[particleIndex].TopRight.Vertices = CCVertex3F.Zero;
-            quads[particleIndex].TopLeft.Vertices = CCVertex3F.Zero;
-            quads[particleIndex].BottomLeft.Vertices = CCVertex3F.Zero;
+            quads[particleIndex].BottomRight.Position = Vector3.Zero;
+            quads[particleIndex].TopRight.Position = Vector3.Zero;
+            quads[particleIndex].TopLeft.Position = Vector3.Zero;
+            quads[particleIndex].BottomLeft.Position = Vector3.Zero;
         }
 
         // CCParticleBatchNode - add / remove / reorder helper methods

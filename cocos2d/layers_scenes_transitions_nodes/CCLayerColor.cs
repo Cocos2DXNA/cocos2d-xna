@@ -36,7 +36,7 @@ namespace Cocos2D
     /// </summary>
     public class CCLayerColor : CCLayerRGBA, ICCBlendProtocol
     {
-        protected VertexPositionColor[] m_pSquareVertices = new VertexPositionColor[4];
+        protected VertexPositionColorTexture[] m_pSquareVertices = new VertexPositionColorTexture[4];
         protected CCBlendFunc m_tBlendFunc;
 
         public CCLayerColor()

@@ -1,3 +1,5 @@
+#define BATCH_MODE
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,6 +26,18 @@ namespace Cocos2D
 
     public static class CCDrawManager
     {
+        [Flags]
+        private enum ChangeFlags
+        {
+            None,
+            WorldMatrix,
+            ProjectionMatrix,
+            ViewMatrix,
+            Texture,
+            Effect
+        }
+
+
         private const int DefaultQuadBufferSize = 1024 * 4;
         public static string DefaultFont = "arial";
 
@@ -58,11 +72,7 @@ namespace Cocos2D
         private static DepthStencilState m_DepthDisableStencilState;
 
         //Flags
-        private static bool m_worldMatrixChanged;
-        private static bool m_projectionMatrixChanged;
-        private static bool m_viewMatrixChanged;
-        private static bool m_textureChanged;
-        private static bool m_effectChanged;
+        private static ChangeFlags _changeFlags;
 
         private static int m_lastWidth;
         private static int m_lastHeight;
@@ -74,7 +84,7 @@ namespace Cocos2D
         private static CCIndexBuffer<short> m_quadsIndexBuffer;
 
         public static int DrawCount;
-        private static CCV3F_C4B_T2F[] m_quadVertices;
+        private static VertexPositionColorTexture[] m_quadVertices;
         private static float m_fScaleX;
         private static float m_fScaleY;
         private static CCRect m_obViewPortRect;
@@ -86,7 +96,7 @@ namespace Cocos2D
         // ref: http://www.khronos.org/registry/gles/extensions/NV/GL_NV_texture_npot_2D_mipmap.txt
         private static bool m_AllowNonPower2Textures = true;
 
-        internal static CCRawList<CCV3F_C4B_T2F> _tmpVertices = new CCRawList<CCV3F_C4B_T2F>();
+        internal static CCRawList<VertexPositionColorTexture> _tmpVertices = new CCRawList<VertexPositionColorTexture>();
 
         private static bool m_bNeedReinitResources;
 
@@ -98,7 +108,7 @@ namespace Cocos2D
                 if (m_vertexColorEnabled != value)
                 {
                     m_vertexColorEnabled = value;
-                    m_textureChanged = true;
+                    _changeFlags |= ChangeFlags.Texture;
                 }
             }
         }
@@ -111,7 +121,7 @@ namespace Cocos2D
                 if (m_textureEnabled != value)
                 {
                     m_textureEnabled = value;
-                    m_textureChanged = true;
+                    _changeFlags |= ChangeFlags.Texture;
                 }
             }
         }
@@ -144,7 +154,7 @@ namespace Cocos2D
             set
             {
                 m_viewMatrix = value;
-                m_viewMatrixChanged = true;
+                _changeFlags |= ChangeFlags.ViewMatrix;
             }
         }
 
@@ -154,7 +164,7 @@ namespace Cocos2D
             set
             {
                 m_projectionMatrix = value;
-                m_projectionMatrixChanged = true;
+                _changeFlags |= ChangeFlags.ProjectionMatrix;
             }
         }
 
@@ -164,7 +174,7 @@ namespace Cocos2D
             set
             {
                 m_Matrix = m_worldMatrix = value;
-                m_worldMatrixChanged = true;
+                _changeFlags |= ChangeFlags.WorldMatrix;
             }
         }
 
@@ -377,6 +387,8 @@ namespace Cocos2D
         {
             CCDrawManager.graphicsDevice = graphicsDevice;
 
+            InitBatchResources();
+
             spriteBatch = new SpriteBatch(graphicsDevice);
 
             m_defaultEffect = new BasicEffect(graphicsDevice);
@@ -444,7 +456,7 @@ namespace Cocos2D
             m_worldMatrix = Matrix.Identity;
             m_Matrix = Matrix.Identity;
 
-            m_worldMatrixChanged = m_viewMatrixChanged = m_projectionMatrixChanged = true;
+            _changeFlags = ChangeFlags.WorldMatrix | ChangeFlags.ViewMatrix | ChangeFlags.ProjectionMatrix;
 
             CCDrawingPrimitives.Init(graphicsDevice);
 
@@ -454,6 +466,8 @@ namespace Cocos2D
             graphicsDevice.DeviceResetting += GraphicsDeviceDeviceResetting;
             graphicsDevice.ResourceCreated += GraphicsDeviceResourceCreated;
             graphicsDevice.ResourceDestroyed += GraphicsDeviceResourceDestroyed;
+
+            InitBatchResources();
         }
 
         public static void PurgeDrawManager()
@@ -540,11 +554,7 @@ namespace Cocos2D
             m_currentTexture = null;
             m_vertexColorEnabled = true;
 
-            m_worldMatrixChanged = false;
-            m_projectionMatrixChanged = false;
-            m_viewMatrixChanged = false;
-            m_textureChanged = false;
-            m_effectChanged = false;
+            _changeFlags = 0;
 
             graphicsDevice.SetVertexBuffer(null);
             graphicsDevice.SetRenderTarget(m_renderTarget);
@@ -622,13 +632,19 @@ namespace Cocos2D
         {
             m_effectStack.Push(m_currentEffect);
             m_currentEffect = effect;
-            m_effectChanged = true;
+            _changeFlags |= ChangeFlags.Effect;
         }
 
         public static void PopEffect()
         {
             m_currentEffect = m_effectStack.Pop();
-            m_effectChanged = true;
+            _changeFlags |= ChangeFlags.Effect;
+        }
+
+        private static void SetEffect(Effect effect)
+        {
+            m_currentEffect = effect;
+            _changeFlags |= ChangeFlags.Effect;
         }
 
         private static void ApplyEffectTexture()
@@ -655,7 +671,7 @@ namespace Cocos2D
 
         private static void ApplyEffectParams()
         {
-            if (m_effectChanged)
+            if ((_changeFlags & ChangeFlags.Effect) != 0)
             {
                 var matrices = m_currentEffect as IEffectMatrices;
 
@@ -670,41 +686,39 @@ namespace Cocos2D
             }
             else
             {
-                if (m_worldMatrixChanged || m_projectionMatrixChanged || m_viewMatrixChanged)
+                if ((_changeFlags & ChangeFlags.WorldMatrix) != 0 || (_changeFlags & ChangeFlags.ProjectionMatrix) != 0 || (_changeFlags & ChangeFlags.ViewMatrix) != 0)
                 {
                     var matrices = m_currentEffect as IEffectMatrices;
 
                     if (matrices != null)
                     {
-                        if (m_worldMatrixChanged)
+                        if ((_changeFlags & ChangeFlags.WorldMatrix) != 0)
                         {
                             matrices.World = m_Matrix;
                         }
-                        if (m_projectionMatrixChanged)
+                        if ((_changeFlags & ChangeFlags.ProjectionMatrix) != 0)
                         {
                             matrices.Projection = m_projectionMatrix;
                         }
-                        if (m_viewMatrixChanged)
+                        if ((_changeFlags & ChangeFlags.ViewMatrix) != 0)
                         {
                             matrices.View = m_viewMatrix;
                         }
                     }
                 }
 
-                if (m_textureChanged)
+                if ((_changeFlags & ChangeFlags.Texture) != 0)
                 {
                     ApplyEffectTexture();
                 }
             }
 
-            m_effectChanged = false;
-            m_textureChanged = false;
-            m_worldMatrixChanged = false;
-            m_projectionMatrixChanged = false;
-            m_viewMatrixChanged = false;
+            _changeFlags = 0;
         }
 
-        public static void DrawPrimitives<T>(PrimitiveType type, T[] vertices, int offset, int count) where T : struct, IVertexType
+        #region Draw Primetives
+
+        public static void DrawPrimitives(PrimitiveType type, VertexPositionColorTexture[] vertices, int offset, int count)
         {
             if (count <= 0)
             {
@@ -723,8 +737,8 @@ namespace Cocos2D
             DrawCount++;
         }
 
-        public static void DrawIndexedPrimitives<T>(PrimitiveType primitiveType, T[] vertexData, int vertexOffset, int numVertices, short[] indexData,
-                                                    int indexOffset, int primitiveCount) where T : struct, IVertexType
+        public static void DrawIndexedPrimitives(PrimitiveType primitiveType, VertexPositionColorTexture[] vertexData, int vertexOffset, int numVertices, short[] indexData,
+                                                    int indexOffset, int primitiveCount)
         {
             if (primitiveCount <= 0)
             {
@@ -744,7 +758,104 @@ namespace Cocos2D
             DrawCount++;
         }
 
+        public static void DrawQuad(ref CCV3F_C4B_T2F_Quad quad)
+        {
+            VertexPositionColorTexture[] vertices = m_quadVertices;
 
+            if (vertices == null)
+            {
+                vertices = m_quadVertices = new VertexPositionColorTexture[4];
+                CheckQuadsIndexBuffer(1);
+            }
+
+            vertices[0] = quad.TopLeft;
+            vertices[1] = quad.BottomLeft;
+            vertices[2] = quad.TopRight;
+            vertices[3] = quad.BottomRight;
+
+            DrawIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, 4, m_quadsIndexBuffer.Data.Elements, 0, 2);
+        }
+
+        public static void DrawQuads(CCRawList<CCV3F_C4B_T2F_Quad> quads, int start, int n)
+        {
+            if (n == 0)
+            {
+                return;
+            }
+
+            CheckQuadsIndexBuffer(start + n);
+            CheckQuadsVertexBuffer(start + n);
+
+            m_quadsBuffer.UpdateBuffer(quads, start, n);
+
+            graphicsDevice.SetVertexBuffer(m_quadsBuffer.VertexBuffer);
+            graphicsDevice.Indices = m_quadsIndexBuffer.IndexBuffer;
+
+            ApplyEffectParams();
+
+            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
+            for (int i = 0; i < passes.Count; i++)
+            {
+                passes[i].Apply();
+                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, n * 4, start * 6, n * 2);
+            }
+
+            graphicsDevice.SetVertexBuffer(null);
+            graphicsDevice.Indices = null;
+
+            DrawCount++;
+        }
+
+        public static void DrawBuffer<T, T2>(CCVertexBuffer<T> vertexBuffer, CCIndexBuffer<T2> indexBuffer, int start, int count)
+            where T : struct, IVertexType
+            where T2 : struct
+        {
+            graphicsDevice.Indices = indexBuffer.IndexBuffer;
+            graphicsDevice.SetVertexBuffer(vertexBuffer.VertexBuffer);
+
+            ApplyEffectParams();
+
+            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
+            for (int i = 0; i < passes.Count; i++)
+            {
+                passes[i].Apply();
+                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start, count);
+            }
+
+            graphicsDevice.SetVertexBuffer(null);
+            graphicsDevice.Indices = null;
+
+            DrawCount++;
+        }
+
+        public static void DrawQuadsBuffer<T>(CCVertexBuffer<T> vertexBuffer, int start, int n) where T : struct, IVertexType
+        {
+            if (n == 0)
+            {
+                return;
+            }
+
+            CheckQuadsIndexBuffer(start + n);
+
+            graphicsDevice.Indices = m_quadsIndexBuffer.IndexBuffer;
+            graphicsDevice.SetVertexBuffer(vertexBuffer.VertexBuffer);
+
+            ApplyEffectParams();
+
+            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
+            for (int i = 0; i < passes.Count; i++)
+            {
+                passes[i].Apply();
+                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start * 6, n * 2);
+            }
+
+            graphicsDevice.SetVertexBuffer(null);
+            graphicsDevice.Indices = null;
+
+            DrawCount++;
+        }
+
+        #endregion
         public static void BlendFunc(CCBlendFunc blendFunc)
         {
 
@@ -813,7 +924,7 @@ namespace Cocos2D
                 if (m_currentTexture != tex)
                 {
                     m_currentTexture = tex;
-                    m_textureChanged = true;
+                    _changeFlags |= ChangeFlags.Texture;
                 }
             }
         }
@@ -950,102 +1061,6 @@ namespace Cocos2D
                     m_quadsBuffer.Capacity = capacity;
                 }
             }
-        }
-
-        public static void DrawQuad(ref CCV3F_C4B_T2F_Quad quad)
-        {
-            CCV3F_C4B_T2F[] vertices = m_quadVertices;
-
-            if (vertices == null)
-            {
-                vertices = m_quadVertices = new CCV3F_C4B_T2F[4];
-                CheckQuadsIndexBuffer(1);
-            }
-
-            vertices[0] = quad.TopLeft;
-            vertices[1] = quad.BottomLeft;
-            vertices[2] = quad.TopRight;
-            vertices[3] = quad.BottomRight;
-
-            DrawIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, 4, m_quadsIndexBuffer.Data.Elements, 0, 2);
-        }
-
-        public static void DrawQuads(CCRawList<CCV3F_C4B_T2F_Quad> quads, int start, int n)
-        {
-            if (n == 0)
-            {
-                return;
-            }
-
-            CheckQuadsIndexBuffer(start + n);
-            CheckQuadsVertexBuffer(start + n);
-
-            m_quadsBuffer.UpdateBuffer(quads, start, n);
-
-            graphicsDevice.SetVertexBuffer(m_quadsBuffer.VertexBuffer);
-            graphicsDevice.Indices = m_quadsIndexBuffer.IndexBuffer;
-
-            ApplyEffectParams();
-
-            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
-            for (int i = 0; i < passes.Count; i++)
-            {
-                passes[i].Apply();
-                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, n * 4, start * 6, n * 2);
-            }
-
-            graphicsDevice.SetVertexBuffer(null);
-            graphicsDevice.Indices = null;
-
-            DrawCount++;
-        }
-
-        public static void DrawBuffer<T, T2>(CCVertexBuffer<T> vertexBuffer, CCIndexBuffer<T2> indexBuffer, int start, int count)
-            where T : struct, IVertexType
-            where T2 : struct
-        {
-            graphicsDevice.Indices = indexBuffer.IndexBuffer;
-            graphicsDevice.SetVertexBuffer(vertexBuffer.VertexBuffer);
-
-            ApplyEffectParams();
-
-            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
-            for (int i = 0; i < passes.Count; i++)
-            {
-                passes[i].Apply();
-                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start, count);
-            }
-
-            graphicsDevice.SetVertexBuffer(null);
-            graphicsDevice.Indices = null;
-
-            DrawCount++;
-        }
-
-        public static void DrawQuadsBuffer<T>(CCVertexBuffer<T> vertexBuffer, int start, int n) where T : struct, IVertexType
-        {
-            if (n == 0)         {
-                return;
-            }
-
-            CheckQuadsIndexBuffer(start + n);
-
-            graphicsDevice.Indices = m_quadsIndexBuffer.IndexBuffer;
-            graphicsDevice.SetVertexBuffer(vertexBuffer.VertexBuffer);
-
-            ApplyEffectParams();
-
-            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
-            for (int i = 0; i < passes.Count; i++)
-            {
-                passes[i].Apply();
-                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexBuffer.VertexBuffer.VertexCount, start * 6, n * 2);
-            }
-
-            graphicsDevice.SetVertexBuffer(null);
-            graphicsDevice.Indices = null;
-
-            DrawCount++;
         }
 
         public static void Clear(ClearOptions options, Color color, float depth, int stencil)
@@ -1307,7 +1322,7 @@ namespace Cocos2D
         public static void SetIdentityMatrix()
         {
             m_Matrix = Matrix.Identity;
-            m_worldMatrixChanged = true;
+            _changeFlags |= ChangeFlags.WorldMatrix;
         }
 
         public static void PushMatrix()
@@ -1318,7 +1333,7 @@ namespace Cocos2D
         public static void PopMatrix()
         {
             m_Matrix = m_matrixStack[--m_stackIndex];
-            m_worldMatrixChanged = true;
+            _changeFlags |= ChangeFlags.WorldMatrix;
             Debug.Assert(m_stackIndex >= 0);
         }
 
@@ -1326,13 +1341,13 @@ namespace Cocos2D
         {
             m_TmpMatrix = Matrix.CreateTranslation(x, y, z);
             Matrix.Multiply(ref m_TmpMatrix, ref m_Matrix, out m_Matrix);
-            m_worldMatrixChanged = true;
+            _changeFlags |= ChangeFlags.WorldMatrix;
         }
 
         public static void MultMatrix(ref Matrix matrix)
         {
             Matrix.Multiply(ref matrix, ref m_Matrix, out m_Matrix);
-            m_worldMatrixChanged = true;
+            _changeFlags |= ChangeFlags.WorldMatrix;
         }
 
         //protected Matrix m_tCCNodeTransform;
@@ -1358,7 +1373,7 @@ namespace Cocos2D
 
             Matrix.Multiply(ref m_pTransform, ref m_Matrix, out m_Matrix);
 
-            m_worldMatrixChanged = true;
+            _changeFlags |= ChangeFlags.WorldMatrix;
         }
 
         #endregion
@@ -1585,6 +1600,164 @@ namespace Cocos2D
         }
         
         #endregion
+
+#if BATCH_MODE
+
+        #region Batch
+
+        struct DrawCallInfo
+        {
+            public bool HasTransform;
+            public CCAffineTransform Transform;
+            public float Z;
+
+            public BlendState BlendState;
+            public DepthStencilState DepthStencilState;
+            public Effect Effect;
+            public Action<Effect> EffectCallback;
+            
+            public CCTexture2D Texture;
+
+            public int StartVertex;
+            public int StartIndex;
+            public PrimitiveType PrimitiveType;
+            public int PrimitivesCount;
+        }
+
+        private static CCVertexBuffer<Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture> _batchVertexBuffer;
+        private static CCIndexBuffer<short> _batchIndexBuffer;
+
+        private static CCRawList<DrawCallInfo> _drawCalls = new CCRawList<DrawCallInfo>();
+        private static int _vertexStride;
+
+        private static DrawCallInfo _currentDrawCall;
+
+        private static short[] _quadIndices;
+        private static short[] _linearindices;
+
+        static void InitBatchResources()
+        {
+            //4MB and 2MB
+            InitBatchResources(1024 * 1024 * 4, 1024 * 1024 * 2);
+        }
+
+        static void InitBatchResources(int vertextBufferSizeInBites, int indexBufferSizeInBytes)
+        {
+            _vertexStride = VertexPositionColorTexture.VertexDeclaration.VertexStride;
+
+            var bufferSize = vertextBufferSizeInBites / _vertexStride;
+            var indexSize = indexBufferSizeInBytes / 2;
+
+            _batchVertexBuffer = new CCVertexBuffer<Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture>(bufferSize, BufferUsage.None);
+            _batchIndexBuffer = new CCIndexBuffer<short>(indexSize, BufferUsage.None);
+
+            //Prepare Quad Indices
+            if (_quadIndices == null)
+            {
+                _quadIndices = new short[short.MaxValue];
+                int capacity = _quadIndices.Length / 6;
+
+                int i6 = 0;
+                int i4 = 0;
+
+                for (int i = 0; i < capacity; ++i)
+                {
+                    _quadIndices[i6 + 0] = (short) (i4 + 0);
+                    _quadIndices[i6 + 1] = (short) (i4 + 2);
+                    _quadIndices[i6 + 2] = (short) (i4 + 1);
+
+                    _quadIndices[i6 + 3] = (short) (i4 + 1);
+                    _quadIndices[i6 + 4] = (short) (i4 + 2);
+                    _quadIndices[i6 + 5] = (short) (i4 + 3);
+
+                    i6 += 6;
+                    i4 += 4;
+                }
+
+                //Prepare Linear Indices
+                _linearindices = new short[short.MaxValue];
+                for (short i = 0; i < _linearindices.Length; ++i)
+                {
+                    _linearindices[i] = i;
+                }
+            }
+        }
+
+        static void Reset()
+        {
+        }
+
+        static void Flush()
+        {
+            graphicsDevice.SetVertexBuffer(_batchVertexBuffer.VertexBuffer);
+            graphicsDevice.Indices = _batchIndexBuffer.IndexBuffer;
+
+            var elements = _drawCalls.Elements;
+            for (int i = 0, count = _drawCalls.Count; i < count; i++)
+            {
+                DrawBatch(ref elements[i]);
+            }
+
+            graphicsDevice.SetVertexBuffer(null);
+            graphicsDevice.Indices = null;
+        }
+
+        static void DrawBatch(ref DrawCallInfo drawCall)
+        {
+            if (drawCall.Effect != null)
+            {
+                if (drawCall.EffectCallback != null)
+                {
+                    drawCall.EffectCallback(drawCall.Effect);
+                }
+                SetEffect(drawCall.Effect);
+            }
+
+            if (drawCall.DepthStencilState != null)
+            {
+                DepthStencilState = drawCall.DepthStencilState;
+            }
+
+            if (drawCall.BlendState != null)
+            {
+                BlendState = drawCall.BlendState;
+            }
+
+            if (drawCall.Texture != null)
+            {
+                BindTexture(drawCall.Texture);
+            }
+            else
+            {
+                TextureEnabled = false;
+            }
+
+            if (drawCall.HasTransform)
+            {
+                MultMatrix(ref drawCall.Transform, drawCall.Z);
+            }
+
+            ApplyEffectParams();
+
+            EffectPassCollection passes = m_currentEffect.CurrentTechnique.Passes;
+            for (int i = 0; i < passes.Count; i++)
+            {
+                passes[i].Apply();
+
+                graphicsDevice.DrawIndexedPrimitives(
+                    drawCall.PrimitiveType,
+                    drawCall.StartVertex, 0, _batchVertexBuffer.Data.Count,
+                    drawCall.StartIndex, drawCall.PrimitivesCount
+                    );
+            }
+
+            DrawCount++;
+        }
+
+        #endregion
+
+#endif
+
     }
 
     public enum CCResolutionPolicy
@@ -1815,7 +1988,7 @@ namespace Cocos2D
             {
                 _vertexBuffer.Dispose();
             }
-            _vertexBuffer = new VertexBuffer(CCDrawManager.GraphicsDevice, typeof(CCV3F_C4B_T2F), _data.Capacity * 4, _usage);
+            _vertexBuffer = new VertexBuffer(CCDrawManager.GraphicsDevice, typeof(VertexPositionColorTexture), _data.Capacity * 4, _usage);
 
             UpdateBuffer();
         }

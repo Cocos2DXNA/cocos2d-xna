@@ -129,33 +129,33 @@ namespace Cocos2D
 
             CCV3F_C4B_T2F_Quad quad;
 
-            quad.TopLeft.TexCoords.U = left;
-            quad.TopLeft.TexCoords.V = top;
-            quad.TopRight.TexCoords.U = right;
-            quad.TopRight.TexCoords.V = top;
-            quad.BottomLeft.TexCoords.U = left;
-            quad.BottomLeft.TexCoords.V = bottom;
-            quad.BottomRight.TexCoords.U = right;
-            quad.BottomRight.TexCoords.V = bottom;
+            quad.TopLeft.TextureCoordinate.X = left;
+            quad.TopLeft.TextureCoordinate.Y = top;
+            quad.TopRight.TextureCoordinate.X = right;
+            quad.TopRight.TextureCoordinate.Y = top;
+            quad.BottomLeft.TextureCoordinate.X = left;
+            quad.BottomLeft.TextureCoordinate.Y = bottom;
+            quad.BottomRight.TextureCoordinate.X = right;
+            quad.BottomRight.TextureCoordinate.Y = bottom;
 
-            quad.BottomLeft.Vertices.X = (x * m_uItemWidth);
-            quad.BottomLeft.Vertices.Y = (y * m_uItemHeight);
-            quad.BottomLeft.Vertices.Z = 0.0f;
-            quad.BottomRight.Vertices.X = (x * m_uItemWidth + m_uItemWidth);
-            quad.BottomRight.Vertices.Y = (y * m_uItemHeight);
-            quad.BottomRight.Vertices.Z = 0.0f;
-            quad.TopLeft.Vertices.X = (x * m_uItemWidth);
-            quad.TopLeft.Vertices.Y = (y * m_uItemHeight + m_uItemHeight);
-            quad.TopLeft.Vertices.Z = 0.0f;
-            quad.TopRight.Vertices.X = (x * m_uItemWidth + m_uItemWidth);
-            quad.TopRight.Vertices.Y = (y * m_uItemHeight + m_uItemHeight);
-            quad.TopRight.Vertices.Z = 0.0f;
+            quad.BottomLeft.Position.X = (x * m_uItemWidth);
+            quad.BottomLeft.Position.Y = (y * m_uItemHeight);
+            quad.BottomLeft.Position.Z = 0.0f;
+            quad.BottomRight.Position.X = (x * m_uItemWidth + m_uItemWidth);
+            quad.BottomRight.Position.Y = (y * m_uItemHeight);
+            quad.BottomRight.Position.Z = 0.0f;
+            quad.TopLeft.Position.X = (x * m_uItemWidth);
+            quad.TopLeft.Position.Y = (y * m_uItemHeight + m_uItemHeight);
+            quad.TopLeft.Position.Z = 0.0f;
+            quad.TopRight.Position.X = (x * m_uItemWidth + m_uItemWidth);
+            quad.TopRight.Position.Y = (y * m_uItemHeight + m_uItemHeight);
+            quad.TopRight.Position.Z = 0.0f;
 
             var color = new CCColor4B(_displayedColor.R, _displayedColor.G, _displayedColor.B, _displayedOpacity);
-            quad.TopRight.Colors = color;
-            quad.TopLeft.Colors = color;
-            quad.BottomRight.Colors = color;
-            quad.BottomLeft.Colors = color;
+            quad.TopRight.Color = color;
+            quad.TopLeft.Color = color;
+            quad.BottomRight.Color = color;
+            quad.BottomLeft.Color = color;
 
             m_pTextureAtlas.UpdateQuad(ref quad, index);
         }

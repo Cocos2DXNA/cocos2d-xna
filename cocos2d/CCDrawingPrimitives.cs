@@ -13,7 +13,7 @@ namespace Cocos2D
 
         public static void Init(GraphicsDevice graphics)
         {
-            m_Batch = new CCPrimitiveBatch(graphics);
+            m_Batch = new CCPrimitiveBatch();
         }
 
         public static void Begin()

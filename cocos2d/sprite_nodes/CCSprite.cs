@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace Cocos2D
 {
@@ -321,10 +322,10 @@ namespace Cocos2D
                     float x2 = x1 + m_obRect.Size.Width;
                     float y2 = y1 + m_obRect.Size.Height;
 
-                    m_sQuad.BottomLeft.Vertices = new CCVertex3F(x1, y1, 0);
-                    m_sQuad.BottomRight.Vertices = new CCVertex3F(x2, y1, 0);
-                    m_sQuad.TopLeft.Vertices = new CCVertex3F(x1, y2, 0);
-                    m_sQuad.TopRight.Vertices = new CCVertex3F(x2, y2, 0);
+                    m_sQuad.BottomLeft.Position = new Vector3(x1, y1, 0);
+                    m_sQuad.BottomRight.Position = new Vector3(x2, y1, 0);
+                    m_sQuad.TopLeft.Position = new Vector3(x1, y2, 0);
+                    m_sQuad.TopRight.Position = new Vector3(x2, y2, 0);
                 }
                 else
                 {
@@ -355,10 +356,10 @@ namespace Cocos2D
                 color4.B = (byte)(color4.B * _displayedOpacity / 255.0f);
             }
 
-            m_sQuad.BottomLeft.Colors = color4;
-            m_sQuad.BottomRight.Colors = color4;
-            m_sQuad.TopLeft.Colors = color4;
-            m_sQuad.TopRight.Colors = color4;
+            m_sQuad.BottomLeft.Color = color4;
+            m_sQuad.BottomRight.Color = color4;
+            m_sQuad.TopLeft.Color = color4;
+            m_sQuad.TopRight.Color = color4;
 
             // renders using Sprite Manager
             if (m_pobBatchNode != null)
@@ -557,10 +558,10 @@ namespace Cocos2D
 
             // Atlas: Color
             var tmpColor = new CCColor4B(255, 255, 255, 255);
-            m_sQuad.BottomLeft.Colors = tmpColor;
-            m_sQuad.BottomRight.Colors = tmpColor;
-            m_sQuad.TopLeft.Colors = tmpColor;
-            m_sQuad.TopRight.Colors = tmpColor;
+            m_sQuad.BottomLeft.Color = tmpColor;
+            m_sQuad.BottomRight.Color = tmpColor;
+            m_sQuad.TopLeft.Color = tmpColor;
+            m_sQuad.TopRight.Color = tmpColor;
 
             // update texture (calls updateBlendFunc)
             Texture = pTexture;
@@ -680,10 +681,10 @@ namespace Cocos2D
                 float y2 = y1 + m_obRect.Size.Height;
 
                 // Don't update Z.
-                m_sQuad.BottomLeft.Vertices = CCTypes.Vertex3(x1, y1, 0);
-                m_sQuad.BottomRight.Vertices = CCTypes.Vertex3(x2, y1, 0);
-                m_sQuad.TopLeft.Vertices = CCTypes.Vertex3(x1, y2, 0);
-                m_sQuad.TopRight.Vertices = CCTypes.Vertex3(x2, y2, 0);
+                m_sQuad.BottomLeft.Position = new Vector3(x1, y1, 0);
+                m_sQuad.BottomRight.Position = new Vector3(x2, y1, 0);
+                m_sQuad.TopLeft.Position = new Vector3(x1, y2, 0);
+                m_sQuad.TopRight.Position = new Vector3(x2, y2, 0);
             }
         }
 
@@ -733,14 +734,14 @@ namespace Cocos2D
                     CCMacros.CCSwap(ref left, ref right);
                 }
 
-                m_sQuad.BottomLeft.TexCoords.U = left;
-                m_sQuad.BottomLeft.TexCoords.V = top;
-                m_sQuad.BottomRight.TexCoords.U = left;
-                m_sQuad.BottomRight.TexCoords.V = bottom;
-                m_sQuad.TopLeft.TexCoords.U = right;
-                m_sQuad.TopLeft.TexCoords.V = top;
-                m_sQuad.TopRight.TexCoords.U = right;
-                m_sQuad.TopRight.TexCoords.V = bottom;
+                m_sQuad.BottomLeft.TextureCoordinate.X = left;
+                m_sQuad.BottomLeft.TextureCoordinate.Y = top;
+                m_sQuad.BottomRight.TextureCoordinate.X = left;
+                m_sQuad.BottomRight.TextureCoordinate.Y = bottom;
+                m_sQuad.TopLeft.TextureCoordinate.X = right;
+                m_sQuad.TopLeft.TextureCoordinate.Y = top;
+                m_sQuad.TopRight.TextureCoordinate.X = right;
+                m_sQuad.TopRight.TextureCoordinate.Y = bottom;
             }
             else
             {
@@ -767,14 +768,14 @@ namespace Cocos2D
                     CCMacros.CCSwap(ref top, ref bottom);
                 }
 
-                m_sQuad.BottomLeft.TexCoords.U = left;
-                m_sQuad.BottomLeft.TexCoords.V = bottom;
-                m_sQuad.BottomRight.TexCoords.U = right;
-                m_sQuad.BottomRight.TexCoords.V = bottom;
-                m_sQuad.TopLeft.TexCoords.U = left;
-                m_sQuad.TopLeft.TexCoords.V = top;
-                m_sQuad.TopRight.TexCoords.U = right;
-                m_sQuad.TopRight.TexCoords.V = top;
+                m_sQuad.BottomLeft.TextureCoordinate.X = left;
+                m_sQuad.BottomLeft.TextureCoordinate.Y = bottom;
+                m_sQuad.BottomRight.TextureCoordinate.X = right;
+                m_sQuad.BottomRight.TextureCoordinate.Y = bottom;
+                m_sQuad.TopLeft.TextureCoordinate.X = left;
+                m_sQuad.TopLeft.TextureCoordinate.Y = top;
+                m_sQuad.TopRight.TextureCoordinate.X = right;
+                m_sQuad.TopRight.TextureCoordinate.Y = top;
             }
         }
 
@@ -790,8 +791,8 @@ namespace Cocos2D
                 if (!m_bVisible ||
                     (m_pParent != null && m_pParent != m_pobBatchNode && ((CCSprite)m_pParent).m_bShouldBeHidden))
                 {
-                    m_sQuad.BottomRight.Vertices =
-                        m_sQuad.TopLeft.Vertices = m_sQuad.TopRight.Vertices = m_sQuad.BottomLeft.Vertices = new CCVertex3F(0, 0, 0);
+                    m_sQuad.BottomRight.Position =
+                        m_sQuad.TopLeft.Position = m_sQuad.TopRight.Position = m_sQuad.BottomLeft.Position = Vector3.Zero;
                     m_bShouldBeHidden = true;
                 }
                 else
@@ -841,10 +842,10 @@ namespace Cocos2D
                     float dx = x1 * cr - y2 * sr2 + x;
                     float dy = x1 * sr + y2 * cr2 + y;
 
-                    m_sQuad.BottomLeft.Vertices = new CCVertex3F(ax, ay, m_fVertexZ);
-                    m_sQuad.BottomRight.Vertices = new CCVertex3F(bx, by, m_fVertexZ);
-                    m_sQuad.TopLeft.Vertices = new CCVertex3F(dx, dy, m_fVertexZ);
-                    m_sQuad.TopRight.Vertices = new CCVertex3F(cx, cy, m_fVertexZ);
+                    m_sQuad.BottomLeft.Position = new Vector3(ax, ay, m_fVertexZ);
+                    m_sQuad.BottomRight.Position = new Vector3(bx, by, m_fVertexZ);
+                    m_sQuad.TopLeft.Position = new Vector3(dx, dy, m_fVertexZ);
+                    m_sQuad.TopRight.Position = new Vector3(cx, cy, m_fVertexZ);
                 }
 
                 m_pobTextureAtlas.UpdateQuad(ref m_sQuad, m_uAtlasIndex);

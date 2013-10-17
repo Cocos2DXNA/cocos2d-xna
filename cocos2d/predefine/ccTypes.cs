@@ -279,16 +279,16 @@ namespace Cocos2D
         */
         public CCTex2F(float inu, float inv)
         {
-            U = inu;
-            V = inv;
+            X = inu;
+            Y = inv;
         }
 
-        public float U;
-        public float V;
+        public float X;
+        public float Y;
 
         public override string ToString()
         {
-            return String.Format("ccTex2F u:{0}, v:{1}", U, V);
+            return String.Format("ccTex2F u:{0}, v:{1}", X, Y);
         }
     }
 
@@ -555,136 +555,6 @@ namespace Cocos2D
     }
 
     /// <summary>
-    /// a Point with a vertex point, a tex coord point and a color 4B
-    /// </summary>
-    public class CCV2F_C4B_T2F
-    {
-        public CCV2F_C4B_T2F()
-        {
-            Vertices = new CCVertex2F();
-            Colors = new CCColor4B();
-            TexCoords = new CCTex2F();
-        }
-
-        /// <summary>
-        /// vertices (2F)
-        /// </summary>
-        public CCVertex2F Vertices;
-
-        /// <summary>
-        /// colors (4B)
-        /// </summary>
-        public CCColor4B Colors;
-
-        /// <summary>
-        /// tex coords (2F)
-        /// </summary>
-        public CCTex2F TexCoords;
-    }
-
-    /// <summary>
-    /// a Point with a vertex point, a tex coord point and a color 4F
-    /// </summary>
-    public class CCV2F_C4F_T2F
-    {
-        public CCV2F_C4F_T2F()
-        {
-            Vertices = new CCVertex2F();
-            Colors = new CCColor4F();
-            TexCoords = new CCTex2F();
-        }
-
-        /// <summary>
-        /// vertices (2F)
-        /// </summary>
-        public CCVertex2F Vertices;
-
-        /// <summary>
-        /// colors (4F)
-        /// </summary>
-        public CCColor4F Colors;
-
-        /// <summary>
-        /// tex coords (2F)
-        /// </summary>
-        public CCTex2F TexCoords;
-    }
-
-    /// <summary>
-    /// a Point with a vertex point, a tex coord point and a color 4B
-    /// </summary>
-    //TODO: Use VertexPositionColorTexture
-    public struct CCV3F_C4B_T2F : IVertexType
-    {
-        /// <summary>
-        /// vertices (3F)
-        /// </summary>
-        public CCVertex3F Vertices;			// 12 bytes
-
-        /// <summary>
-        /// colors (4B)
-        /// </summary>
-        public CCColor4B Colors;				// 4 bytes
-
-        /// <summary>
-        /// tex coords (2F)
-        /// </summary>
-        public CCTex2F TexCoords;			// 8 byts
-
-        public static readonly VertexDeclaration VertexDeclaration;
-
-        static CCV3F_C4B_T2F()
-        {
-            var elements = new VertexElement[]
-                {
-                    new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
-                    new VertexElement(12, VertexElementFormat.Color, VertexElementUsage.Color, 0),
-                    new VertexElement(0x10, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
-                };
-            VertexDeclaration = new VertexDeclaration(elements);
-        }
-
-        VertexDeclaration IVertexType.VertexDeclaration
-        {
-            get { return VertexDeclaration; }
-        }
-    }
-
-    /// <summary>
-    /// 4 ccVertex2FTex2FColor4B Quad
-    /// </summary>
-    public class CCV2F_C4B_T2F_Quad
-    {
-        public CCV2F_C4B_T2F_Quad()
-        {
-            BottomLeft = new CCV2F_C4B_T2F();
-            BottomRight = new CCV2F_C4B_T2F();
-            TopLeft = new CCV2F_C4B_T2F();
-            TopRight = new CCV2F_C4B_T2F();
-        }
-
-        /// <summary>
-        /// bottom left
-        /// </summary>
-        public CCV2F_C4B_T2F BottomLeft;
-
-        /// <summary>
-        /// bottom right
-        /// </summary>
-        public CCV2F_C4B_T2F BottomRight;
-
-        /// <summary>
-        /// top left
-        /// </summary>
-        public CCV2F_C4B_T2F TopLeft;
-
-        /// <summary>
-        /// top right
-        /// </summary>
-        public CCV2F_C4B_T2F TopRight;
-    }
-
-    /// <summary>
     /// 4 ccVertex3FTex2FColor4B
     /// </summary>
     public struct CCV3F_C4B_T2F_Quad : IVertexType
@@ -692,22 +562,22 @@ namespace Cocos2D
         /// <summary>
         /// top left
         /// </summary>
-        public CCV3F_C4B_T2F TopLeft;
+        public VertexPositionColorTexture TopLeft;
 
         /// <summary>
         /// bottom left
         /// </summary>
-        public CCV3F_C4B_T2F BottomLeft;
+        public VertexPositionColorTexture BottomLeft;
 
         /// <summary>
         /// top right
         /// </summary>
-        public CCV3F_C4B_T2F TopRight;
+        public VertexPositionColorTexture TopRight;
 
         /// <summary>
         /// bottom right
         /// </summary>
-        public CCV3F_C4B_T2F BottomRight;
+        public VertexPositionColorTexture BottomRight;
 
         public static readonly VertexDeclaration VertexDeclaration;
 
@@ -726,40 +596,6 @@ namespace Cocos2D
         {
             get { return VertexDeclaration; }
         }
-    }
-
-    /// <summary>
-    /// 4 ccVertex2FTex2FColor4F Quad
-    /// </summary>
-    public class CCV2F_C4F_T2F_Quad
-    {
-        public CCV2F_C4F_T2F_Quad()
-        {
-            TopLeft = new CCV2F_C4F_T2F();
-            BottomLeft = new CCV2F_C4F_T2F();
-            TopRight = new CCV2F_C4F_T2F();
-            BottomRight = new CCV2F_C4F_T2F();
-        }
-
-        /// <summary>
-        /// bottom left
-        /// </summary>
-        public CCV2F_C4F_T2F BottomLeft;
-
-        /// <summary>
-        /// bottom right
-        /// </summary>
-        public CCV2F_C4F_T2F BottomRight;
-
-        /// <summary>
-        /// top left
-        /// </summary>
-        public CCV2F_C4F_T2F TopLeft;
-
-        /// <summary>
-        /// top right
-        /// </summary>
-        public CCV2F_C4F_T2F TopRight;
     }
 
     /// <summary>

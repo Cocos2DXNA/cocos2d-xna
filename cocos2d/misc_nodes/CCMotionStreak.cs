@@ -16,7 +16,7 @@ namespace Cocos2D
         private CCPoint[] m_pPointVertexes;
         /** texture used for the motion streak */
         private CCTexture2D m_pTexture;
-        private CCV3F_C4B_T2F[] m_pVertices;
+        private VertexPositionColorTexture[] m_pVertices;
         private CCBlendFunc m_tBlendFunc;
         private CCPoint m_tPositionR;
 
@@ -126,7 +126,7 @@ namespace Cocos2D
             m_pPointState = new float[m_uMaxPoints];
             m_pPointVertexes = new CCPoint[m_uMaxPoints];
 
-            m_pVertices = new CCV3F_C4B_T2F[(m_uMaxPoints + 1) * 2];
+            m_pVertices = new VertexPositionColorTexture[(m_uMaxPoints + 1) * 2];
 
             // Set blend mode
             m_tBlendFunc = CCBlendFunc.NonPremultiplied;
@@ -144,7 +144,7 @@ namespace Cocos2D
 
             for (int i = 0; i < m_uNuPoints * 2; i++)
             {
-                m_pVertices[i].Colors = new CCColor4B(colors.R, colors.G, colors.B, 255);
+                m_pVertices[i].Color = new CCColor4B(colors.R, colors.G, colors.B, 255);
             }
         }
 
@@ -184,19 +184,19 @@ namespace Cocos2D
                         // Move vertices
                         i2 = i * 2;
                         newIdx2 = newIdx * 2;
-                        m_pVertices[newIdx2].Vertices = m_pVertices[i2].Vertices;
-                        m_pVertices[newIdx2 + 1].Vertices = m_pVertices[i2 + 1].Vertices;
+                        m_pVertices[newIdx2].Position = m_pVertices[i2].Position;
+                        m_pVertices[newIdx2 + 1].Position = m_pVertices[i2 + 1].Position;
 
                         // Move color
-                        m_pVertices[newIdx2].Colors = m_pVertices[i2].Colors;
-                        m_pVertices[newIdx2 + 1].Colors = m_pVertices[i2 + 1].Colors;
+                        m_pVertices[newIdx2].Color = m_pVertices[i2].Color;
+                        m_pVertices[newIdx2 + 1].Color = m_pVertices[i2 + 1].Color;
                     }
                     else
                     {
                         newIdx2 = newIdx * 2;
                     }
 
-                    m_pVertices[newIdx2].Colors.A = m_pVertices[newIdx2 + 1].Colors.A = (byte) (m_pPointState[newIdx] * 255.0f);
+                    m_pVertices[newIdx2].Color.A = m_pVertices[newIdx2 + 1].Color.A = (byte) (m_pPointState[newIdx] * 255.0f);
                 }
             }
             m_uNuPoints -= mov;
@@ -226,7 +226,7 @@ namespace Cocos2D
 
                 // Color asignation
                 int offset = m_uNuPoints * 2;
-                m_pVertices[offset].Colors = m_pVertices[offset + 1].Colors = new CCColor4B(_displayedColor.R, _displayedColor.G, _displayedColor.B, 255);
+                m_pVertices[offset].Color = m_pVertices[offset + 1].Color = new CCColor4B(_displayedColor.R, _displayedColor.G, _displayedColor.B, 255);
 
                 // Generate polygon
                 if (m_uNuPoints > 0 && m_bFastMode)
@@ -255,8 +255,8 @@ namespace Cocos2D
                 float texDelta = 1.0f / m_uNuPoints;
                 for (i = 0; i < m_uNuPoints; i++)
                 {
-                    m_pVertices[i * 2].TexCoords = new CCTex2F(0, texDelta * i);
-                    m_pVertices[i * 2 + 1].TexCoords = new CCTex2F(1, texDelta * i);
+                    m_pVertices[i * 2].TextureCoordinate = new Vector2(0, texDelta * i);
+                    m_pVertices[i * 2 + 1].TextureCoordinate = new Vector2(1, texDelta * i);
                 }
 
                 m_uPreviousNuPoints = m_uNuPoints;
@@ -264,7 +264,7 @@ namespace Cocos2D
         }
 
 
-        private void VertexLineToPolygon(CCPoint[] points, float stroke, CCV3F_C4B_T2F[] vertices, int offset, int nuPoints)
+        private void VertexLineToPolygon(CCPoint[] points, float stroke, VertexPositionColorTexture[] vertices, int offset, int nuPoints)
         {
             nuPoints += offset;
             if (nuPoints <= 1) return;
@@ -318,8 +318,8 @@ namespace Cocos2D
 
                 perpVector = perpVector * stroke;
 
-                vertices[idx].Vertices = new CCVertex3F(p1.X + perpVector.X, p1.Y + perpVector.Y, 0);
-                vertices[idx + 1].Vertices = new CCVertex3F(p1.X - perpVector.X, p1.Y - perpVector.Y, 0);
+                vertices[idx].Position = new Vector3(p1.X + perpVector.X, p1.Y + perpVector.Y, 0);
+                vertices[idx + 1].Position = new Vector3(p1.X - perpVector.X, p1.Y - perpVector.Y, 0);
             }
 
             // Validate vertexes
@@ -329,10 +329,10 @@ namespace Cocos2D
                 idx = i * 2;
                 int idx1 = idx + 2;
 
-                CCVertex3F p1 = vertices[idx].Vertices;
-                CCVertex3F p2 = vertices[idx + 1].Vertices;
-                CCVertex3F p3 = vertices[idx1].Vertices;
-                CCVertex3F p4 = vertices[idx1 + 1].Vertices;
+                var p1 = vertices[idx].Position;
+                var p2 = vertices[idx + 1].Position;
+                var p3 = vertices[idx1].Position;
+                var p4 = vertices[idx1 + 1].Position;
 
                 float s;
                 bool fixVertex = !ccVertexLineIntersect(p1.X, p1.Y, p4.X, p4.Y, p2.X, p2.Y, p3.X, p3.Y, out s);
@@ -346,8 +346,8 @@ namespace Cocos2D
 
                 if (fixVertex)
                 {
-                    vertices[idx1].Vertices = p4;
-                    vertices[idx1 + 1].Vertices = p3;
+                    vertices[idx1].Position = p4;
+                    vertices[idx1 + 1].Position = p3;
                 }
             }
         }

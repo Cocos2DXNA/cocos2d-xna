@@ -793,7 +793,6 @@ namespace FarseerPhysics.DebugViews
 
             if (_customPrimitiveBatch.IsReady())
             {
-                _customPrimitiveBatch.UpdateMatrix();
                 _customPrimitiveBatch.End();
             }
 
@@ -832,8 +831,8 @@ namespace FarseerPhysics.DebugViews
             // Create a new SpriteBatch, which can be used to draw textures.
             _device = device;
             _batch = new SpriteBatch(_device);
-            _customPrimitiveBatch = new CCPrimitiveBatch(_device, 5000);
-            _basicPrimitiveBatch = new CCPrimitiveBatch(_device, 5000);
+            _customPrimitiveBatch = new CCPrimitiveBatch(5000);
+            _basicPrimitiveBatch = new CCPrimitiveBatch(5000);
             _font = content.Load<SpriteFont>("fonts/debugfont");
             _stringData = new List<StringData>();
 

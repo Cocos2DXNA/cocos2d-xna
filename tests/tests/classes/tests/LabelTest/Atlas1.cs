@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Cocos2D;
-
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 namespace tests
 {
     public class Atlas1 : AtlasDemo
@@ -23,22 +24,22 @@ namespace tests
             CCV3F_C4B_T2F_Quad[] quads = 
             {
                new  CCV3F_C4B_T2F_Quad() {
-                    BottomLeft = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(0,0,0), Colors = new CCColor4B(0,0,255,255),TexCoords = new CCTex2F(0.0f,1.0f)},				// bottom left
-                    BottomRight = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(s.Width,0,0), Colors = new CCColor4B(0,0,255,0),TexCoords = new CCTex2F(1.0f,1.0f)},			// bottom right
-                    TopLeft = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(0,s.Height,0), Colors = new CCColor4B(0,0,255,0),TexCoords = new CCTex2F(0.0f,0.0f)},			// bottom right
-                    TopRight = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(s.Width,s.Height,0), Colors = new CCColor4B(0,0,255,255),TexCoords = new CCTex2F(1.0f,0.0f)},			// bottom right
+                    BottomLeft = new VertexPositionColorTexture() { Position = new Vector3(0,0,0), Color = new Color(0,0,255,255),TextureCoordinate = new Vector2(0.0f,1.0f)},				// bottom left
+                    BottomRight = new VertexPositionColorTexture() { Position = new Vector3(s.Width,0,0), Color = new Color(0,0,255,0),TextureCoordinate = new Vector2(1.0f,1.0f)},			// bottom right
+                    TopLeft = new VertexPositionColorTexture() { Position = new Vector3(0,s.Height,0), Color = new Color(0,0,255,0),TextureCoordinate = new Vector2(0.0f,0.0f)},			// bottom right
+                    TopRight = new VertexPositionColorTexture() { Position = new Vector3(s.Width,s.Height,0), Color = new Color(0,0,255,255),TextureCoordinate = new Vector2(1.0f,0.0f)},			// bottom right
                 },		
                new  CCV3F_C4B_T2F_Quad() {
-                    BottomLeft = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(40,40,0), Colors = new CCColor4B(255,255,255,255),TexCoords = new CCTex2F(0.0f,0.2f)},				// bottom left
-                    BottomRight = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(120,80,0), Colors = new CCColor4B(255,0,0,255),TexCoords = new CCTex2F(0.5f,0.2f)},			// bottom right
-                    TopLeft = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(40,160,0), Colors = new CCColor4B(255,255,255,255),TexCoords = new CCTex2F(0.0f,0.0f)},			// bottom right
-                    TopRight = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(160,160,0), Colors = new CCColor4B(0,255,0,255),TexCoords = new CCTex2F(0.5f,0.0f)},			// bottom right
+                    BottomLeft = new VertexPositionColorTexture() { Position = new Vector3(40,40,0), Color = new Color(255,255,255,255),TextureCoordinate = new Vector2(0.0f,0.2f)},				// bottom left
+                    BottomRight = new VertexPositionColorTexture() { Position = new Vector3(120,80,0), Color = new Color(255,0,0,255),TextureCoordinate = new Vector2(0.5f,0.2f)},			// bottom right
+                    TopLeft = new VertexPositionColorTexture() { Position = new Vector3(40,160,0), Color = new Color(255,255,255,255),TextureCoordinate = new Vector2(0.0f,0.0f)},			// bottom right
+                    TopRight = new VertexPositionColorTexture() { Position = new Vector3(160,160,0), Color = new Color(0,255,0,255),TextureCoordinate = new Vector2(0.5f,0.0f)},			// bottom right
                 },		
                new  CCV3F_C4B_T2F_Quad() {
-                    BottomLeft = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(s.Width/2,40,0), Colors = new CCColor4B(255,0,0,255),TexCoords = new CCTex2F(0.0f,1.0f)},				// bottom left
-                    BottomRight = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(s.Width,40,0), Colors = new CCColor4B(0,255,0,255),TexCoords = new CCTex2F(1.0f,1.0f)},			// bottom right
-                    TopLeft = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(s.Width/2-50,200,0), Colors = new CCColor4B(0,0,255,255),TexCoords = new CCTex2F(0.0f,0.0f)},			// bottom right
-                    TopRight = new CCV3F_C4B_T2F() { Vertices = new CCVertex3F(s.Width,100,0), Colors = new CCColor4B(255,255,0,255),TexCoords = new CCTex2F(1.0f,0.0f)},			// bottom right
+                    BottomLeft = new VertexPositionColorTexture() { Position = new Vector3(s.Width/2,40,0), Color = new Color(255,0,0,255),TextureCoordinate = new Vector2(0.0f,1.0f)},				// bottom left
+                    BottomRight = new VertexPositionColorTexture() { Position = new Vector3(s.Width,40,0), Color = new Color(0,255,0,255),TextureCoordinate = new Vector2(1.0f,1.0f)},			// bottom right
+                    TopLeft = new VertexPositionColorTexture() { Position = new Vector3(s.Width/2-50,200,0), Color = new Color(0,0,255,255),TextureCoordinate = new Vector2(0.0f,0.0f)},			// bottom right
+                    TopRight = new VertexPositionColorTexture() { Position = new Vector3(s.Width,100,0), Color = new Color(255,255,0,255),TextureCoordinate = new Vector2(1.0f,0.0f)},			// bottom right
                 },		
             };
 
