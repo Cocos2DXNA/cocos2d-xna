@@ -135,6 +135,8 @@ namespace Cocos2D
 
         public CCNode()
         {
+            SortChildrenByOrderOfArrival = true;
+            SortChildrenByVertexZ = false;
             m_fScaleX = 1.0f;
             m_fScaleY = 1.0f;
             m_bVisible = true;
@@ -898,6 +900,46 @@ namespace Cocos2D
         
         #region Child Sorting
 
+        public bool SortChildrenByOrderOfArrival { get; set; }
+        public bool SortChildrenByVertexZ { get; set; }
+
+        private class NoOrderOfArrivalSorter : IComparer<CCNode>
+        {
+            int IComparer<CCNode>.Compare(CCNode n1, CCNode n2)
+            {
+                if (n1.m_nZOrder < n2.m_nZOrder)
+                {
+                    return -1;
+                }
+
+                if (n1 == n2)
+                {
+                    return 0;
+                }
+
+                return 1;
+            }
+        }
+
+        private class VertexZSorter : IComparer<CCNode>
+        {
+            int IComparer<CCNode>.Compare(CCNode n1, CCNode n2)
+            {
+                if (n1.m_nZOrder < n2.m_nZOrder || (n1.m_nZOrder == n2.m_nZOrder && n1.m_fVertexZ < n2.m_fVertexZ))
+                {
+                    return -1;
+                }
+
+                if (n1 == n2)
+                {
+                    return 0;
+                }
+
+                return 1;
+            }
+        }
+
+
         int IComparer<CCNode>.Compare(CCNode n1, CCNode n2)
         {
             if (n1.m_nZOrder < n2.m_nZOrder || (n1.m_nZOrder == n2.m_nZOrder && n1.m_uOrderOfArrival < n2.m_uOrderOfArrival))
@@ -913,11 +955,14 @@ namespace Cocos2D
             return 1;
         }
 
+        private static IComparer<CCNode> _SortWithoutOrderOfArrival = new NoOrderOfArrivalSorter();
+        private static IComparer<CCNode> _SortByVertexZ = new VertexZSorter();
+
         public virtual void SortAllChildren()
         {
             if (m_bReorderChildDirty)
             {
-                Array.Sort(m_pChildren.Elements, 0, m_pChildren.count, this);
+                Array.Sort(m_pChildren.Elements, 0, m_pChildren.count, SortChildrenByOrderOfArrival ? _SortWithoutOrderOfArrival : (SortChildrenByVertexZ ? _SortByVertexZ : this));
                 m_bReorderChildDirty = false;
             }
         }
