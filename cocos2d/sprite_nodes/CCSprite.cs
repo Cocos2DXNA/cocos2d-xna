@@ -176,6 +176,20 @@ namespace Cocos2D
             }
         }
 
+        /// <summary>
+        /// Scales the sprite to have the given size.
+        /// </summary>
+        /// <param name="size"></param>
+        public virtual void ScaleTo(CCSize size)
+        {
+            CCSize content = ContentSize;
+            float sx = size.Width / content.Width;
+            float sy = size.Height / content.Height;
+            base.ScaleX = sx;
+            base.ScaleY = sy;
+            SET_DIRTY_RECURSIVELY();
+        }
+
         public override float ScaleX
         {
             get { return base.ScaleX; }
@@ -711,17 +725,16 @@ namespace Cocos2D
             if (m_bRectRotated)
             {
 #if CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
-                left    = (2*rect.origin.x+1)/(2*atlasWidth);
-                right    = left+(rect.size.height*2-2)/(2*atlasWidth);
-                top        = (2*rect.origin.y+1)/(2*atlasHeight);
-                bottom    = top+(rect.size.width*2-2)/(2*atlasHeight);
+                left = (2 * rect.Origin.X + 1) / (2 * atlasWidth);
+                right = left + (rect.Size.Height * 2 - 2) / (2 * atlasWidth);
+                top = (2 * rect.Origin.Y + 1) / (2 * atlasHeight);
+                bottom = top + (rect.Size.Width * 2 - 2) / (2 * atlasHeight);
 #else
                 left = rect.Origin.X / atlasWidth;
                 right = (rect.Origin.X + rect.Size.Height) / atlasWidth;
                 top = rect.Origin.Y / atlasHeight;
                 bottom = (rect.Origin.Y + rect.Size.Width) / atlasHeight;
 #endif
-                // CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
 
                 if (m_bFlipX)
                 {
@@ -745,17 +758,16 @@ namespace Cocos2D
             else
             {
 #if CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
-                left    = (2*rect.origin.x+1)/(2*atlasWidth);
-                right    = left + (rect.size.width*2-2)/(2*atlasWidth);
-                top        = (2*rect.origin.y+1)/(2*atlasHeight);
-                bottom    = top + (rect.size.height*2-2)/(2*atlasHeight);
+                left = (2 * rect.Origin.X + 1) / (2 * atlasWidth);
+                right = left + (rect.Size.Width * 2 - 2) / (2 * atlasWidth);
+                top = (2 * rect.Origin.Y + 1) / (2 * atlasHeight);
+                bottom = top + (rect.Size.Height * 2 - 2) / (2 * atlasHeight);
 #else
                 left = rect.Origin.X / atlasWidth;
                 right = (rect.Origin.X + rect.Size.Width) / atlasWidth;
                 top = rect.Origin.Y / atlasHeight;
                 bottom = (rect.Origin.Y + rect.Size.Height) / atlasHeight;
 #endif
-                // ! CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
 
                 if (m_bFlipX)
                 {

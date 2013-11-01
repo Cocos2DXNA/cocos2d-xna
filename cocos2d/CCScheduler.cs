@@ -275,11 +275,13 @@ namespace Cocos2D
                         for (elt.TimerIndex = 0; elt.TimerIndex < elt.Timers.Count; ++elt.TimerIndex)
                         {
                             elt.CurrentTimer = elt.Timers[elt.TimerIndex];
-                            elt.CurrentTimerSalvaged = false;
+							if(elt.CurrentTimer != null) {
+	                            elt.CurrentTimerSalvaged = false;
 
-                            elt.CurrentTimer.Update(dt);
+	                            elt.CurrentTimer.Update(dt);
 
-                            elt.CurrentTimer = null;
+	                            elt.CurrentTimer = null;
+							}
                         }
                     }
 
@@ -381,34 +383,39 @@ namespace Cocos2D
                 }
                 else
                 {
-                    Debug.Assert(element.Paused == paused);
-                }
-
-                if (element.Timers == null)
-                {
-                    element.Timers = new List<CCTimer>();
-                }
-                else
-                {
-                    CCTimer[] timers = element.Timers.ToArray();
-                    foreach (var timer in timers)
+                    if (element != null)
                     {
-                        if (timer == null)
-                        {
-                            continue;
-                        }
-                        if (selector == timer.Selector)
-                        {
-                            CCLog.Log(
-                                "CCSheduler#scheduleSelector. Selector already scheduled. Updating interval from: {0} to {1}",
-                                timer.Interval, interval);
-                            timer.Interval = interval;
-                            return;
-                        }
+                        Debug.Assert(element.Paused == paused);
                     }
                 }
+                if (element != null)
+                {
+                    if (element.Timers == null)
+                    {
+                        element.Timers = new List<CCTimer>();
+                    }
+                    else
+                    {
+                        CCTimer[] timers = element.Timers.ToArray();
+                        foreach (var timer in timers)
+                        {
+                            if (timer == null)
+                            {
+                                continue;
+                            }
+                            if (selector == timer.Selector)
+                            {
+                                CCLog.Log(
+                                    "CCSheduler#scheduleSelector. Selector already scheduled. Updating interval from: {0} to {1}",
+                                    timer.Interval, interval);
+                                timer.Interval = interval;
+                                return;
+                            }
+                        }
+                    }
 
-                element.Timers.Add(new CCTimer(this, target, selector, interval, repeat, delay));
+                    element.Timers.Add(new CCTimer(this, target, selector, interval, repeat, delay));
+                }
             }
         }
 
