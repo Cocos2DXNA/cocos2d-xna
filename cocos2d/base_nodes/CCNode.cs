@@ -1102,6 +1102,12 @@ namespace Cocos2D
             }
         }
 
+        public void SetTransform(CCAffineTransform tx)
+        {
+            m_sTransform = tx;
+            m_bTransformDirty = false;
+        }
+
         public void Transform()
         {
             CCDrawManager.MultMatrix(NodeToParentTransform(), m_fVertexZ);
