@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-XNA.Windows8</id>
-    <version>1.2.0.0</version>
+    <version>1.3.0.0</version>
     <title>Cocos2D-XNA for Windows 8</title>
     <authors>Cocos2D-XNA, Totally Evil Entertainment, LLC.</authors>
     <owners>Cocos2D-XNA</owners>
@@ -14,10 +14,25 @@
     <copyright>Copyright 2013 Cocos2D-XNA</copyright>
     <tags>cocos2d cocos2d-xna xna monogame 2D games visualization engine totallyevil surface windowsrt</tags>
 
+    <references>
+            <reference file="box2d.dll"></reference>
+            <reference file="cocos2d-xna.dll"></reference>
+            <reference file="ICSharpCode.SharpZipLib.dll"></reference>
+            <reference file="MonoGame.Framework.dll"></reference>
+            <reference file="SharpDX.dll"></reference>
+            <reference file="SharpDX.Direct3D11.dll"></reference>
+            <reference file="SharpDX.Direct2D1.dll"></reference>
+            <reference file="SharpDX.DXGI.dll"></reference>
+            <reference file="SharpDX.MediaFoundation.dll"></reference>
+            <reference file="SharpDX.XInput.dll"></reference>
+            <reference file="SharpDX.XAudio2.dll"></reference>
+    </references>
+
   </metadata>
 
   <files>
-    <file src="..\..\cocos2d\bin\Windows8\Release\*.dll" target="lib\windows8" />
+    <file src="..\..\cocos2d\bin\Windows8\Release\*.dll" target="lib\Windows8" />
+    <file src="..\..\MonoGame\MonoGame.Framework\bin\Windows8\Release\*.dll" target="lib\Windows8" />
   </files>
 
 </package>
