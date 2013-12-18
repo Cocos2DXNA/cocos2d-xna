@@ -1196,7 +1196,7 @@ namespace Cocos2D
                         m_fAccumDt = m_fAccumDraw = m_fAccumUpdate = 0;
                         m_uDrawCount = m_uUpdateCount = 0;
 
-                        m_pMemoryLabel.Text = String.Format("{0}", GC.GetTotalMemory(false));
+                        m_pMemoryLabel.Text = String.Format("{0}", GC.GetTotalMemory(false) / 1024);
                         m_pGCLabel.Text = String.Format("{0}", _GCCount);
                     }
             
