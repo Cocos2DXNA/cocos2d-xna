@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-XNA.WindowsPhone8</id>
-    <version>1.2.0.0</version>
+    <version>1.3.0.0</version>
     <title>Cocos2D-XNA for Windows Phone 8</title>
     <authors>Cocos2D-XNA, Totally Evil Entertainment, LLC.</authors>
     <owners>Cocos2D-XNA</owners>
@@ -18,10 +18,18 @@
             <reference file="cocos2d-xna.dll"></reference>
             <reference file="ICSharpCode.SharpZipLib.dll"></reference>
             <reference file="MonoGame.Framework.dll"></reference>
+            <reference file="SharpDX.dll"></reference>
+            <reference file="SharpDX.Direct3D11.dll"></reference>
+            <reference file="SharpDX.DXGI.dll"></reference>
+            <reference file="SharpDX.MediaFoundation.dll"></reference>
+            <reference file="SharpDX.WP8.dll"></reference>
+            <reference file="SharpDX.XAudio2.dll"></reference>
         </references>
   </metadata>
 
   <files>
+    <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\x86\Release\*.dll" target="lib\WindowsPhone\x86" />
+    <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\ARM\Release\*.dll" target="lib\WindowsPhone\ARM" />
     <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\*.dll" target="lib\WindowsPhone8\x86" />
     <file src="..\..\cocos2d\bin\WindowsPhone\ARM\Release\*.dll" target="lib\WindowsPhone8\ARM" />
     <file src="tools\**" target="tools" />

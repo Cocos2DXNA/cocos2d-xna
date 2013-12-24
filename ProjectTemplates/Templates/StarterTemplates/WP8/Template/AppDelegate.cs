@@ -8,29 +8,28 @@ namespace $safeprojectname$
 	public class AppDelegate : CCApplication
 	{
 
-		int preferredWidth;
-		int preferredHeight;
+		int preferredWidth = 800;
+		int preferredHeight = 480;
 
 		public AppDelegate(Game game, GraphicsDeviceManager graphics)
 			: base(game, graphics)
 		{
 			s_pSharedApplication = this;
-#if WINDOWS || MACOS || LINUX || OUYA || XBOX
-            preferredWidth = 1024;
-            preferredHeight = 768;
-#else
-			preferredWidth = 480;
-			preferredHeight = 320;
 
-#endif
+			// disable the automatic media restore so we don't get a deadlock when the game
+			// first starts.
+            HandleMediaStateAutomatically = false;
+
+			// set the render viewport size
 			graphics.PreferredBackBufferWidth = preferredWidth;
 			graphics.PreferredBackBufferHeight = preferredHeight;
 
+			// Initialize the graphics
             CCDrawManager.InitializeDisplay(game, 
 			                              graphics, 
 			                              DisplayOrientation.LandscapeRight | DisplayOrientation.LandscapeLeft);
 			
-			
+			// this controls anti-aliasing
 			graphics.PreferMultiSampling = false;
 			
 		}
@@ -60,11 +59,7 @@ namespace $safeprojectname$
 			// 2D projection
 			pDirector.Projection = CCDirectorProjection.Projection2D;
 
-#if WINDOWS || MACOS || LINUX || OUYA || XBOX
-			var resPolicy = CCResolutionPolicy.ExactFit; // This will stretch out your game
-#else
 			var resPolicy = CCResolutionPolicy.ShowAll; // This will letterbox your game
-#endif
 
 			CCDrawManager.SetDesignResolutionSize(preferredWidth, 
 			                                      preferredHeight, 
@@ -91,7 +86,7 @@ namespace $safeprojectname$
 			CCDirector.SharedDirector.Pause();
 			
 			// if you use SimpleAudioEngine, your music must be paused
-			//CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic = true;
+			// CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic = true;
 		}
 		
 		/// <summary>

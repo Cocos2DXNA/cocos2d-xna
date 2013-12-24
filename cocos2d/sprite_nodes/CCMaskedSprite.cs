@@ -54,22 +54,28 @@ namespace Cocos2D
         public virtual bool CollidesWith(CCMaskedSprite target, out CCPoint pt)
         {
             pt = CCPoint.Zero;
-            if (!BoundingBox.IntersectsRect(target.BoundingBox))
+            CCAffineTransform m1 = NodeToWorldTransform();
+            CCAffineTransform m2 = target.NodeToWorldTransform();
+            CCRect myBBInWorld = WorldBoundingBox;
+            CCRect targetBBInWorld = target.WorldBoundingBox;
+            if (!myBBInWorld.IntersectsRect(targetBBInWorld))
             {
                 return (false);
             }
             // Based upon http://www.riemers.net/eng/Tutorials/XNA/Csharp/Series2D/Putting_CD_into_practice.php
-            CCAffineTransform m1 = NodeToWorldTransform();
-            CCAffineTransform m2 = target.NodeToWorldTransform();
             Matrix mat1 = m1.XnaMatrix;
             Matrix mat2 = m2.XnaMatrix;
             Matrix mat1to2 = mat1 * Matrix.Invert(mat2);
-            int width2 = target.Texture.XNATexture.Width;
-            int height2 = target.Texture.XNATexture.Height;
-            int width1 = Texture.XNATexture.Width;
-            int height1 = Texture.XNATexture.Height;
+            int width2 = (int)target.ContentSize.Width;
+            int height2 = (int)target.ContentSize.Height;
+            int width1 = (int)ContentSize.Width;
+            int height1 = (int)ContentSize.Height;
             byte[] maskA = CollisionMask;
             byte[] maskB = target.CollisionMask;
+            if (maskA == null || maskB == null)
+            {
+                return (false);
+            }
             for (int x1 = 0; x1 < width1; x1++)
             {
                 for (int y1 = 0; y1 < height1; y1++)

@@ -80,13 +80,15 @@ namespace Cocos2D
         public CCAffineTransform m_sTransform;
         protected bool m_bInverseDirty;
         protected bool m_bRunning;
-        public bool m_bTransformDirty;
+        protected bool m_bTransformDirty;
         protected bool m_bVisible;
         protected bool m_bReorderChildDirty;
         protected float m_fRotationX;
         protected float m_fRotationY;
         protected float m_fScaleX;
         protected float m_fScaleY;
+        protected bool m_bWorldTransformIsDirty = true;
+        protected CCAffineTransform m_NodeToWorldTransform = CCAffineTransform.Identity;
 
         //protected int m_nScriptHandler;
 
@@ -303,7 +305,7 @@ namespace Cocos2D
             set
             {
                 m_fSkewX = value;
-                m_bTransformDirty = m_bInverseDirty = true;
+                SetTransformIsDirty();
             }
         }
 
@@ -313,7 +315,7 @@ namespace Cocos2D
             set
             {
                 m_fSkewY = value;
-                m_bTransformDirty = m_bInverseDirty = true;
+                SetTransformIsDirty();
             }
         }
 
@@ -349,7 +351,7 @@ namespace Cocos2D
             set
             {
                 m_fRotationX = m_fRotationY = value;
-                m_bTransformDirty = m_bInverseDirty = true;
+                SetTransformIsDirty();
             }
         }
 
@@ -359,7 +361,7 @@ namespace Cocos2D
             set
             {
                 m_fRotationX = value;
-                m_bTransformDirty = m_bInverseDirty = true;
+                SetTransformIsDirty();
             }
         }
 
@@ -369,7 +371,7 @@ namespace Cocos2D
             set
             {
                 m_fRotationY = value;
-                m_bTransformDirty = m_bInverseDirty = true;
+                SetTransformIsDirty();
             }
         }
 
@@ -386,7 +388,7 @@ namespace Cocos2D
             set
             {
                 m_fScaleX = m_fScaleY = value;
-                m_bTransformDirty = m_bInverseDirty = true;
+                SetTransformIsDirty();
             }
         }
 
@@ -399,7 +401,7 @@ namespace Cocos2D
             set
             {
                 m_fScaleX = value;
-                m_bTransformDirty = m_bInverseDirty = true;
+                SetTransformIsDirty();
             }
         }
 
@@ -412,7 +414,7 @@ namespace Cocos2D
             set
             {
                 m_fScaleY = value;
-                m_bTransformDirty = m_bInverseDirty = true;
+                SetTransformIsDirty();
             }
         }
 
@@ -426,7 +428,7 @@ namespace Cocos2D
             set
             {
                 m_obPosition = value;
-                m_bTransformDirty = m_bInverseDirty = true;
+                SetTransformIsDirty();
             }
         }
 
@@ -491,7 +493,7 @@ namespace Cocos2D
                     m_obAnchorPoint = value;
                     m_obAnchorPointInPoints = new CCPoint(m_obContentSize.Width * m_obAnchorPoint.X,
                                                                   m_obContentSize.Height * m_obAnchorPoint.Y);
-                    m_bTransformDirty = m_bInverseDirty = true;
+                    SetTransformIsDirty();
                 }
             }
         }
@@ -517,7 +519,7 @@ namespace Cocos2D
                     m_obContentSize = value;
                     m_obAnchorPointInPoints = new CCPoint(m_obContentSize.Width * m_obAnchorPoint.X,
                                                                   m_obContentSize.Height * m_obAnchorPoint.Y);
-                    m_bTransformDirty = m_bInverseDirty = true;
+                    SetTransformIsDirty();
                 }
             }
         }
@@ -542,11 +544,52 @@ namespace Cocos2D
                 if (value != m_bIgnoreAnchorPointForPosition)
                 {
                     m_bIgnoreAnchorPointForPosition = value;
-                    m_bTransformDirty = m_bInverseDirty = true;
+                    SetTransformIsDirty();
                 }
             }
         }
 
+        /// <summary>
+        /// Returns the given point, which is assumed to be in this node's coordinate
+        /// system, as a point in the given target's coordinate system.
+        /// </summary>
+        /// <param name="ptInNode"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public CCPoint ConvertPointTo(ref CCPoint ptInNode, CCNode target)
+        {
+            CCPoint pt = NodeToWorldTransform().Transform(ptInNode);
+            pt = target.WorldToNodeTransform().Transform(pt);
+            return (pt);
+        }
+
+        /// <summary>
+        /// Returns this node's bounding box in the coordinate system of the given target.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public CCRect GetBoundingBox(CCNode target)
+        {
+            CCRect rect = WorldBoundingBox;
+            rect = target.WorldToNodeTransform().Transform(rect);
+            return (rect);
+        }
+
+        /// <summary>
+        /// Returns the bounding box of this node in world coordinates
+        /// </summary>
+        public CCRect WorldBoundingBox
+        {
+            get
+            {
+                var rect = new CCRect(0, 0, m_obContentSize.Width, m_obContentSize.Height);
+                return CCAffineTransform.Transform(rect, NodeToWorldTransform());
+            }
+        }
+
+        /// <summary>
+        /// Returns the bounding box of this node in the coordinate system of its parent.
+        /// </summary>
         public CCRect BoundingBox
         {
             get
@@ -556,6 +599,11 @@ namespace Cocos2D
             }
         }
 
+        /// <summary>
+        /// Returns the bounding box of this node, in the coordinate system of its parent,
+        /// with the scale, content scale, and other display transforms applied to return
+        /// the per-pixel bounding box.
+        /// </summary>
         public CCRect BoundingBoxInPixels
         {
             get
@@ -568,6 +616,18 @@ namespace Cocos2D
         public uint OrderOfArrival
         {
             get { return m_uOrderOfArrival; }
+        }
+
+        /// <summary>
+        /// Sets all of the transform indictators to dirty so that the visual transforms
+        /// are recomputed.
+        /// </summary>
+        public virtual void ForceTransformRefresh()
+        {
+            m_bTransformDirty = true;
+            m_bWorldTransformIsDirty = true;
+            m_bAdditionalTransformDirty = true;
+            m_bInverseDirty = true;
         }
 
         public CCAffineTransform AdditionalTransform
@@ -628,7 +688,7 @@ namespace Cocos2D
         {
             m_obPosition.X = x;
             m_obPosition.Y = y;
-            m_bTransformDirty = m_bInverseDirty = true;
+            SetTransformIsDirty();
         }
 
         protected virtual void ResetCleanState()
@@ -687,6 +747,8 @@ namespace Cocos2D
             return null;
         }
 
+        #region AddChild
+
         public void AddChild(CCNode child)
         {
             Debug.Assert(child != null, "Argument must be no-null");
@@ -726,6 +788,18 @@ namespace Cocos2D
                 child.OnEnterTransitionDidFinish();
             }
         }
+        private void InsertChild(CCNode child, int z, int tag)
+        {
+            m_bReorderChildDirty = true;
+            m_pChildren.Add(child);
+
+            ChangedChildTag(child, kCCNodeTagInvalid, tag);
+
+            child.m_nZOrder = z;
+        }
+        #endregion
+
+        #region RemoveChild
 
         public void RemoveFromParent()
         {
@@ -778,6 +852,25 @@ namespace Cocos2D
             }
             else
             {
+                RemoveChild(child, cleanup);
+            }
+        }
+
+        public virtual void RemoveAllChildrenByTag(int tag)
+        {
+            RemoveAllChildrenByTag(tag, true);
+        }
+
+        public virtual void RemoveAllChildrenByTag(int tag, bool cleanup)
+        {
+            Debug.Assert(tag != (int)CCNodeTag.Invalid, "Invalid tag");
+            while (true)
+            {
+                CCNode child = GetChildByTag(tag);
+                if (child == null)
+                {
+                    break;
+                }
                 RemoveChild(child, cleanup);
             }
         }
@@ -847,6 +940,7 @@ namespace Cocos2D
 
             m_pChildren.Remove(child);
         }
+        #endregion
 
         private void ChangedChildTag(CCNode child, int oldTag, int newTag)
         {
@@ -875,16 +969,6 @@ namespace Cocos2D
 
                 list.Add(child);
             }
-        }
-
-        private void InsertChild(CCNode child, int z, int tag)
-        {
-            m_bReorderChildDirty = true;
-            m_pChildren.Add(child);
-
-            ChangedChildTag(child, kCCNodeTagInvalid, tag);
-
-            child.m_nZOrder = z;
         }
 
         public virtual void ReorderChild(CCNode child, int zOrder)
@@ -1016,6 +1100,12 @@ namespace Cocos2D
                 m_pParent.TransformAncestors();
                 m_pParent.Transform();
             }
+        }
+
+        public void SetTransform(CCAffineTransform tx)
+        {
+            m_sTransform = tx;
+            m_bTransformDirty = false;
         }
 
         public void Transform()
@@ -1397,6 +1487,30 @@ namespace Cocos2D
             return m_sTransform;
         }
 
+        /// <summary>
+        /// Set my transform to be dirty and recursively set my children's transform to be dirty.
+        /// </summary>
+        protected virtual void SetTransformIsDirty()
+        {
+            m_bTransformDirty = true;
+            m_bInverseDirty = true;
+            // Me and all of my children have dirty world transforms now.
+            SetWorldTransformIsDirty();
+        }
+
+        protected virtual void SetWorldTransformIsDirty()
+        {
+            m_bWorldTransformIsDirty = true;
+            if (m_pChildren != null && m_pChildren.count > 0)
+            {
+                CCNode[] elements = m_pChildren.Elements;
+                for (int i = 0, count = m_pChildren.count; i < count; i++)
+                {
+                    elements[i].SetWorldTransformIsDirty();
+                }
+            }
+        }
+
         public virtual void UpdateTransform()
         {
             // Recursively iterate over children
@@ -1424,13 +1538,19 @@ namespace Cocos2D
         {
             CCAffineTransform t = NodeToParentTransform();
 
-            CCNode p = m_pParent;
-            while (p != null)
-            {
-                t.Concat(p.NodeToParentTransform());
-                p = p.Parent;
-            }
+            // CCLog.Log("{0}.NodeToWorld: woldIsDirty={1}, transformIsDirty={2}", GetType().Name, m_bWorldTransformIsDirty, m_bTransformDirty);
 
+            if (!m_bWorldTransformIsDirty)
+            {
+                return (m_NodeToWorldTransform);
+            }
+            if (m_pParent != null)
+            {
+                CCAffineTransform n2p = m_pParent.NodeToWorldTransform();
+                t.Concat(ref n2p);
+            }
+            m_bWorldTransformIsDirty = false;
+            m_NodeToWorldTransform = t;
             return t;
         }
 
