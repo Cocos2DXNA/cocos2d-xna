@@ -1,7 +1,7 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
-    <Name>Cocos2D-XNA Empty Game Windows Phone 8</Name>
-    <Description>Creates a simple Cocos2D-XNA minimal skeleton game solution and project to get developers up and running fast.  This particular template is for Windows Phone 8.</Description>
+		<Name>Cocos2D-XNA Empty Game for Windows Phone 8</Name>
+    <Description>Official Cocos2D-XNA for Windows Phone 8 minimal skeleton game solution and project to get you up and running fast. Your project will include pre-packaged libraries for MonoGame for Windows Phone 8.</Description>
     <ProjectType>CSharp</ProjectType>
     <ProjectSubType>
     </ProjectSubType>
@@ -57,7 +57,7 @@
   </WizardExtension>
   <WizardData>
     <packages repository="extension"
-          repositoryId="EmptyProject.0e049194-4b93-4875-aac8-6d7bb6fcf64d">
+          repositoryId="EmptyProject.E349F769-76FD-4DAD-BA07-5317A99F619D">
       <package id="Cocos2D-XNA.WindowsPhone8" version="1.3.0.0" />
     </packages>
   </WizardData>

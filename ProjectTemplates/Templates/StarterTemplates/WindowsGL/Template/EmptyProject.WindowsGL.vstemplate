@@ -1,7 +1,7 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
 	<TemplateData>
-		<Name>Cocos2D-XNA Empty Game Windows GL</Name>
-		<Description>Creates a simple Cocos2D-XNA minimal skeleton game solution and project to get developers up and running fast.  This particular template is for Windows GL.</Description>
+		<Name>Cocos2D-XNA Empty Game for Windows GL</Name>
+		<Description>Official Cocos2D-XNA for Windows Desktop GL minimal skeleton game solution and project to get you up and running fast. Your project will include pre-packaged libraries for MonoGame for Windows Desktop GL.</Description>
 		<ProjectType>CSharp</ProjectType>
 		<ProjectSubType>
 		</ProjectSubType>
@@ -38,7 +38,7 @@
 	</WizardExtension>
 	<WizardData>
 		<packages repository="extension"
-			  repositoryId="EmptyProject.e61812b3-4ed7-44ae-85ac-418735783f2f">
+			  repositoryId="EmptyProject.FB6390D5-5189-4735-8C54-53D080E3F136">
 			<package id="Cocos2D-XNA.WindowsGL" version="1.3.0.0" />
 		</packages>
 	</WizardData>
