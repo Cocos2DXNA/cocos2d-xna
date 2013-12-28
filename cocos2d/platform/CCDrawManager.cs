@@ -310,7 +310,7 @@ namespace Cocos2D
         public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
         {
             m_GraphicsDeviceMgr = graphics;
-
+            m_bHasStencilBuffer = (graphics.PreferredDepthStencilFormat == DepthFormat.Depth24Stencil8);
             SetOrientation(supportedOrientations, false);
 
 #if ANDROID || WINDOWS_PHONE
@@ -326,7 +326,6 @@ namespace Cocos2D
         public static void Init(IGraphicsDeviceService service)
         {
             m_graphicsService = service;
-
             m_presentationParameters = new PresentationParameters()
             {
                 RenderTargetUsage = RenderTargetUsage.DiscardContents,
@@ -581,6 +580,8 @@ namespace Cocos2D
             }
         }
 
+        private static bool m_bHasStencilBuffer = true;
+
         public static void BeginDraw()
         {
             if (graphicsDevice == null || graphicsDevice.IsDisposed)
@@ -596,7 +597,23 @@ namespace Cocos2D
             }
 
             ResetDevice();
-            Clear(Color.Black, 0, 0);
+            if (m_bHasStencilBuffer)
+            {
+                try
+                {
+                    Clear(Color.Black, 0, 0);
+                }
+                catch (InvalidOperationException)
+                {
+                    // no stencil buffer
+                    m_bHasStencilBuffer = false;
+                    Clear(Color.Black);
+                }
+            }
+            else
+            {
+                Clear(Color.Black);
+            }
             DrawCount = 0;
         }
 
