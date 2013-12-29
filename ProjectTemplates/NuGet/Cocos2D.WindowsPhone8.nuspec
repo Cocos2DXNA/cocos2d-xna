@@ -22,14 +22,16 @@
             <reference file="SharpDX.Direct3D11.dll"></reference>
             <reference file="SharpDX.DXGI.dll"></reference>
             <reference file="SharpDX.MediaFoundation.dll"></reference>
-            <reference file="SharpDX.WP8.dll"></reference>
+            <reference file="SharpDX.WP8.winmd"></reference>
             <reference file="SharpDX.XAudio2.dll"></reference>
         </references>
   </metadata>
 
   <files>
     <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\x86\Release\*.dll" target="lib\WindowsPhone\x86" />
+    <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\x86\Release\*.winmd" target="lib\WindowsPhone\x86" />
     <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\ARM\Release\*.dll" target="lib\WindowsPhone\ARM" />
+    <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\ARM\Release\*.winmd" target="lib\WindowsPhone\ARM" />
     <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\*.dll" target="lib\WindowsPhone8\x86" />
     <file src="..\..\cocos2d\bin\WindowsPhone\ARM\Release\*.dll" target="lib\WindowsPhone8\ARM" />
     <file src="tools\**" target="tools" />
