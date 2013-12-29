@@ -28,8 +28,12 @@
     <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\x86\Release\*.winmd" target="lib\WindowsPhone8\x86" />
     <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\ARM\Release\MonoGame.Framework.dll" target="lib\WindowsPhone8\ARM" />
     <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\ARM\Release\*.winmd" target="lib\WindowsPhone8\ARM" />
-    <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\*.dll" target="lib\WindowsPhone8\x86" />
-    <file src="..\..\cocos2d\bin\WindowsPhone\ARM\Release\*.dll" target="lib\WindowsPhone8\ARM" />
+    <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\box2d.dll" target="lib\WindowsPhone8\x86" />
+    <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\cocos2d-xna.dll" target="lib\WindowsPhone8\x86" />
+    <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\ICSharpCode.SharpZipLib.dll" target="lib\WindowsPhone8\x86" />
+    <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\box2d.dll" target="lib\WindowsPhone8\ARM" />
+    <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\cocos2d-xna.dll" target="lib\WindowsPhone8\ARM" />
+    <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\ICSharpCode.SharpZipLib.dll" target="lib\WindowsPhone8\ARM" />
     <file src="tools\**" target="tools" />
   </files>
 
