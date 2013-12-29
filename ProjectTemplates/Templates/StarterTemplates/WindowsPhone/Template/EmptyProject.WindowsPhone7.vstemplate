@@ -1,13 +1,13 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
-    <Name>EmptyProject.WP7</Name>
-    <Description>Start your Cocos2D-XNA project for Windows Phone 7. This template will create your basic single layer game with sprite content.</Description>
+		<Name>Cocos2D-XNA Empty Game for Windows Phone 7</Name>
+    <Description>Official Cocos2D-XNA for Windows Phone 7 minimal skeleton game solution and project to get you up and running fast.</Description>
     <ProjectType>CSharp</ProjectType>
     <ProjectSubType>
     </ProjectSubType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>EmptyProject.WP7</DefaultName>
+    <DefaultName>Cocos2DGame</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
     <LocationField>Enabled</LocationField>
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
@@ -34,4 +34,14 @@
       </Folder>
     </Project>
   </TemplateContent>
+	<WizardExtension>
+		<Assembly>NuGet.VisualStudio.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</Assembly>
+		<FullClassName>NuGet.VisualStudio.TemplateWizard</FullClassName>
+	</WizardExtension>
+	<WizardData>
+		<packages repository="extension"
+			  repositoryId="EmptyProject.250EBC7D-4861-41C9-96BC-E02E7C95D364">
+			<package id="Cocos2D-XNA.WindowsPhone7" version="1.3.0.2" />
+		</packages>
+	</WizardData>
 </VSTemplate>

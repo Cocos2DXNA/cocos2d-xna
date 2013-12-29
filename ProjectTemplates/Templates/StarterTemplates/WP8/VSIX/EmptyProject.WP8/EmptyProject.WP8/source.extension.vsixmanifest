@@ -1,20 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-	<Identifier Id="EmptyProject.0e049194-4b93-4875-aac8-6d7bb6fcf64d">
-		<Name>Cocos2D-XNA Empty Game Windows Phone 8</Name>
+	<Identifier Id="EmptyProject.E349F769-76FD-4DAD-BA07-5317A99F619D">
+		<Name>Cocos2D-XNA Empty Game for Windows Phone 8</Name>
 		<Author>Cocos2D-XNA</Author>
-		<Version>1.0</Version>
-		<Description xml:space="preserve">Creates a simple Cocos2D-XNA minimal skeleton game solution and project to get developers up and running fast.  This particular template is for Windows Phone 8.</Description>
+		<Version>1.3</Version>
+		<Description xml:space="preserve">Official Cocos2D-XNA for Windows Phone 8 minimal skeleton game solution and project to get you up and running fast. Your project will include pre-packaged libraries for MonoGame for Windows Phone 8.</Description>
 		<Locale>1033</Locale>
 		<Icon>powered.ico</Icon>
 		<PreviewImage>powered.png</PreviewImage>
 		<SupportedProducts>
-			<VisualStudio Version="10.0">
-				<Edition>Ultimate</Edition>
-				<Edition>Premium</Edition>
-				<Edition>Pro</Edition>
-				<Edition>VCSExpress</Edition>
-			</VisualStudio>
 			<VisualStudio Version="11.0">
 				<Edition>Ultimate</Edition>
 				<Edition>Premium</Edition>
@@ -28,7 +22,7 @@
 				<Edition>VCSExpress</Edition>
 			</VisualStudio>
 		</SupportedProducts>
-		<SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+		<SupportedFrameworkRuntimeEdition MinVersion="4.0"/>
 	</Identifier>
 	<References>
 		<Reference Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" MinVersion="2.5.40416.9020">

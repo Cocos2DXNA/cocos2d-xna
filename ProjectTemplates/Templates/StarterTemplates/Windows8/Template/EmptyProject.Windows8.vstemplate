@@ -1,7 +1,7 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
 	<TemplateData>
-		<Name>Cocos2D-XNA Empty Game Windows Store</Name>
-		<Description>Creates a simple Cocos2D-XNA minimal skeleton game solution and project to get developers up and running fast.  This particular template is for targeting Windows Store.</Description>
+		<Name>Cocos2D-XNA Empty Game for Windows Store</Name>
+		<Description>Official Cocos2D-XNA for The Windows Store minimal skeleton game solution and project to get you up and running fast. Your project will include pre-packaged libraries of MonoGame for The Windows Store.</Description>
 		<ProjectType>CSharp</ProjectType>
 		<ProjectSubType>
 		</ProjectSubType>
@@ -44,8 +44,8 @@
 	</WizardExtension>
 	<WizardData>
 		<packages repository="extension"
-			  repositoryId="EmptyProject.0ab22475-63ab-43e9-8713-cb2e3af7c2b8">
-			<package id="Cocos2D-XNA.Windows8" version="1.3.0.0" />
+			  repositoryId="EmptyProject.9CBDB754-7668-4FA1-B917-B46722DE906E">
+			<package id="Cocos2D-XNA.Windows8" version="1.3.0.2" />
 		</packages>
 	</WizardData>
 
