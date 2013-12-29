@@ -1,7 +1,7 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
 	<TemplateData>
-		<Name>Cocos2D-XNA Empty Game iOS</Name>
-		<Description>Creates a simple Cocos2D-XNA minimal skeleton game solution and project to get developers up and running fast.  This particular template is for iOS.</Description>
+		<Name>Cocos2D-XNA Empty Game for iOS</Name>
+		<Description>Official Cocos2D-XNA for Apple iOS minimal skeleton game solution and project to get you up and running fast. Your project will include pre-packaged libraries of MonoGame for Apple iOS. A license for Xamarin.iOS is required for this project.</Description>
 		<ProjectType>CSharp</ProjectType>
 		<ProjectSubType>
 		</ProjectSubType>
@@ -39,8 +39,8 @@
 	</WizardExtension>
 	<WizardData>
 		<packages repository="extension"
-			  repositoryId="EmptyProject.346aa2ec-5a76-4321-a311-628aa73664b9">
-			<package id="Cocos2D-XNA.iOS" version="1.3.0.0" />
+			  repositoryId="EmptyProject.72DEFFE1-ADB5-47A6-9ABC-E94A6C378D01">
+			<package id="Cocos2D-XNA.iOS" version="1.3.0.2" />
 		</packages>
 	</WizardData>
 </VSTemplate>
