@@ -50,7 +50,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\..\..\Template\bin\EmptyProject.WindowsPhone7.zip">
-      <Link>ProjectTemplates\Cocos2D-XNA\Windows\EmptyProject.WindowsPhone.zip</Link>
+      <Link>ProjectTemplates\Cocos2D-XNA\EmptyProject.WP7.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
