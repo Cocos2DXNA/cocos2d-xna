@@ -1,0 +1,10 @@
+Looking for a fast way to develop a 2D game with extensive support for sprites, collisions, physics? Cocos2D-XNA provides all of the fantastic features from Cocos2D, and extends the experience across nearly every platform on the planet. With Cocos2D-XNA you can author a single source base game and with nearly 98% code reuse, you can target every other platform for your user base. 
+
+This template extension will create a simple Android game with a single game scene. From this template you will see how to integrate content into your game, create scenes, and setup the Cocos2D-XNA game environment.
+
+
+With Cocos2D-XNA you will truly reach to infinity!
+ 
+ 
+xna, cocos2d, cocos2d-xna, 2d games, free game framework, totally evil, official
+ 
