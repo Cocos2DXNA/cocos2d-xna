@@ -387,8 +387,23 @@ namespace Cocos2D
         public bool InitWithFile(string plistFile)
         {
             PlistDocument doc = CCContentManager.SharedContentManager.Load<PlistDocument>(plistFile);
-
-            return InitWithDictionary(doc.Root.AsDictionary);
+            // Add the directory containing the plist file as a search path
+            int idx = plistFile.LastIndexOf('/');
+            string pathToRemove = null;
+            if(idx > -1) {
+                string path = plistFile.Substring(0, idx);
+                if (!CCContentManager.SharedContentManager.SearchPaths.Contains(path))
+                {
+                    CCContentManager.SharedContentManager.SearchPaths.Add(path);
+                    pathToRemove = path;
+                }
+            }
+            bool ret = InitWithDictionary(doc.Root.AsDictionary);
+            if (pathToRemove != null)
+            {
+                CCContentManager.SharedContentManager.SearchPaths.Remove(pathToRemove);
+            }
+            return (ret);
         }
 
         public bool InitWithDictionary(PlistDictionary dictionary)
@@ -551,7 +566,15 @@ namespace Cocos2D
 
                                 try
                                 {
-                                    Texture = CCTextureCache.SharedTextureCache.AddImage(imageBytes, textureName, SurfaceFormat.Color);
+                                    CCTexture2D texx = CCTextureCache.SharedTextureCache.AddImage(imageBytes, textureName, SurfaceFormat.Color);
+                                    if (texx == null && textureName.IndexOf('.') > -1)
+                                    {
+                                        texx = CCTextureCache.SharedTextureCache.AddImage(imageBytes, textureName.Substring(textureName.LastIndexOf('.')), SurfaceFormat.Color);
+                                    }
+                                    if (texx != null)
+                                    {
+                                        Texture = texx;
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
