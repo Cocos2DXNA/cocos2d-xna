@@ -67,6 +67,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="source.extension.vs13.vsixmanifest">
+	  <Link>source.extension.vsixmanifest</Link>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
