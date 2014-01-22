@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -780,12 +781,12 @@ namespace Cocos2D
 #if NETFX_CORE
                     var methodInfo = typeof(CCTexture2D).GetType().GetTypeInfo().GetDeclaredMethod("InitWithRawData");
 #else
-                    var methodInfo = typeof(CCTexture2D).GetMethod("InitWithRawData", BindingFlags.Public | BindingFlags.Instance);
+                    var methodInfo = typeof(CCTexture2D).GetMethods(BindingFlags.Public | BindingFlags.Instance).First(m => m.Name == "InitWithRawData" && m.IsGenericMethod && m.GetParameters().Length == 7);
 #endif
-                    var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType());
+                    var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType().GetElementType());
                     genericMethod.Invoke(this, new object[]
                         {
-                            Convert.ChangeType(m_CacheInfo.Data, m_CacheInfo.Data.GetType(),System.Globalization.CultureInfo.InvariantCulture),
+                            m_CacheInfo.Data,
                             m_ePixelFormat, m_uPixelsWide, m_uPixelsHigh, 
                             m_bHasPremultipliedAlpha, m_bHasMipmaps, m_tContentSize
                         });
