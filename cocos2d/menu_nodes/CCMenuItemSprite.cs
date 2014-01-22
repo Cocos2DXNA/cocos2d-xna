@@ -18,12 +18,13 @@ namespace Cocos2D
                 if (value != null)
                 {
                     AddChild(value);
-                    value.AnchorPoint = new CCPoint(0, 0);
+                    value.AnchorPoint = CCPoint.Zero;
                     ContentSize = value.ContentSize;
                 }
 
                 if (m_pNormalImage != null)
                 {
+                    value.Position = m_pNormalImage.Position;
                     RemoveChild(m_pNormalImage, true);
                 }
 
@@ -40,11 +41,12 @@ namespace Cocos2D
                 if (value != null)
                 {
                     AddChild(value);
-                    value.AnchorPoint = new CCPoint(0, 0);
+                    value.AnchorPoint = CCPoint.Zero;
                 }
 
                 if (m_pSelectedImage != null)
                 {
+                    value.Position = m_pSelectedImage.Position;
                     RemoveChild(m_pSelectedImage, true);
                 }
 
@@ -61,11 +63,12 @@ namespace Cocos2D
                 if (value != null)
                 {
                     AddChild(value);
-                    value.AnchorPoint = new CCPoint(0, 0);
+                    value.AnchorPoint = CCPoint.Zero;
                 }
 
                 if (m_pDisabledImage != null)
                 {
+                    value.Position = m_pDisabledImage.Position;
                     RemoveChild(m_pDisabledImage, true);
                 }
 
