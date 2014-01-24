@@ -108,7 +108,10 @@ namespace Cocos2D
 
             var size = GetMeasureString(text);
 
-            CreateBitmap((int) size.Width + 2, (int) size.Height + 2);
+            var w = (int)(Math.Ceiling(size.Width += 2));
+            var h = (int)(Math.Ceiling(size.Height += 2));
+
+            CreateBitmap(w, h);
 
             _canvas.DrawColor(Android.Graphics.Color.Black);
 
