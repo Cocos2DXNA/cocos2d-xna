@@ -362,7 +362,7 @@ namespace Cocos2D
                         continue;
                     }
                     height += pChild.ContentSize.Height * pChild.ScaleY + padding;
-                    width = Math.Max(width, pChild.ContentSize.Width);
+                    width = Math.Max(width, pChild.ContentSize.Width * pChild.ScaleX);
                 }
             }
 
@@ -379,7 +379,7 @@ namespace Cocos2D
                     }
                     pChild.Position = new CCPoint(0, y - pChild.ContentSize.Height * pChild.ScaleY / 2.0f);
                     y -= pChild.ContentSize.Height * pChild.ScaleY + padding;
-                    width = Math.Max(width, pChild.ContentSize.Width);
+                    width = Math.Max(width, pChild.ContentSize.Width * pChild.ScaleX);
                 }
             }
             ContentSize = new CCSize(width, height);
@@ -402,7 +402,7 @@ namespace Cocos2D
                     if (pChild.Visible)
                     {
                         width += pChild.ContentSize.Width * pChild.ScaleX + padding;
-                        height = Math.Max(height, pChild.ContentSize.Height);
+                        height = Math.Max(height, pChild.ContentSize.Height * pChild.ScaleY);
                     }
                 }
             }
@@ -418,7 +418,7 @@ namespace Cocos2D
                     {
                         pChild.Position = new CCPoint(x + pChild.ContentSize.Width * pChild.ScaleX / 2.0f, 0);
                         x += pChild.ContentSize.Width * pChild.ScaleX + padding;
-                        height = Math.Max(height, pChild.ContentSize.Height);
+                        height = Math.Max(height, pChild.ContentSize.Height * pChild.ScaleY);
                     }
                 }
             }
