@@ -44,7 +44,7 @@ namespace Cocos2D
 
             game.IsFixedTimeStep = true;
 
-            TouchPanel.EnabledGestures = GestureType.Tap;
+            // TouchPanel.EnabledGestures = GestureType.Tap;
 
             game.Activated += GameActivated;
             game.Deactivated += GameDeactivated;
@@ -139,6 +139,18 @@ namespace Cocos2D
         }
 
         /// <summary>
+        /// Override and set to true if you want to use CCInputState to manage the input
+        /// to the application. This will give you access to the gesture state of the app.
+        /// </summary>
+        public virtual bool UseInputStateManagement
+        {
+            get
+            {
+                return (false);
+            }
+        }
+
+        /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
@@ -152,18 +164,35 @@ namespace Cocos2D
                 CCDirector.SharedDirector.Accelerometer.Update();
             }
 #endif
-            // Process touch events 
-            ProcessTouch();
-
-            if (CCDirector.SharedDirector.GamePadEnabled)
+            if (UseInputStateManagement)
             {
-                // Process the game pad
-                // This consumes game pad state.
-                ProcessGamePad();
+                CCInputState.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+#if WINDOWS || WINDOWSGL || MACOS
+                ProcessMouse(CCInputState.Instance.Mouse);
+#else
+                ProcessTouch(CCInputState.Instance.TouchState);
+#endif
+                ProcessGestures(CCInputState.Instance.Gestures);
             }
+            else
+            {
+                // Process touch events 
+#if WINDOWS || WINDOWSGL || MACOS
+                ProcessMouse();
+#else
+                ProcessTouch();
+#endif
+                ProcessGestures();
 
-            ProcessKeyboard();
+                if (CCDirector.SharedDirector.GamePadEnabled)
+                {
+                    // Process the game pad
+                    // This consumes game pad state.
+                    ProcessGamePad();
+                }
 
+                ProcessKeyboard();
+            }
             CCDirector.SharedDirector.Update(gameTime);
 
             base.Update(gameTime);
@@ -182,10 +211,31 @@ namespace Cocos2D
             CCDrawManager.EndDraw();
         }
 
+        #region Gesture Support
+
         protected virtual void HandleGesture(GestureSample gesture)
         {
-            //TODO: Create CCGesture and convert the coordinates into the local coordinates.
         }
+
+        private void ProcessGestures(List<GestureSample> gestures)
+        {
+            // TODO: Handle the gestures and dispatch them to the subscribers.
+        }
+
+        private void ProcessGestures()
+        {
+            if (TouchPanel.EnabledGestures != GestureType.None)
+            {
+                List<GestureSample> g = new List<GestureSample>();
+                while (TouchPanel.IsGestureAvailable)
+                {
+                    g.Add(TouchPanel.ReadGesture());
+                }
+                ProcessGestures(g);
+            }
+        }
+
+        #endregion
 
         #region GamePad Support
         public event CCGamePadButtonDelegate GamePadButtonUpdate;
@@ -368,14 +418,23 @@ namespace Cocos2D
         }
         #endregion
 
-        private CCPoint TransformPoint(float x, float y) {
+        private CCPoint TransformPoint(float x, float y)
+        {
             CCPoint newPoint;
             newPoint.X = x * TouchPanel.DisplayWidth / Game.Window.ClientBounds.Width;
             newPoint.Y = y * TouchPanel.DisplayHeight / Game.Window.ClientBounds.Height;
             return newPoint;
         }
 
-        private void ProcessTouch()
+        #region Mouse Support
+
+#if WINDOWS || WINDOWSGL || MACOS
+        private void ProcessMouse()
+        {
+            ProcessMouse(Mouse.GetState());
+        }
+
+        private void ProcessMouse(MouseState mouse)
         {
             if (m_pDelegate != null)
             {
@@ -386,56 +445,87 @@ namespace Cocos2D
                 CCRect viewPort = CCDrawManager.ViewPortRect;
                 CCPoint pos;
 
-                // TODO: allow configuration to treat the game pad as a touch device.
+            _prevMouseState = _lastMouseState;
+            _lastMouseState = mouse;
 
-#if WINDOWS || WINDOWSGL || MACOS
-                _prevMouseState = _lastMouseState;
-                _lastMouseState = Mouse.GetState();
-
-                if (_prevMouseState.LeftButton == ButtonState.Released && _lastMouseState.LeftButton == ButtonState.Pressed)
-                {
+            if (_prevMouseState.LeftButton == ButtonState.Released && _lastMouseState.LeftButton == ButtonState.Pressed)
+            {
 #if NETFX_CORE
                     pos = TransformPoint(_lastMouseState.X, _lastMouseState.Y);
                     pos = CCDrawManager.ScreenToWorld(pos.X, pos.Y);
 #else
-                    pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
+                pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
 #endif
-                    _lastMouseId++;
-                    m_pTouches.AddLast(new CCTouch(_lastMouseId, pos.X, pos.Y));
-                    m_pTouchMap.Add(_lastMouseId, m_pTouches.Last);
-                    newTouches.Add(m_pTouches.Last.Value);
+                _lastMouseId++;
+                m_pTouches.AddLast(new CCTouch(_lastMouseId, pos.X, pos.Y));
+                m_pTouchMap.Add(_lastMouseId, m_pTouches.Last);
+                newTouches.Add(m_pTouches.Last.Value);
 
-                    m_bCaptured = true;
-                }
-                else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Pressed)
+                m_bCaptured = true;
+            }
+            else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Pressed)
+            {
+                if (m_pTouchMap.ContainsKey(_lastMouseId))
                 {
-                    if (m_pTouchMap.ContainsKey(_lastMouseId))
+                    if (_prevMouseState.X != _lastMouseState.X || _prevMouseState.Y != _lastMouseState.Y)
                     {
-                        if (_prevMouseState.X != _lastMouseState.X || _prevMouseState.Y != _lastMouseState.Y)
-                        {
 #if NETFX_CORE
                             pos = TransformPoint(_lastMouseState.X, _lastMouseState.Y);
                             pos = CCDrawManager.ScreenToWorld(pos.X, pos.Y);
 #else
-                            pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
+                        pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
 #endif
-                            movedTouches.Add(m_pTouchMap[_lastMouseId].Value);
-                            m_pTouchMap[_lastMouseId].Value.SetTouchInfo(_lastMouseId, pos.X, pos.Y);
-                        }
+                        movedTouches.Add(m_pTouchMap[_lastMouseId].Value);
+                        m_pTouchMap[_lastMouseId].Value.SetTouchInfo(_lastMouseId, pos.X, pos.Y);
                     }
                 }
-                else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Released)
+            }
+            else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Released)
+            {
+                if (m_pTouchMap.ContainsKey(_lastMouseId))
                 {
-                    if (m_pTouchMap.ContainsKey(_lastMouseId))
-                    {
-                        endedTouches.Add(m_pTouchMap[_lastMouseId].Value);
-                        m_pTouches.Remove(m_pTouchMap[_lastMouseId]);
-                        m_pTouchMap.Remove(_lastMouseId);
-                    }
+                    endedTouches.Add(m_pTouchMap[_lastMouseId].Value);
+                    m_pTouches.Remove(m_pTouchMap[_lastMouseId]);
+                    m_pTouchMap.Remove(_lastMouseId);
                 }
+            }
+                if (newTouches.Count > 0)
+                {
+                    m_pDelegate.TouchesBegan(newTouches);
+                }
+
+                if (movedTouches.Count > 0)
+                {
+                    m_pDelegate.TouchesMoved(movedTouches);
+                }
+
+                if (endedTouches.Count > 0)
+                {
+                    m_pDelegate.TouchesEnded(endedTouches);
+                }
+        }
+        }
 #endif
 
-                TouchCollection touchCollection = TouchPanel.GetState();
+        #endregion
+
+        #region Touch Support
+
+        private void ProcessTouch()
+        {
+            ProcessTouch(TouchPanel.GetState());
+        }
+
+        private void ProcessTouch(TouchCollection touchCollection)
+        {
+            if (m_pDelegate != null)
+            {
+                newTouches.Clear();
+                movedTouches.Clear();
+                endedTouches.Clear();
+
+                CCRect viewPort = CCDrawManager.ViewPortRect;
+                CCPoint pos;
 
                 foreach (TouchLocation touch in touchCollection)
                 {
@@ -518,6 +608,7 @@ namespace Cocos2D
             //matching the specified id.
             return null;
         }
+        #endregion
 
         // sharedApplication pointer
 
