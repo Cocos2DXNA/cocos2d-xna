@@ -173,6 +173,14 @@ namespace Cocos2D
                 ProcessTouch(CCInputState.Instance.TouchState);
 #endif
                 ProcessGestures(CCInputState.Instance.Gestures);
+                if (CCDirector.SharedDirector.GamePadEnabled)
+                {
+                    ProcessGamePad(CCInputState.Instance.CurrentGamePadStates[0], PlayerIndex.One);
+                    ProcessGamePad(CCInputState.Instance.CurrentGamePadStates[1], PlayerIndex.Two);
+                    ProcessGamePad(CCInputState.Instance.CurrentGamePadStates[2], PlayerIndex.Three);
+                    ProcessGamePad(CCInputState.Instance.CurrentGamePadStates[3], PlayerIndex.Four);
+                }
+                ProcessKeyboard(CCInputState.Instance.CurrentKeyboardStates[0]);
             }
             else
             {
@@ -213,13 +221,33 @@ namespace Cocos2D
 
         #region Gesture Support
 
-        protected virtual void HandleGesture(GestureSample gesture)
-        {
-        }
+        public delegate void OnGestureDelegate(CCGesture g);
+
+        public event OnGestureDelegate OnGesture;
 
         private void ProcessGestures(List<GestureSample> gestures)
         {
-            // TODO: Handle the gestures and dispatch them to the subscribers.
+            if (OnGesture != null)
+            {
+                CCRect viewPort = CCDrawManager.ViewPortRect;
+                foreach (GestureSample g in gestures)
+                {
+                    CCPoint pos = CCPoint.Zero;
+                    CCPoint pos2 = CCPoint.Zero;
+                    if (viewPort.ContainsPoint(g.Position.X, g.Position.Y))
+                    {
+                        pos = CCDrawManager.ScreenToWorld(g.Position.X, g.Position.Y);
+                    }
+                    if (viewPort.ContainsPoint(g.Position2.X, g.Position2.Y))
+                    {
+                        pos2 = CCDrawManager.ScreenToWorld(g.Position2.X, g.Position2.Y);
+                    }
+                    CCPoint delta = new CCPoint(g.Delta.X, g.Delta.Y);
+                    CCPoint delta2 = new CCPoint(g.Delta2.X, g.Delta2.Y);
+                    CCGesture cg = new CCGesture(g.GestureType, g.Timestamp, pos, pos2, delta, delta2);
+                    OnGesture(cg);
+                }
+            }
         }
 
         private void ProcessGestures()
@@ -247,10 +275,10 @@ namespace Cocos2D
         private Dictionary<PlayerIndex, GamePadState> m_PriorGamePadState = new Dictionary<PlayerIndex, GamePadState>();
 
         private void ProcessGamePad(GamePadState gps, PlayerIndex player)
-            {
+        {
             GamePadState lastState = new GamePadState();
             if (m_PriorGamePadState.ContainsKey(player))
-                {
+            {
                 lastState = m_PriorGamePadState[player];
                 // Notify listeners when the gamepad is connected.
                 if ((lastState.IsConnected != gps.IsConnected) && GamePadConnectionUpdate != null)
@@ -276,29 +304,29 @@ namespace Cocos2D
                     if (caps.HasBackButton)
                     {
                         back = (gps.Buttons.Back == ButtonState.Pressed ? CCGamePadButtonStatus.Pressed : CCGamePadButtonStatus.Released);
-                }
+                    }
                     if (caps.HasStartButton)
                     {
                         start = (gps.Buttons.Start == ButtonState.Pressed ? CCGamePadButtonStatus.Pressed : CCGamePadButtonStatus.Released);
-            }
+                    }
                     if (caps.HasBigButton)
-            {
+                    {
                         system = (gps.Buttons.BigButton == ButtonState.Pressed ? CCGamePadButtonStatus.Pressed : CCGamePadButtonStatus.Released);
                     }
                     if (caps.HasAButton)
-                {
+                    {
                         a = (gps.Buttons.A == ButtonState.Pressed ? CCGamePadButtonStatus.Pressed : CCGamePadButtonStatus.Released);
-                }
+                    }
                     if (caps.HasBButton)
                     {
                         b = (gps.Buttons.B == ButtonState.Pressed ? CCGamePadButtonStatus.Pressed : CCGamePadButtonStatus.Released);
-            }
+                    }
                     if (caps.HasXButton)
-            {
+                    {
                         x = (gps.Buttons.X == ButtonState.Pressed ? CCGamePadButtonStatus.Pressed : CCGamePadButtonStatus.Released);
                     }
                     if (caps.HasYButton)
-                {
+                    {
                         y = (gps.Buttons.Y == ButtonState.Pressed ? CCGamePadButtonStatus.Pressed : CCGamePadButtonStatus.Released);
                     }
                     if (caps.HasLeftShoulderButton)
@@ -312,7 +340,7 @@ namespace Cocos2D
                     GamePadButtonUpdate(back, start, system, a, b, x, y, leftShoulder, rightShoulder, player);
                 }
                 // Process the game sticks
-                if (GamePadStickUpdate != null && (caps.HasLeftXThumbStick || caps.HasLeftYThumbStick || caps.HasRightXThumbStick || caps.HasRightYThumbStick ||  caps.HasLeftStickButton || caps.HasRightStickButton))
+                if (GamePadStickUpdate != null && (caps.HasLeftXThumbStick || caps.HasLeftYThumbStick || caps.HasRightXThumbStick || caps.HasRightYThumbStick || caps.HasLeftStickButton || caps.HasRightStickButton))
                 {
                     CCPoint vecLeft;
                     if (caps.HasLeftXThumbStick || caps.HasLeftYThumbStick)
@@ -399,7 +427,9 @@ namespace Cocos2D
         {
 			// Read the current keyboard state
             KeyboardState currentKeyState = Keyboard.GetState();
-
+        }
+        private void ProcessKeyboard(KeyboardState currentKeyState)
+        {
 			// Check for Keypad interaction
             if(currentKeyState.IsKeyUp(Keys.Back) && m_priorKeyboardState.IsKeyDown(Keys.Back)) 
             {
