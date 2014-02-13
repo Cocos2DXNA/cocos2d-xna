@@ -304,7 +304,7 @@ namespace Cocos2D
             pp.BackBufferHeight = manager.PreferredBackBufferHeight;
             pp.BackBufferFormat = manager.PreferredBackBufferFormat;
             pp.DepthStencilFormat = manager.PreferredDepthStencilFormat;
-            pp.RenderTargetUsage = RenderTargetUsage.DiscardContents; //??? DiscardContents fast
+            pp.RenderTargetUsage = RenderTargetUsage.PreserveContents; // DiscardContents; //??? DiscardContents fast
         }
 
         public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
@@ -396,9 +396,9 @@ namespace Cocos2D
 
             m_DepthEnableStencilState = new DepthStencilState
             {
-                DepthBufferEnable = true,
-                DepthBufferWriteEnable = true,
-                TwoSidedStencilMode = true
+                DepthBufferEnable = true
+                ,DepthBufferWriteEnable = true
+                ,TwoSidedStencilMode = true
             };
 
             m_DepthDisableStencilState = new DepthStencilState

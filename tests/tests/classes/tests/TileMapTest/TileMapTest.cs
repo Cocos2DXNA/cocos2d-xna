@@ -987,6 +987,7 @@ namespace tests
             base.OnEnter();
 
             // TIP: 2d projection should be used
+            CCDirector.SharedDirector.SetDepthTest(true);
             CCDirector.SharedDirector.Projection = CCDirectorProjection.Projection2D;
         }
 
@@ -995,6 +996,7 @@ namespace tests
             // At exit use any other projection. 
             //    CCDirector.sharedDirector().setProjection:kCCDirectorProjection3D);
             base.OnExit();
+            CCDirector.SharedDirector.SetDepthTest(false);
         }
 
         public override string title()
@@ -1790,7 +1792,6 @@ namespace tests
             // fix bug #486, #419. 
             // "test" is not the default value in CCDirector.setGLDefaultValues()
             // but TransitionTest may setDepthTest(false), we should revert it here
-            CCDirector.SharedDirector.SetDepthTest(true);
 
             CCDirector.SharedDirector.ReplaceScene(this);
         }

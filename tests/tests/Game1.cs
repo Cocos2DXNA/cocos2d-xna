@@ -20,7 +20,7 @@ namespace tests
             Content.RootDirectory = "Content";
 
             graphics.IsFullScreen = false;
-            graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
+            graphics.PreferredDepthStencilFormat = DepthFormat.Depth24;//.Depth24Stencil8;
 
 #if WINDOWS || MACOS
             graphics.PreferredBackBufferWidth = 1024;
