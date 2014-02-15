@@ -733,7 +733,7 @@ namespace Cocos2D
 
             if (m_pChildrenByTag != null && m_pChildrenByTag.Count > 0)
             {
-                Debug.Assert(m_pChildren != null && m_pChildren.count > 0);
+                //Debug.Assert(m_pChildren != null && m_pChildren.count > 0);
 
                 List<CCNode> list;
                 if (m_pChildrenByTag.TryGetValue(tag, out list))
