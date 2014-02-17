@@ -17,7 +17,7 @@ namespace Cocos2D
         }
         public CCScale9SpriteFile(CCRect capInsets, string file)
         {
-            InitWithFile(file, capInsets);
+            InitWithFile(capInsets, file);
         }
         public CCScale9SpriteFile(string file)
         {
