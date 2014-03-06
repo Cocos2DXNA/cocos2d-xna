@@ -1192,7 +1192,7 @@ namespace Cocos2D
             CCDirector.SharedDirector.m_obWinSizeInPoints = DesignResolutionSize;
 
             CCDirector.SharedDirector.CreateStatsLabel();
-            CCDirector.SharedDirector.SetGlDefaultValues();
+            CCDirector.SharedDirector.SetRenderDefaultValues();
         }
 
         public static void SetOrientation(DisplayOrientation supportedOrientations)

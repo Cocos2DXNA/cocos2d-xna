@@ -167,7 +167,7 @@ namespace Cocos2D
     #endif
         }
 
-    	public void PurgeSharedUserDefault()
+    	public static void PurgeSharedUserDefault()
     	{
     		m_spUserDefault = null;
     	}
