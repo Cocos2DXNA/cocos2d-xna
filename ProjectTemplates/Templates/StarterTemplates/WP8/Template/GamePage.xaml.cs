@@ -20,11 +20,16 @@ namespace $safeprojectname$
         public GamePage()
         {
             InitializeComponent();
-
-            _game = XamlGame<Game1>.Create("", this);
+			Loaded += GamePage_Loaded;
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+        }
+
+		void GamePage_Loaded(object sender, RoutedEventArgs e)
+        {
+			// We do this here to prevent a deadlock in the initialization of the framework.
+            _game = XamlGame<Game1>.Create("", this);
         }
 
         // Sample code for building a localized ApplicationBar

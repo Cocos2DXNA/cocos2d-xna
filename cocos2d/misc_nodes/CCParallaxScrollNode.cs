@@ -46,7 +46,7 @@ namespace Cocos2D
 
         public void AddChild(CCSprite node, int z, CCPoint r, CCPoint p, CCPoint s) 
         {
-        addChild(node, z, r, p, s, ccp(0,0));
+        AddChild(node, z, r, p, s, CCPoint.Zero);
         }
 
         public void AddChild(CCSprite node, int z, CCPoint r, CCPoint p, CCPoint s, CCPoint v) 
