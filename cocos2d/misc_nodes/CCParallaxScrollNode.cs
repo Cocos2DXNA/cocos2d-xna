@@ -8,7 +8,10 @@ namespace Cocos2D
 {
     public class CCParallaxScrollNode : CCNode
     {
-        private const float kDefaultPTMRatio = 1f / 32f;
+        /// <summary>
+        /// This is the default speed used in box2d - 32 pixels/sec
+        /// </summary>
+        private const float kDefaultPTMRatio = 32f;
 
         private List<CCParallaxScrollOffset> m_ScrollOffsets;
         private CCSpriteBatchNode m_Batch;
@@ -18,6 +21,15 @@ namespace Cocos2D
         /// Scaling ratio for real world size to game world size.
         /// </summary>
         public float PTMRatio { get; set; }
+
+        /// <summary>
+        /// Scrolling node with no sprite batch support.
+        /// </summary>
+        public CCParallaxScrollNode()
+        {
+            m_ScrollOffsets = new List<CCParallaxScrollOffset>();
+            PTMRatio = kDefaultPTMRatio;
+        }
 
         public CCParallaxScrollNode(CCSpriteSheet sheet)
         {
