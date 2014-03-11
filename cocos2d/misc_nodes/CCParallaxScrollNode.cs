@@ -8,6 +8,8 @@ namespace Cocos2D
 {
     public class CCParallaxScrollNode : CCNode
     {
+        private const float kDefaultPTMRatio = 1f / 32f;
+
         private List<CCParallaxScrollOffset> m_ScrollOffsets;
         private CCSpriteBatchNode m_Batch;
         private CCSpriteSheet m_SpriteSheet;
@@ -22,6 +24,7 @@ namespace Cocos2D
             m_SpriteSheet = sheet;
             m_ScrollOffsets = new List<CCParallaxScrollOffset>();
             m_Batch = new CCSpriteBatchNode(sheet.Frames[0].Texture);
+            PTMRatio = kDefaultPTMRatio;
         }
         /// <summary>
         /// Constructs the infinite scrolling background node with the given texture sheet, which is the root texture
@@ -32,57 +35,67 @@ namespace Cocos2D
         {
             m_ScrollOffsets = new List<CCParallaxScrollOffset>();
             m_Batch = new CCSpriteBatchNode(textureName);
-            PTMRatio = 1f / 32f;
+            PTMRatio = kDefaultPTMRatio;
         }
-        public CCParallaxScrollNode(string textureName, string plistName) : this(textureName)
+        public CCParallaxScrollNode(string textureName, string plistName)
+            : this(textureName)
         {
             m_SpriteSheet = new CCSpriteSheet(plistName, textureName);
         }
 
-        public CCParallaxScrollNode(string textureName, Stream plistFile) : this(textureName)
+        public CCParallaxScrollNode(string textureName, Stream plistFile)
+            : this(textureName)
         {
             m_SpriteSheet = new CCSpriteSheet(plistFile, textureName);
         }
 
-        public void AddChild(CCSprite node, int z, CCPoint r, CCPoint p, CCPoint s) 
+        public void AddChild(CCSprite node, int z, CCPoint r, CCPoint p, CCPoint s)
         {
-        AddChild(node, z, r, p, s, CCPoint.Zero);
+            AddChild(node, z, r, p, s, CCPoint.Zero);
         }
 
-        public void AddChild(CCSprite node, int z, CCPoint r, CCPoint p, CCPoint s, CCPoint v) 
+        public void AddChild(CCSprite node, int z, CCPoint r, CCPoint p, CCPoint s, CCPoint v)
         {
-node->setAnchorPoint(ccp(0,0));
-        CCParallaxScrollOffset *obj = CCParallaxScrollOffset::scrollWithNode(node, r, p, s, v);
-        ccArrayAppendObjectWithResize(scrollOffsets, obj);
-        if (batch) {
-            batch->addChild(node, z);
-        } else {
-            base.AddChild(node, z);
-        }
+            node.AnchorPoint = CCPoint.Zero;
+            CCParallaxScrollOffset obj = new CCParallaxScrollOffset(node, r, p, s, v);
+            m_ScrollOffsets.Add(obj);
+            if (m_Batch != null)
+            {
+                m_Batch.AddChild(node, z);
+            }
+            else
+            {
+                base.AddChild(node, z);
+            }
         }
 
         public void RemoveChild(CCSprite node, bool cleanup)
         {
-            for (int i = 0; i < scrollOffsets->num; i++)
+            int removeAt = -1;
+            for (int i = 0; i < m_ScrollOffsets.Count; i++)
             {
-                CCParallaxScrollOffset* scrollOffset = (CCParallaxScrollOffset*)scrollOffsets->arr[i];
-                if (scrollOffset->getChild()->isEqual(node))
+                CCParallaxScrollOffset scrollOffset = m_ScrollOffsets[i];
+                if (scrollOffset.Child == node)
                 {
-                    ccArrayRemoveObjectAtIndex(scrollOffsets, i);
+                    removeAt = i;
                     break;
                 }
             }
-            if (batch)
+            if (removeAt != -1)
             {
-                batch->removeChild(node, cleanup);
+                m_ScrollOffsets.RemoveAt(removeAt);
+            }
+            if (m_Batch != null)
+            {
+                m_Batch.RemoveChild(node, cleanup);
             }
         }
         public void RemoveAllChildrenWithCleanup(bool cleanup)
         {
-            ccArrayRemoveAllObjects(scrollOffsets);
-            if (batch)
+            m_ScrollOffsets.Clear();
+            if (m_Batch != null)
             {
-                batch->removeAllChildrenWithCleanup(cleanup);
+                m_Batch.RemoveAllChildrenWithCleanup(cleanup);
             }
         }
         /// <summary>
@@ -96,29 +109,33 @@ node->setAnchorPoint(ccp(0,0));
 
             CCPoint vel2 = vel * PTMRatio;
 
-            for (int i=m_ScrollOffsets.Count - 1; i >= 0; i--) {
-            CCParallaxScrollOffset scrollOffset = m_ScrollOffsets[i];
-            CCNode child = scrollOffset.getChild();
+            for (int i = m_ScrollOffsets.Count - 1; i >= 0; i--)
+            {
+                CCParallaxScrollOffset scrollOffset = m_ScrollOffsets[i];
+                CCNode child = scrollOffset.Child;
 
-            CCPoint relVel = scrollOffset.RelativeVelocity * PTMRatio;
-            CCPoint totalVel = vel2 + relVel;
+                CCPoint relVel = scrollOffset.RelativeVelocity * PTMRatio;
+                CCPoint totalVel = vel2 + relVel;
 
-            CCPoint offset = (totalVel * dt) * scrollOffset.Ratio;
+                CCPoint offset = (totalVel * dt);
+                offset = offset * scrollOffset.Ratio;
 
-            child.Position = child.Position + offset;
+                child.Position = child.Position + offset;
 
-            if ( (vel2.X < 0f && child.Position.X + child.ContentSize.Width < 0) ||
-                (vel2.X > 0 && child.Position.X > screen.Width) ) {
+                if ((vel2.X < 0f && child.Position.X + child.ContentSize.Width < 0) ||
+                    (vel2.X > 0 && child.Position.X > screen.Width))
+                {
 
-                child.Position = child.Position + new CCPoint((vel2.X < 0f ? 1 : -1) * Math.Abs(scrollOffset.Offset.X), 0f);
+                    child.Position = child.Position + new CCPoint((vel2.X < 0f ? 1 : -1) * Math.Abs(scrollOffset.Offset.X), 0f);
+                }
+
+                // Positive y indicates upward movement in cocos2d
+                if ((vel2.Y < 0 && child.Position.Y + child.ContentSize.Height < 0f) ||
+                    (vel2.Y > 0 && child.Position.Y > screen.Height))
+                {
+                    child.Position = child.Position + new CCPoint(0f, (vel2.Y < 0f ? 1f : -1f) * Math.Abs(scrollOffset.Offset.Y));
+                }
             }
-
-            // Positive y indicates upward movement in cocos2d
-            if ( (vel2.Y < 0 && child.Position.Y + child.ContentSize.Height < 0f) ||
-                (vel2.Y > 0 && child.Position.Y > screen.Height) ) {
-                child.Position = child.Position + new CCPoint(0f, (vel2.Y < 0f ? 1f : -1f) * Math.Abs(scrollOffset.Offset.Y));
-            }
-        }
         }
         /// <summary>
         /// 
@@ -129,10 +146,10 @@ node->setAnchorPoint(ccp(0,0));
         {
             for (int i = m_ScrollOffsets.Count - 1; i >= 0; i--)
             {
-                CCParallaxScrollOffset* scrollOffset = (CCParallaxScrollOffset*)scrollOffsets->arr[i];
-                CCNode* child = scrollOffset->getChild();
-                float offset = y * scrollOffset->getRatio().y;//ccpCompMult(pos, scrollOffset.ratio);
-                child->setPosition(ccp(child->getPosition().x, scrollOffset->getOrigPosition().y + offset));
+                CCParallaxScrollOffset scrollOffset = m_ScrollOffsets[i];
+                CCNode child = scrollOffset.Child;
+                float offset = y * scrollOffset.Ratio.Y;//ccpCompMult(pos, scrollOffset.ratio);
+                child.Position = new CCPoint(child.Position.X, scrollOffset.OriginalPosition.Y + offset);
             }
         }
         /// <summary>
@@ -145,12 +162,7 @@ node->setAnchorPoint(ccp(0,0));
         /// <param name="objects"></param>
         public void AddInfiniteScrollWithZ(int z, CCPoint ratio, CCPoint pos, CCPoint dir, CCSprite[] objects)
         {
-CCArray* argArray = CCArray::arrayWithCapacity(2);
-        for (CCSprite *arg = firstObject; arg != 0; arg = va_arg(args, CCSprite*)) {
-            argArray->addObject(arg);
-        }
-
-        addInfiniteScrollWithObjects(argArray, z, ratio, pos, dir);
+            AddInfiniteScrollWithObjects(objects, z, ratio, pos, dir);
         }
         /// <summary>
         /// 
@@ -161,13 +173,7 @@ CCArray* argArray = CCArray::arrayWithCapacity(2);
         /// <param name="objects"></param>
         public void AddInfiniteScrollXWithZ(int z, CCPoint ratio, CCPoint pos, CCSprite[] objects)
         {
-CCArray* argArray = CCArray::arrayWithCapacity(2);
-        for (CCSprite *arg = firstObject; arg != 0; arg = va_arg(args, CCSprite*)) {
-            argArray->addObject(arg);
-        }
-        va_end(args);
-
-        addInfiniteScrollWithObjects(argArray, z, ratio, pos, ccp(1, 0));
+            AddInfiniteScrollWithObjects(objects, z, ratio, pos, new CCPoint(1, 0));
         }
 
         /// <summary>
@@ -179,13 +185,7 @@ CCArray* argArray = CCArray::arrayWithCapacity(2);
         /// <param name="objects"></param>
         public void AddInfiniteScrollYWithZ(int z, CCPoint ratio, CCPoint pos, CCSprite[] objects)
         {
-CCArray* argArray = CCArray::arrayWithCapacity(2);
-        for (CCSprite *arg = firstObject; arg != 0; arg = va_arg(args, CCSprite*)) {
-            argArray->addObject(arg);
-        }
-        va_end(args);
-
-        addInfiniteScrollWithObjects(argArray, z, ratio, pos, ccp(0, 1));
+            AddInfiniteScrollWithObjects(objects, z, ratio, pos, new CCPoint(0, 1));
         }
 
         /// <summary>
@@ -196,85 +196,30 @@ CCArray* argArray = CCArray::arrayWithCapacity(2);
         /// <param name="p"></param>
         /// <param name="pos"></param>
         /// <param name="dir"></param>
-        public void AddInfiniteScrollWithObjects(CCNode[] objects, int z, CCPoint p, CCPoint pos, CCPoint dir)
+        public void AddInfiniteScrollWithObjects(CCSprite[] objects, int z, CCPoint ratio, CCPoint pos, CCPoint dir)
         {
-// NOTE: corrects for 1 pixel at end of each sprite to avoid thin lines appearing
+            // NOTE: corrects for 1 pixel at end of each sprite to avoid thin lines appearing
 
-        // Calculate total width and height
-        float totalWidth = 0;
-        float totalHeight = 0;
-        for (int i = 0; i < objects->count(); i++) {
-            CCSprite *object = (CCSprite *)(objects->objectAtIndex(i));
-            totalWidth += object->getContentSize().width - 2;//1;
-            totalHeight += object->getContentSize().height - 2;//1;
+            // Calculate total width and height
+            float totalWidth = 0;
+            float totalHeight = 0;
+            for (int i = 0; i < objects.Length; i++)
+            {
+                CCSprite obj = objects[i];
+                totalWidth += obj.ContentSize.Width - 2;//1;
+                totalHeight += obj.ContentSize.Height - 2;//1;
+            }
+
+            // Position objects, add to parallax
+            CCPoint currPos = pos;
+            for (int i = 0; i < objects.Length; i++)
+            {
+                CCSprite obj = objects[i];
+                AddChild(obj, z, ratio, currPos, new CCPoint(totalWidth, totalHeight));
+                CCPoint nextPosOffset = new CCPoint(dir.X * (obj.ContentSize.Width - 2/*1*/), dir.Y * (obj.ContentSize.Height - 2/*1*/));
+                currPos = currPos + nextPosOffset;
+            }
         }
-
-        // Position objects, add to parallax
-        CCPoint currPos = pos;
-        for (int i = 0; i < objects->count(); i++) {
-            CCSprite *object = (CCSprite *)(objects->objectAtIndex(i));
-            addChild(object, z, ratio, currPos, ccp(totalWidth, totalHeight));
-            CCPoint nextPosOffset = ccp(dir.x * (object->getContentSize().width - 2/*1*/), dir.y * (object->getContentSize().height - 2/*1*/));
-            currPos = ccpAdd(currPos, nextPosOffset);
-        }
-        }
-
-void UpdateWithOffset(CCPoint delta)
- {
- CCSize screen = CCDirector::sharedDirector~~>getWinSize;
- CCPoint offsetPTM = ccpMult;
- for {
- CCParallaxScrollOffset scrollOffset = scrollOffsets~~>arr[i];
- CCNode *child = scrollOffset~~>getChild;
- CCPoint offset = ccpMult), 1);
- CCPoint newPos = ccpAdd, offset);
- CCPoint oldPos = child>getPosition;
- if && .width < 0)) {
- newPos.x = fabs.x);
- } else if && ) {
- newPos.x = fabs.x);
- }
- // Positive y indicates upward movement in cocos2d
- if && .y + child>getContentSize.height < 0)) {
- newPos.y= fabs.y);
- } else if .y > screen.height)) {
- newPos.y = fabs.y);
- }
- child>setPosition;
- }
- }
-public void updateWithPosition(CCPoint pos)
- {
- CCSize screen = CCDirector::sharedDirector~~>getWinSize;
- float fractpartX, fractpartY, intpart, xScrollOffset, yScrollOffset;
- for {
- CCParallaxScrollOffset *scrollOffset = scrollOffsets~~>arr[i];
- CCNodechild = scrollOffset~~>getChild;
- CCPoint offset = ccpMult), 1);
- CCPoint newPos = ccpAdd, offset);
- CCPoint oldPos = child>getPosition;
- xScrollOffset = scrollOffset~~>getScrollOffset.x;
- yScrollOffset = scrollOffset~~>getScrollOffset.y;
- fractpartX = modff;
- newPos.x = fractpartX*xScrollOffset;
- fractpartY = modff;
- newPos.y = fractpartY*yScrollOffset;
- if && .width < 0)) {
- newPos.x*= fabs(xScrollOffset);
- } else if ((newPos.x > oldPos.x) && (newPos.x > screen.width)) {
- newPos.x = fabs;
- }
- // Positive y indicates upward movement in cocos2d
- if && .height < 0)) {
- newPos.y += fabs;
- } else if && ) {
- newPos.y= fabs(yScrollOffset);
- }
-
-child->setPosition(newPos.x, newPos.y);
- }
- }
-
 
         public CCSpriteBatchNode BatchNode
         {
