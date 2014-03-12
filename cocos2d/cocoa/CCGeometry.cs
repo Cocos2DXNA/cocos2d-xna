@@ -615,6 +615,13 @@ namespace Cocos2D
             pt.Y = p1.Y + p2.Y;
             return pt;
         }
+        public static CCPoint operator *(CCPoint p1, CCPoint p2)
+        {
+            CCPoint pt;
+            pt.X = p1.X * p2.X;
+            pt.Y = p1.Y * p2.Y;
+            return pt;
+        }
 
         public static CCPoint operator +(CCPoint p1)
         {

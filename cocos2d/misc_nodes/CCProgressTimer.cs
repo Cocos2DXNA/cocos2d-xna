@@ -12,12 +12,13 @@ namespace Cocos2D
         Bar,
     }
 
-/**
- @brief CCProgresstimer is a subclass of CCNode.
- It renders the inner sprite according to the percentage.
- The progress can be Radial, Horizontal or vertical.
- @since v0.99.1
- */
+    /**
+     @brief CCProgresstimer is a subclass of CCNode.
+     It renders the inner sprite according to the percentage.
+     The progress can be Radial, Horizontal or vertical.
+     @since v0.99.1
+     * Based upon: http://fancyratstudios.com/2010/02/programming/progresstimer-for-cocos2d/
+     */
 
     public class CCProgressTimer : CCNodeRGBA
     {

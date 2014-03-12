@@ -17,7 +17,7 @@ namespace tests
         }
 
         static int sceneIdx = -1;
-        static int MAX_LAYER = 2;
+        static int MAX_LAYER = 3;
 
         protected override void NextTestCase()
         {
@@ -49,6 +49,7 @@ namespace tests
             {
                 case 0: return new Parallax1();
                 case 1: return new Parallax2();
+                case 2: return new ParallaxScrollTest();
             }
 
             return null;
