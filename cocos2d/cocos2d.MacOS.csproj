@@ -12,7 +12,7 @@
     <RootNamespace>Cocos2D</RootNamespace>
     <SuppressXamMacUpsell>True</SuppressXamMacUpsell>
     <AssemblyName>cocos2d-xna</AssemblyName>
-	<UseMSBuildEngine>False</UseMSBuildEngine>
+    <UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -29,7 +29,6 @@
     <EnablePackageSigning>False</EnablePackageSigning>
     <IncludeMonoRuntime>False</IncludeMonoRuntime>
     <UseSGen>False</UseSGen>
-	<UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -45,7 +44,6 @@
     <EnablePackageSigning>False</EnablePackageSigning>
     <IncludeMonoRuntime>False</IncludeMonoRuntime>
     <UseSGen>False</UseSGen>
-	<UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -59,7 +57,6 @@
     <EnablePackageSigning>False</EnablePackageSigning>
     <IncludeMonoRuntime>False</IncludeMonoRuntime>
     <UseSGen>False</UseSGen>
-	<UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

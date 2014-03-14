@@ -58,7 +58,7 @@ namespace GameStarterKit
 
 
 			// 2D projection
-			pDirector.Projection = ccDirectorProjection.kCCDirectorProjection2D;
+			pDirector.Projection = CCDirectorProjection.Projection2D;
 
 			// Enables High Res mode (Retina Display) on iPhone 4 and maintains low res on all other devices
 			//if( ! [director_ enableRetinaDisplay:YES] )
@@ -66,9 +66,9 @@ namespace GameStarterKit
 
 
 #if WINDOWS || MACOS || LINUX || OUYA || XBOX
-			var resPolicy = ResolutionPolicy.ExactFit;
+			var resPolicy = CCResolutionPolicy.ExactFit;
 #else
-			var resPolicy = ResolutionPolicy.ShowAll;
+			var resPolicy = CCResolutionPolicy.ShowAll;
 #endif
 
 			CCDrawManager.SetDesignResolutionSize(preferredWidth, 
