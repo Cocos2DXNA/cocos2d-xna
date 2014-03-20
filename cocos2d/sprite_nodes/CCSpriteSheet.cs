@@ -91,6 +91,7 @@ namespace Cocos2D
 
 		}
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithFile(string fileName)
         {
             PlistDocument document = CCContentManager.SharedContentManager.Load<PlistDocument>(fileName);
@@ -156,6 +157,7 @@ namespace Cocos2D
             }
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithFile(string fileName, string textureFileName)
         {
             Debug.Assert(textureFileName != null);
@@ -172,6 +174,7 @@ namespace Cocos2D
             }
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithFile(string fileName, CCTexture2D texture)
         {
             PlistDocument document = CCContentManager.SharedContentManager.Load<PlistDocument>(fileName);
@@ -181,6 +184,7 @@ namespace Cocos2D
             InitWithDictionary(dict, texture);
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithStream(Stream stream, string textureFileName)
         {
             CCTexture2D texture = CCTextureCache.SharedTextureCache.AddImage(textureFileName);
@@ -195,6 +199,7 @@ namespace Cocos2D
             }
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithStream(Stream stream, CCTexture2D texture)
         {
             var document = new PlistDocument();
@@ -212,6 +217,7 @@ namespace Cocos2D
             InitWithDictionary(dict, texture);
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithDictionary(PlistDictionary dict, CCTexture2D texture)
         {
             _spriteFrames.Clear();

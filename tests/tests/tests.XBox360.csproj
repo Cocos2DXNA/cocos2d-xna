@@ -399,6 +399,7 @@
     <Compile Include="classes\tests\ParallaxTest\Parallax1.cs" />
     <Compile Include="classes\tests\ParallaxTest\Parallax2.cs" />
     <Compile Include="classes\tests\ParallaxTest\ParallaxDemo.cs" />
+    <Compile Include="classes\tests\ParallaxTest\ParallaxScrollTest.cs" />
     <Compile Include="classes\tests\ParallaxTest\ParallaxTestScene.cs" />
     <Compile Include="classes\tests\ActionManagerTest\PauseTest.cs" />
     <Compile Include="classes\tests\ActionManagerTest\RemoveTest.cs" />
