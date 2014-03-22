@@ -948,6 +948,25 @@ namespace Cocos2D
             CCGridSize v = new CCGridSize(x, y);
             return v;
         }
+
+        // Make a color from hue, saturation and value parameters. Hue should be
+        // between 0 and 6, while saturation and value should be between 0 and 1.
+        public static CCColor4F HSVToColor(float h, float s, float v)
+        {
+            if (h == 0 && s == 0)
+                return new CCColor4F(v, v, v, 1f);
+
+            float c = s * v;
+            float x = c * (1 - Math.Abs(h % 2 - 1));
+            float m = v - c;
+
+            if (h < 1) return new CCColor4F(c + m, x + m, m, 1f);
+            else if (h < 2) return new CCColor4F(x + m, c + m, m, 1f);
+            else if (h < 3) return new CCColor4F(m, c + m, x + m, 1f);
+            else if (h < 4) return new CCColor4F(m, x + m, c + m, 1f);
+            else if (h < 5) return new CCColor4F(x + m, m, c + m, 1f);
+            else return new CCColor4F(c + m, m, x + m,1f);
+        }
     }
 
 }//namespace   cocos2d 

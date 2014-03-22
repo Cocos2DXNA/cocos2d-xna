@@ -233,7 +233,7 @@ namespace Cocos2D
 
         /** Clear the geometry in the node's buffer. */
 
-        public void Clear()
+        public virtual void Clear()
         {
             m_pVertices.Clear();
         }
