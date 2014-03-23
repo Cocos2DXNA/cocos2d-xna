@@ -101,6 +101,7 @@ namespace tests
             node.AddBolt(new CCLightningBolt()
             {
                 BoltColor = CCLightning.LightningBlue,
+                BoltGlowColor = CCLightning.LightningBlue,
                 Start = CCDirector.SharedDirector.WinSize.Center,
                 End = ConvertToNodeSpace(touch.Location),
                 StrikeTime = (2f * CCMacros.CCRandomBetween0And1()),

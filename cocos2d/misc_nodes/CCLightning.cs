@@ -11,19 +11,21 @@ namespace Cocos2D
         public CCPoint End;
         public float Width;
         public CCColor4F BoltColor;
+        public CCColor4F BoltGlowColor;
         public float StrikeTime;
         public float FadeTime;
     }
 
     public class CCLightning : CCDrawNode
     {
-        public const float Sway = 80;
-        public const float Jaggedness = 1 / Sway;
+        private float m_Sway = 65f;
+        private float m_Jaggedness = 1f/65f;
 
         /// <summary>
         /// Typical blue for lightning.
         /// </summary>
         public static readonly CCColor4F LightningBlue = new CCColor4F(0.9f, 0.8f, 1f, 1f);
+        public static readonly CCColor4F LightningBlueGlow = CCColor3B.Yellow; // new CCColor4F(0.35f, 0.9f, 0.9f, 1f);
 
         /// <summary>
         /// The current status of the bolts being drawn.
@@ -37,6 +39,39 @@ namespace Cocos2D
             internal List<int> DrawNodeVertexIndex;
         }
 
+        public float Sway
+        {
+            get
+            {
+                return (m_Sway);
+            }
+            set
+            {
+                if (value < 1f)
+                {
+                    m_Sway = 1f;
+                }
+                else
+                {
+                    m_Sway = value;
+                }
+                m_Jaggedness = 1.0f / m_Sway;
+            }
+        }
+
+        private float m_GlowSize = .75f;
+        public virtual float GlowSize
+        {
+            get
+            {
+                return (m_GlowSize);
+            }
+            set
+            {
+                m_GlowSize = value;
+            }
+        }
+
         /// <summary>
         /// The bolts to draw in this node.
         /// </summary>
@@ -44,7 +79,9 @@ namespace Cocos2D
 
         public CCLightning()
         {
-            BlendFunc = CCBlendFunc.Additive;
+            BlendFunc = CCBlendFunc.NonPremultiplied;
+            FilterPrimitivesByAlpha = true;
+            Sway = 65f;
         }
 
         public override void  OnEnter()
@@ -56,6 +93,7 @@ namespace Cocos2D
         public override void  Update(float dt)
         {
  	        base.Update(dt);
+            bool bDidDraw = false;
             foreach (BoltStatus bs in _Bolts)
             {
                 bs.CurrentTime += dt;
@@ -70,6 +108,7 @@ namespace Cocos2D
                         {
                             FadeToSegment(bs.DrawNodeVertexIndex[i], fade);
                         }
+                        bDidDraw = true;
                     }
                     else
                     {
@@ -81,16 +120,36 @@ namespace Cocos2D
                 }
                 else
                 {
+                    bDidDraw = true;
                     int idx = (int)Math.Round(bs.CurrentTime / bs.Bolt.StrikeTime * (float)(bs.Segments.Count - 1));
                     if (idx > bs.LastSegmentIndex)
                     {
                         for (int j = bs.LastSegmentIndex; j < idx && j < bs.Segments.Count; j++)
                         {
-                            bs.DrawNodeVertexIndex.Add(DrawSegment(bs.Segments[j], bs.Segments[j + 1], bs.Bolt.Width, bs.Bolt.BoltColor));
+                            CCPoint p1 = bs.Segments[j];
+                            CCPoint p2 = bs.Segments[j + 1];
+                            // Side segments
+                            CCPoint u = p2 - p1;
+                            u.Normalize();
+                            CCPoint perp1 = new CCPoint(-u.Y, u.X);
+                            CCPoint pA = p2 + perp1 * GlowSize;
+                            CCPoint pB = p1 + perp1 * GlowSize;
+                            bs.DrawNodeVertexIndex.Add(DrawSegment(pA, pB, bs.Bolt.Width, bs.Bolt.BoltGlowColor * 0.25f));
+                            // Next side segment
+                            perp1 = new CCPoint(u.Y, u.X);
+                            pA = p2 + perp1 * GlowSize;
+                            pB = p1 + perp1 * GlowSize;
+                            bs.DrawNodeVertexIndex.Add(DrawSegment(pA, pB, bs.Bolt.Width, bs.Bolt.BoltGlowColor * 0.25f));
+                            // Main segment
+                            bs.DrawNodeVertexIndex.Add(DrawSegment(p1, p2, bs.Bolt.Width, bs.Bolt.BoltColor));
                         }
                         bs.LastSegmentIndex = idx;
                     }
                 }
+            }
+            if (!bDidDraw)
+            {
+                Clear();
             }
         }
 
@@ -101,13 +160,7 @@ namespace Cocos2D
         public override void Clear()
         {
             base.Clear();
-            foreach (BoltStatus bs in _Bolts)
-            {
-                bs.CurrentTime = 0f;
-                bs.Segments = CreateBolt(bs.Bolt.Start, bs.Bolt.End);
-                bs.LastSegmentIndex = 0;
-                bs.DrawNodeVertexIndex.Clear();
-            }
+            _Bolts.Clear();
         }
 
         public void AddBolt(CCLightningBolt bolt) 
@@ -121,7 +174,15 @@ namespace Cocos2D
             });
         }
 
-		protected static List<CCPoint> CreateBolt(CCPoint source, CCPoint dest)
+        /// <summary>
+        /// Creates the full set of bolt segments between the start and end points. Based upon the
+        /// algorithm found at http://gamedevelopment.tutsplus.com/tutorials/how-to-generate-shockingly-good-2d-lightning-effects--gamedev-2681
+        /// by Michael Hoffman.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="dest"></param>
+        /// <returns></returns>
+		protected virtual List<CCPoint> CreateBolt(CCPoint source, CCPoint dest)
 		{
 			var results = new List<CCPoint>();
 			CCPoint tangent = dest - source;
@@ -143,19 +204,21 @@ namespace Cocos2D
 				float pos = positions[i];
 
 				// used to prevent sharp angles by ensuring very close positions also have small perpendicular variation.
-				float scale = (length * Jaggedness) * (pos - positions[i - 1]);
+				float scale = (length * m_Jaggedness) * (pos - positions[i - 1]);
 
 				// defines an envelope. Points near the middle of the bolt can be further from the central line.
-				float envelope = pos > 0.95f ? 20 * (1 - pos) : 1;
+				float envelope = pos > 0.95f ? 20f * (1f - pos) : 1f;
 
-                float displacement = -Sway + 2f * Sway * CCMacros.CCRandomBetween0And1();
+                float displacement = -m_Sway + 2f * m_Sway * CCMacros.CCRandomBetween0And1();
 				displacement -= (displacement - prevDisplacement) * (1 - scale);
 				displacement *= envelope;
 
 				CCPoint point = source + tangent * pos + normal * displacement;
+                // Core segment
 				results.Add(prevPoint);
-                results.Add(point); // , thickness));
-				prevPoint = point;
+                results.Add(point);
+                // Continue to the next segment.
+                prevPoint = point;
 				prevDisplacement = displacement;
 			}
 

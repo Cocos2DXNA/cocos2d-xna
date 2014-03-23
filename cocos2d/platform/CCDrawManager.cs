@@ -738,6 +738,10 @@ namespace Cocos2D
             for (int i = 0; i < passes.Count; i++)
             {
                 passes[i].Apply();
+                if (count > 65535)
+                {
+                    count = 65535; // Hard limit for XNA
+                }
                 graphicsDevice.DrawUserPrimitives(type, vertices, offset, count);
             }
 

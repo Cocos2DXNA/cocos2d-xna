@@ -125,6 +125,19 @@ namespace Cocos2D
             FadeToVertices(vertexStart, 18, fadeFactor);
         }
 
+        public virtual void RemoveSegment(int vertexStart) 
+        {
+            if (m_pVertices.Count == 18)
+            {
+                m_pVertices.Clear();
+            }
+            else
+            {
+                m_pVertices.RemoveRange(vertexStart, 18);
+            }
+            m_bDirty = true;
+        }
+
         /// <summary>
         /// Multiplicatively applies the fadeFactor to the alpha channel of the vertices starting
         /// with start and for the number of vertices defined by count. the alpha channel is
@@ -296,17 +309,35 @@ namespace Cocos2D
             m_pVertices.Clear();
         }
 
+        public bool FilterPrimitivesByAlpha
+        {
+            get;
+            set;
+        }
+
+        private VertexPositionColor[] _toDraw;
+
         public override void Draw()
         {
             if (m_bDirty)
             {
-                //TODO: Set vertices to buffer
                 m_bDirty = false;
+                if (FilterPrimitivesByAlpha)
+                {
+                    _toDraw = m_pVertices.Elements.Where(x => x.Color.A > 0).ToArray();
+                }
+                else
+                {
+                    _toDraw = m_pVertices.Elements;
+                }
             }
 
-            CCDrawManager.TextureEnabled = false;
-            CCDrawManager.BlendFunc(m_sBlendFunc);
-            CCDrawManager.DrawPrimitives(PrimitiveType.TriangleList, m_pVertices.Elements, 0, m_pVertices.Count / 3);
+            if (_toDraw != null)
+            {
+                CCDrawManager.TextureEnabled = false;
+                CCDrawManager.BlendFunc(m_sBlendFunc);
+                CCDrawManager.DrawPrimitives(PrimitiveType.TriangleList, _toDraw, 0, _toDraw.Length / 3);
+            }
         }
     }
 }
