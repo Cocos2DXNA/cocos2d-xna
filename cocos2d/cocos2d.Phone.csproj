@@ -97,6 +97,7 @@
     <Compile Include="actions\action_ease\CCEaseRateAction.cs" />
     <Compile Include="actions\action_ease\CCEaseSineIn.cs" />
     <Compile Include="actions\action_ease\CCEaseSineInOut.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="actions\action_ease\CCEaseSineOut.cs" />
     <Compile Include="actions\action_grid3d\CCFlipX3D.cs" />
     <Compile Include="actions\action_grid3d\CCFlipY3D.cs" />

@@ -107,6 +107,7 @@
     <Compile Include="actions\action_ease\CCEaseExponentialIn.cs" />
     <Compile Include="actions\action_ease\CCEaseExponentialInOut.cs" />
     <Compile Include="actions\action_ease\CCEaseExponentialOut.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="actions\action_ease\CCEaseIn.cs" />
     <Compile Include="actions\action_ease\CCEaseInOut.cs" />
     <Compile Include="actions\action_ease\CCEaseOut.cs" />

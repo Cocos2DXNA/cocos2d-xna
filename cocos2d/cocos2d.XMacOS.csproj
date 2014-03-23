@@ -182,6 +182,7 @@
     <Compile Include="Actions\action_tiled_grid\CCWavesTiles3D.cs" />
     <Compile Include="Actions\action_tiled_grid\CCTile.cs" />
     <Compile Include="Actions\CCActionManager.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="base_nodes\CCAtlasNode.cs" />
     <Compile Include="base_nodes\CCNode.cs" />
     <Compile Include="base_nodes\CCNodeRGBA.cs" />

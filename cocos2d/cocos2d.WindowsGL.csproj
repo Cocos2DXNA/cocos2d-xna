@@ -120,6 +120,7 @@
     <Compile Include="actions\action_grid\CCAccelDeccelAmplitude.cs" />
     <Compile Include="actions\action_grid\CCDeccelAmplitude.cs" />
     <Compile Include="actions\action_grid\CCGrid3DAction.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="actions\action_grid\CCGridAction.cs" />
     <Compile Include="actions\action_grid\CCTiledGrid3DAction.cs" />
     <Compile Include="actions\action_instants\callfunc\CCCallFunc.cs" />

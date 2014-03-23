@@ -164,6 +164,7 @@
     <Compile Include="actions\action_intervals\CCRotateTo.cs" />
     <Compile Include="actions\action_intervals\CCScaleBy.cs" />
     <Compile Include="actions\action_intervals\CCScaleTo.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="actions\action_intervals\CCSequence.cs" />
     <Compile Include="actions\action_intervals\CCSkewBy.cs" />
     <Compile Include="actions\action_intervals\CCSkewTo.cs" />
