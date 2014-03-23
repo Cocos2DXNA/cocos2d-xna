@@ -44,7 +44,7 @@ namespace Cocos2D
 
         public CCLightning()
         {
-            BlendFunc = CCBlendFunc.NonPremultiplied;
+            BlendFunc = CCBlendFunc.Additive;
         }
 
         public override void  OnEnter()
@@ -69,6 +69,13 @@ namespace Cocos2D
                         for (int i = 0; i < bs.DrawNodeVertexIndex.Count; i++)
                         {
                             FadeToSegment(bs.DrawNodeVertexIndex[i], fade);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < bs.DrawNodeVertexIndex.Count; i++)
+                        {
+                            FadeToSegment(bs.DrawNodeVertexIndex[i], 0f);
                         }
                     }
                 }
