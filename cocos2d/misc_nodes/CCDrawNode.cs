@@ -55,10 +55,17 @@ namespace Cocos2D
 
             m_bDirty = true;
         }
-
-        /** draw a segment with a radius and color */
-
-        public void DrawSegment(CCPoint from, CCPoint to, float radius, CCColor4F color)
+        
+        /// <summary>
+        /// Creates 18 vertices that create a segment between the two points with the given radius of rounding
+        /// on the segment end. The color is used to draw the segment.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="radius"></param>
+        /// <param name="color"></param>
+        /// <returns>The starting vertex index of the segment.</returns>
+        public virtual int DrawSegment(CCPoint from, CCPoint to, float radius, CCColor4F color)
         {
             var cl = new Color(color.R, color.G, color.B, color.A);
 
@@ -79,6 +86,7 @@ namespace Cocos2D
             var v6 = a - (nw - tw);
             var v7 = a + (nw + tw);
 
+            int returnIndex = m_pVertices.Count;
             m_pVertices.Add(new VertexPositionColor(v0, cl)); //__t(v2fneg(v2fadd(n, t)))
             m_pVertices.Add(new VertexPositionColor(v1, cl)); //__t(v2fsub(n, t))
             m_pVertices.Add(new VertexPositionColor(v2, cl)); //__t(v2fneg(n))}
@@ -103,6 +111,56 @@ namespace Cocos2D
             m_pVertices.Add(new VertexPositionColor(v7, cl)); //__t(v2fadd(n, t))
             m_pVertices.Add(new VertexPositionColor(v5, cl)); //__t(n)
 
+            m_bDirty = true;
+            return (returnIndex);
+        }
+
+        public virtual void FadeBySegment(int vertexStart, float fadeFactor) 
+        {
+            FadeByVertices(vertexStart, 18, fadeFactor);
+        }
+
+        public virtual void FadeToSegment(int vertexStart, float fadeFactor)
+        {
+            FadeToVertices(vertexStart, 18, fadeFactor);
+        }
+
+        /// <summary>
+        /// Multiplicatively applies the fadeFactor to the alpha channel of the vertices starting
+        /// with start and for the number of vertices defined by count. the alpha channel is
+        /// determined by the current alpha * fadeFactor.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <param name="fadeFactor"></param>
+        public virtual void FadeByVertices(int start, int count, float fadeFactor)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                VertexPositionColor vpc = m_pVertices[start + i];
+                Color c = vpc.Color;
+                vpc.Color = new Color(c.R, c.G, c.B, (byte)(c.A * fadeFactor));
+                m_pVertices[start + i] = vpc;
+            }
+            m_bDirty = true;
+        }
+
+        /// <summary>
+        /// For the start and count vertices drawn, this will set the alpha channel to the given fade factor.
+        /// The alpha is determined by 255 * fadeFactor.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <param name="fadeFactor"></param>
+        public virtual void FadeToVertices(int start, int count, float fadeFactor)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                VertexPositionColor vpc = m_pVertices[start + i];
+                Color c = vpc.Color;
+                vpc.Color = new Color(c.R, c.G, c.B, (byte)(255f * fadeFactor));
+                m_pVertices[start + i] = vpc;
+            }
             m_bDirty = true;
         }
 

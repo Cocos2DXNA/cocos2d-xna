@@ -33,6 +33,8 @@ namespace Cocos2D
             internal CCLightningBolt Bolt;
             internal List<CCPoint> Segments;
             internal float CurrentTime;
+            internal int LastSegmentIndex;
+            internal List<int> DrawNodeVertexIndex;
         }
 
         /// <summary>
@@ -56,6 +58,31 @@ namespace Cocos2D
             foreach (BoltStatus bs in _Bolts)
             {
                 bs.CurrentTime += dt;
+                if (bs.CurrentTime > bs.Bolt.StrikeTime)
+                {
+                    // Fading it out
+                    float time = bs.CurrentTime - bs.Bolt.StrikeTime;
+                    if (time < bs.Bolt.FadeTime)
+                    {
+                        float fade = 1f - time / bs.Bolt.FadeTime;
+                        for (int i = 0; i < bs.DrawNodeVertexIndex.Count; i++)
+                        {
+                            FadeToSegment(bs.DrawNodeVertexIndex[i], fade);
+                        }
+                    }
+                }
+                else
+                {
+                    int idx = (int)Math.Round(bs.CurrentTime / bs.Bolt.StrikeTime * (float)(bs.Segments.Count - 1));
+                    if (idx > bs.LastSegmentIndex)
+                    {
+                        for (int j = bs.LastSegmentIndex; j < idx && j < bs.Segments.Count; j++)
+                        {
+                            bs.DrawNodeVertexIndex.Add(DrawSegment(bs.Segments[j], bs.Segments[j + 1], bs.Bolt.Width, bs.Bolt.BoltColor));
+                        }
+                        bs.LastSegmentIndex = idx;
+                    }
+                }
             }
         }
 
@@ -70,6 +97,8 @@ namespace Cocos2D
             {
                 bs.CurrentTime = 0f;
                 bs.Segments = CreateBolt(bs.Bolt.Start, bs.Bolt.End);
+                bs.LastSegmentIndex = 0;
+                bs.DrawNodeVertexIndex.Clear();
             }
         }
 
@@ -78,7 +107,9 @@ namespace Cocos2D
             _Bolts.Add(new BoltStatus() { 
                 Bolt = bolt, 
                 Segments = CreateBolt(bolt.Start, bolt.End),
-                CurrentTime = 0f
+                CurrentTime = 0f,
+                LastSegmentIndex = 0,
+                DrawNodeVertexIndex = new List<int>()
             });
         }
 
