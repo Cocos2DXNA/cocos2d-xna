@@ -44,6 +44,7 @@ namespace Cocos2D
 
         public CCLightning()
         {
+            BlendFunc = CCBlendFunc.NonPremultiplied;
         }
 
         public override void  OnEnter()
