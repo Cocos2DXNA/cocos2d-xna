@@ -92,6 +92,7 @@
     <Compile Include="Actions\action_grid3d\CCTwirl.cs" />
     <Compile Include="Actions\action_grid3d\CCWaves.cs" />
     <Compile Include="Actions\action_grid3d\CCWaves3D.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="Actions\action_grid\CCAccelAmplitude.cs" />
     <Compile Include="Actions\action_grid\CCAccelDeccelAmplitude.cs" />
     <Compile Include="Actions\action_grid\CCDeccelAmplitude.cs" />

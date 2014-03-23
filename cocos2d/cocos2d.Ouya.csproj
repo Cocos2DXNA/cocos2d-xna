@@ -126,6 +126,7 @@
     <Compile Include="Actions\action_intervals\CCJumpTo.cs" />
     <Compile Include="Actions\action_intervals\CCMoveBy.cs" />
     <Compile Include="Actions\action_intervals\CCMoveTo.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="Actions\action_intervals\CCRepeat.cs" />
     <Compile Include="Actions\action_intervals\CCRepeatForever.cs" />
     <Compile Include="Actions\action_intervals\CCReverseTime.cs" />
