@@ -167,7 +167,7 @@ namespace Cocos2D
             if (UseInputStateManagement)
             {
                 CCInputState.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-#if WINDOWS || WINDOWSGL || MACOS || ENABLE_MOUSE
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
                 ProcessMouse(CCInputState.Instance.Mouse);
 #else
                 ProcessTouch(CCInputState.Instance.TouchState);
@@ -185,7 +185,7 @@ namespace Cocos2D
             else
             {
                 // Process touch events 
-#if WINDOWS || WINDOWSGL || MACOS || ENABLE_MOUSE
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
                 ProcessMouse();
 #else
                 ProcessTouch();
@@ -458,7 +458,7 @@ namespace Cocos2D
 
         #region Mouse Support
 
-#if WINDOWS || WINDOWSGL || MACOS || ENABLE_MOUSE
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
         private void ProcessMouse()
         {
             ProcessMouse(Mouse.GetState());
