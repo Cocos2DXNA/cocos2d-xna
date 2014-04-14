@@ -9,6 +9,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -23,6 +24,105 @@ namespace Cocos2D
         Right,
         Left,
         None
+    }
+
+    public struct CCGesture
+    {
+        // attributes
+        private GestureType _gestureType;
+        private TimeSpan _timestamp;
+        private CCPoint _position;
+        private CCPoint _position2;
+        private CCPoint _delta;
+        private CCPoint _delta2;
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the type of the gesture.
+        /// </summary>
+        public GestureType GestureType
+        {
+            get
+            {
+                return this._gestureType;
+            }
+        }
+
+        /// <summary>
+        /// Gets the starting time for this multi-touch gesture sample.
+        /// </summary>
+        public TimeSpan Timestamp
+        {
+            get
+            {
+                return this._timestamp;
+            }
+        }
+
+        /// <summary>
+        /// Gets the position of the first touch-point in the gesture sample.
+        /// </summary>
+        public CCPoint Position
+        {
+            get
+            {
+                return this._position;
+            }
+        }
+
+        /// <summary>
+        /// Gets the position of the second touch-point in the gesture sample.
+        /// </summary>
+        public CCPoint Position2
+        {
+            get
+            {
+                return this._position2;
+            }
+        }
+
+        /// <summary>
+        /// Gets the delta information for the first touch-point in the gesture sample.
+        /// </summary>
+        public CCPoint Delta
+        {
+            get
+            {
+                return this._delta;
+            }
+        }
+
+        /// <summary>
+        /// Gets the delta information for the second touch-point in the gesture sample.
+        /// </summary>
+        public CCPoint Delta2
+        {
+            get
+            {
+                return this._delta2;
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Initializes a new <see cref="GestureSample"/>.
+        /// </summary>
+        /// <param name="gestureType"><see cref="GestureType"/></param>
+        /// <param name="timestamp"></param>
+        /// <param name="position"></param>
+        /// <param name="position2"></param>
+        /// <param name="delta"></param>
+        /// <param name="delta2"></param>
+        public CCGesture(GestureType gestureType, TimeSpan timestamp, CCPoint position, CCPoint position2, CCPoint delta, CCPoint delta2)
+        {
+            this._gestureType = gestureType;
+            this._timestamp = timestamp;
+            this._position = position;
+            this._position2 = position2;
+            this._delta = delta;
+            this._delta2 = delta2;
+        }
     }
 
     public static class CCExtensionMethods

@@ -738,6 +738,10 @@ namespace Cocos2D
             for (int i = 0; i < passes.Count; i++)
             {
                 passes[i].Apply();
+                if (count > 65535)
+                {
+                    count = 65535; // Hard limit for XNA
+                }
                 graphicsDevice.DrawUserPrimitives(type, vertices, offset, count);
             }
 
@@ -1192,7 +1196,7 @@ namespace Cocos2D
             CCDirector.SharedDirector.m_obWinSizeInPoints = DesignResolutionSize;
 
             CCDirector.SharedDirector.CreateStatsLabel();
-            CCDirector.SharedDirector.SetGlDefaultValues();
+            CCDirector.SharedDirector.SetRenderDefaultValues();
         }
 
         public static void SetOrientation(DisplayOrientation supportedOrientations)

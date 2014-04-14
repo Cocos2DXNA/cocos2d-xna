@@ -78,6 +78,53 @@ namespace tests
         }
     }
 
+    #region Lightning Test
+    public class DrawPrimtivesLightningTest : BaseDrawNodeTest
+    {
+        public override string subtitle()
+        {
+            return "Lightning - Basic Bolt - Touch To Strike";
+        }
+        public DrawPrimtivesLightningTest() 
+        {
+            CCSize s = CCDirector.SharedDirector.WinSize;
+            CCLightning lightning = new CCLightning();
+            AddChild(lightning, 10, 55);
+            TouchMode = CCTouchMode.OneByOne;
+            TouchEnabled = true;
+        }
+
+        public override void TouchEnded(CCTouch touch)
+        {
+            base.TouchEnded(touch);
+            CCLightning node = (CCLightning)GetChildByTag(55);
+            node.AddBolt(new CCLightningBolt()
+            {
+                BoltColor = CCLightning.LightningBlue,
+                BoltGlowColor = CCLightning.LightningBlue,
+                Start = CCDirector.SharedDirector.WinSize.Center,
+                End = ConvertToNodeSpace(touch.Location),
+                StrikeTime = (2f * CCMacros.CCRandomBetween0And1()),
+                FadeTime = 0.15f,
+                Width = .5f
+            });
+        }
+        public override bool TouchBegan(CCTouch touch)
+        {
+            CCPoint pt = ConvertToNodeSpace(touch.Location);
+            if (pt.X > 0f && pt.X < CCDirector.SharedDirector.WinSize.Width)
+            {
+                if (pt.Y > 0f && pt.Y < CCDirector.SharedDirector.WinSize.Height)
+                {
+                    return (true);
+                }
+            }
+            return (false);
+        }
+    }
+    #endregion
+
+    #region Render Target Test
     public class DrawPrimitivesWithRenderTextureTest : BaseDrawNodeTest
     {
         public DrawPrimitivesWithRenderTextureTest()
@@ -100,7 +147,9 @@ namespace tests
             AddChild(text, 24);
         }
     }
+    #endregion
 
+    #region Draw Primitives
     public class DrawPrimitivesTest : BaseDrawNodeTest
     {
         public override void Draw()
@@ -197,7 +246,9 @@ namespace tests
 
         }
     }
+    #endregion
 
+    #region Draw Node
     public class DrawNodeTest : BaseDrawNodeTest
     {
         public override bool Init()
@@ -267,4 +318,5 @@ namespace tests
             return true;
         }
     }
+    #endregion
 }
