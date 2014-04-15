@@ -16,7 +16,7 @@ namespace tests
             //     Waves3D is Grid3D and it's size is (15,10)
 
             CCSize size = CCDirector.SharedDirector.WinSize;
-            CCActionInterval lens = new CCLens3D(0.0f, new CCGridSize(15, 10), new CCPoint(size.Width / 2, size.Height / 2), 240);
+            CCActionInterval lens = new CCLens3D(0.0f, new CCGridSize(15, 10), new CCPoint(size.Width / 4, size.Height / 4), 240);
             CCActionInterval waves = new CCWaves3D(10, new CCGridSize(15, 10), 18, 15);
 
 

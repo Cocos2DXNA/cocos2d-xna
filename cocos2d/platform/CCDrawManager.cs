@@ -304,7 +304,7 @@ namespace Cocos2D
             pp.BackBufferHeight = manager.PreferredBackBufferHeight;
             pp.BackBufferFormat = manager.PreferredBackBufferFormat;
             pp.DepthStencilFormat = manager.PreferredDepthStencilFormat;
-            pp.RenderTargetUsage = RenderTargetUsage.DiscardContents; //??? DiscardContents fast
+            pp.RenderTargetUsage = m_presentationParameters.RenderTargetUsage;
         }
 
         public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
@@ -328,7 +328,7 @@ namespace Cocos2D
             m_graphicsService = service;
             m_presentationParameters = new PresentationParameters()
             {
-                RenderTargetUsage = RenderTargetUsage.DiscardContents,
+                RenderTargetUsage = RenderTargetUsage.PreserveContents,
                 DepthStencilFormat = DepthFormat.Depth24Stencil8,
                 BackBufferFormat = SurfaceFormat.Color
             };
