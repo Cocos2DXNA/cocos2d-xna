@@ -305,6 +305,14 @@ namespace Cocos2D
             pp.BackBufferFormat = manager.PreferredBackBufferFormat;
             pp.DepthStencilFormat = manager.PreferredDepthStencilFormat;
             pp.RenderTargetUsage = m_presentationParameters.RenderTargetUsage;
+            if (manager.PreferMultiSampling && pp.MultiSampleCount == 0)
+            {
+                pp.MultiSampleCount = 4;
+            }
+            else if (!manager.PreferMultiSampling)
+            {
+                pp.MultiSampleCount = 0;
+            }
         }
 
         public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
@@ -332,7 +340,7 @@ namespace Cocos2D
                 DepthStencilFormat = DepthFormat.Depth24Stencil8,
                 BackBufferFormat = SurfaceFormat.Color
             };
-
+            
             service.DeviceCreated += GraphicsDeviceDeviceCreated;
 
             var manager = service as GraphicsDeviceManager;
@@ -364,7 +372,8 @@ namespace Cocos2D
             gdipp.RenderTargetUsage = pp.RenderTargetUsage;
             gdipp.DepthStencilFormat = pp.DepthStencilFormat;
             gdipp.BackBufferFormat = pp.BackBufferFormat;
-            
+            gdipp.MultiSampleCount = pp.MultiSampleCount;
+
             //if (graphicsDevice == null)
             {
                 // Only set the buffer dimensions when the device was not created
