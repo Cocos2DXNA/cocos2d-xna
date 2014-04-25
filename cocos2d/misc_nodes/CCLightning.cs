@@ -72,6 +72,12 @@ namespace Cocos2D
             }
         }
 
+        public virtual bool DrawShadowSegments
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// The bolts to draw in this node.
         /// </summary>
@@ -82,6 +88,7 @@ namespace Cocos2D
             BlendFunc = CCBlendFunc.NonPremultiplied;
             FilterPrimitivesByAlpha = true;
             Sway = 65f;
+            DrawShadowSegments = false;
         }
 
         public override void  OnEnter()
@@ -131,15 +138,18 @@ namespace Cocos2D
                             // Side segments
                             CCPoint u = p2 - p1;
                             u.Normalize();
-                            CCPoint perp1 = new CCPoint(-u.Y, u.X);
-                            CCPoint pA = p2 + perp1 * GlowSize;
-                            CCPoint pB = p1 + perp1 * GlowSize;
-                            bs.DrawNodeVertexIndex.Add(DrawSegment(pA, pB, bs.Bolt.Width, bs.Bolt.BoltGlowColor * 0.25f));
-                            // Next side segment
-                            perp1 = new CCPoint(u.Y, u.X);
-                            pA = p2 + perp1 * GlowSize;
-                            pB = p1 + perp1 * GlowSize;
-                            bs.DrawNodeVertexIndex.Add(DrawSegment(pA, pB, bs.Bolt.Width, bs.Bolt.BoltGlowColor * 0.25f));
+                            if (DrawShadowSegments)
+                            {
+                                CCPoint perp1 = new CCPoint(-u.Y, u.X);
+                                CCPoint pA = p2 + perp1 * GlowSize;
+                                CCPoint pB = p1 + perp1 * GlowSize;
+                                bs.DrawNodeVertexIndex.Add(DrawSegment(pA, pB, bs.Bolt.Width, bs.Bolt.BoltGlowColor * 0.25f));
+                                // Next side segment
+                                perp1 = new CCPoint(u.Y, u.X);
+                                pA = p2 + perp1 * GlowSize;
+                                pB = p1 + perp1 * GlowSize;
+                                bs.DrawNodeVertexIndex.Add(DrawSegment(pA, pB, bs.Bolt.Width, bs.Bolt.BoltGlowColor * 0.25f));
+                            }
                             // Main segment
                             bs.DrawNodeVertexIndex.Add(DrawSegment(p1, p2, bs.Bolt.Width, bs.Bolt.BoltColor));
                         }
