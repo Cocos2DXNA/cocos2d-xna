@@ -102,7 +102,7 @@ namespace Cocos2D
                 m_Batch.RemoveChild(node, cleanup);
             }
         }
-        public void RemoveAllChildrenWithCleanup(bool cleanup)
+        public override void RemoveAllChildrenWithCleanup(bool cleanup)
         {
             m_ScrollOffsets.Clear();
             if (m_Batch != null)
