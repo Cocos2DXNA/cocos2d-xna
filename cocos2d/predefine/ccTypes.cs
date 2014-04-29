@@ -236,12 +236,66 @@ namespace Cocos2D
         public static CCColor4F Parse(string s)
         {
             string[] f = s.Split(',');
-            return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), float.Parse(f[3])));
+            if (f.Length == 4)
+            {
+                return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), float.Parse(f[3])));
+            }
+            return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), 1f));
         }
 
         public static implicit operator Color(CCColor4F point)
         {
             return new Color(point.R, point.G, point.B, point.A);
+        }
+
+        public static implicit operator CCColor3B(CCColor4F point)
+        {
+            return new CCColor3B((byte)(point.R * point.A * 255f), (byte)(point.G*point.A*255f), (byte)(point.B*point.A*255));
+        }
+
+        public static implicit operator CCColor4F(CCColor3B point)
+        {
+            return new CCColor4F((float)point.R/255f, (float)point.G/255f, (float)point.B/255f, 1f);
+        }
+
+        public static CCColor4F operator +(CCColor4F c, float amt)
+        {
+            CCColor4F nc = new CCColor4F(c.R + amt, c.G + amt, c.B + amt, c.A);
+            return (nc);
+        }
+
+        public static CCColor4F operator *(CCColor4F c, float amt) 
+        {
+            CCColor4F nc = new CCColor4F(c.R * amt, c.G * amt, c.B * amt, c.A);
+            return (nc);
+        }
+
+        public static CCColor4F operator /(CCColor4F c, float amt)
+        {
+            CCColor4F nc = new CCColor4F(c.R / amt, c.G / amt, c.B / amt, c.A);
+            return (nc);
+        }
+
+        public static CCColor4F Lerp(CCColor4F value1, CCColor4F value2, float amount)
+        {
+            CCColor4F color;
+
+            color.A = (value1.A + ((value2.A - value1.A) * amount));
+            color.R = (value1.R + ((value2.R - value1.R) * amount));
+            color.G = (value1.G + ((value2.G - value1.G) * amount));
+            color.B = (value1.B + ((value2.B - value1.B) * amount));
+
+            return color;
+        }
+
+        public static bool operator ==(CCColor4F p1, CCColor4F p2)
+        {
+            return p1.R == p2.R && p1.G == p2.G && p1.B == p2.B && p1.A == p2.A;
+        }
+
+        public static bool operator !=(CCColor4F p1, CCColor4F p2)
+        {
+            return p1.R != p2.R || p1.G != p2.G || p1.B != p2.B || p1.A != p2.A;
         }
     }
 
@@ -947,6 +1001,25 @@ namespace Cocos2D
         {
             CCGridSize v = new CCGridSize(x, y);
             return v;
+        }
+
+        // Make a color from hue, saturation and value parameters. Hue should be
+        // between 0 and 6, while saturation and value should be between 0 and 1.
+        public static CCColor4F HSVToColor(float h, float s, float v)
+        {
+            if (h == 0 && s == 0)
+                return new CCColor4F(v, v, v, 1f);
+
+            float c = s * v;
+            float x = c * (1 - Math.Abs(h % 2 - 1));
+            float m = v - c;
+
+            if (h < 1) return new CCColor4F(c + m, x + m, m, 1f);
+            else if (h < 2) return new CCColor4F(x + m, c + m, m, 1f);
+            else if (h < 3) return new CCColor4F(m, c + m, x + m, 1f);
+            else if (h < 4) return new CCColor4F(m, x + m, c + m, 1f);
+            else if (h < 5) return new CCColor4F(x + m, m, c + m, 1f);
+            else return new CCColor4F(c + m, m, x + m,1f);
         }
     }
 

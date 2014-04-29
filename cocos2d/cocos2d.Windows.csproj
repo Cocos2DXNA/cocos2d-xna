@@ -170,6 +170,7 @@
     <Compile Include="denshion\CCEffectPlayer.cs" />
     <Compile Include="denshion\CCMusicPlayer.cs" />
     <Compile Include="denshion\CCSimpleAudioEngine.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="extentions\Box2D\CCDraw.cs" />
     <Compile Include="extentions\GUI\CCControlExtension\CCControlColourPicker.cs" />
     <Compile Include="extentions\GUI\CCControlExtension\CCControlHuePicker.cs" />

@@ -61,7 +61,7 @@
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\MonoGame\ThirdParty\Libs\OpenTK.dll</HintPath>
+      <HintPath>..\MonoGame\ThirdParty\Dependencies\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -120,6 +120,7 @@
     <Compile Include="actions\action_grid\CCAccelDeccelAmplitude.cs" />
     <Compile Include="actions\action_grid\CCDeccelAmplitude.cs" />
     <Compile Include="actions\action_grid\CCGrid3DAction.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="actions\action_grid\CCGridAction.cs" />
     <Compile Include="actions\action_grid\CCTiledGrid3DAction.cs" />
     <Compile Include="actions\action_instants\callfunc\CCCallFunc.cs" />

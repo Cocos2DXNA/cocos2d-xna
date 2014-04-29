@@ -74,6 +74,7 @@
     <Compile Include="Actions\action_ease\CCEaseElasticOut.cs" />
     <Compile Include="Actions\action_ease\CCEaseExponentialIn.cs" />
     <Compile Include="Actions\action_ease\CCEaseExponentialInOut.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="Actions\action_ease\CCEaseExponentialOut.cs" />
     <Compile Include="Actions\action_ease\CCEaseIn.cs" />
     <Compile Include="Actions\action_ease\CCEaseInOut.cs" />
