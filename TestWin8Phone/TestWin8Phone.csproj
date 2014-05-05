@@ -1745,7 +1745,6 @@
     <None Include="Properties\WMAppManifest.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="TestWin8Phone_2014_05_05_13_59_22.sap" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\tests\tests\Assets\Content\**\*.*">
