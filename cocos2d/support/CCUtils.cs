@@ -72,7 +72,11 @@ namespace Cocos2D
 
 				#else
                 var extstring = GL.GetString(StringName.Extensions);
-				GraphicsExtensions.CheckGLError();
+                ErrorCode error = GL.GetError();
+                if (error != ErrorCode.NoError)
+                {
+                    CCLog.Log("ERROR: The GL context is in error (" + error + ").");
+                }
                 #endif
                 
                 if (!string.IsNullOrEmpty(extstring))
