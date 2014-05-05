@@ -215,7 +215,6 @@
       <Name>grossini</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-      <ProcessorParameters_TextureFormat>DxtCompressed</ProcessorParameters_TextureFormat>
     </Compile>
     <Compile Include="Images\grossinis_sister1-hd.png">
       <Name>grossinis_sister1-hd</Name>
