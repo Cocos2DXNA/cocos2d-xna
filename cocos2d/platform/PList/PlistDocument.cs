@@ -541,7 +541,14 @@ namespace Cocos2D
 			byte[] buffer = objectTable.GetRange(headerPosition + 1, byteCount).ToArray();
 			Array.Reverse(buffer);
 
-			return new PlistReal(BitConverter.ToSingle(RegulateNullBytes(buffer, 8), 0));
+            if (byteCount > 4)
+            {
+                return new PlistReal((float)BitConverter.ToDouble(RegulateNullBytes(buffer, 8), 0));
+            }
+            else
+            {
+                return new PlistReal(BitConverter.ToSingle(RegulateNullBytes(buffer, 4), 0));
+            }
 		}
 		private PlistString parseBinaryAsciiString(int headerPosition)
 		{
