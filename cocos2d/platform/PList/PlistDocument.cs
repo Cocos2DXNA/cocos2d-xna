@@ -73,7 +73,7 @@ namespace Cocos2D
 
         public void LoadFromXmlFile(Stream data)
         {
-
+            data = SeekableStream(data);
 			byte[] magicHeader = new byte[8];
 			data.Read(magicHeader, 0, 8);
 			data.Seek(0, SeekOrigin.Begin);
@@ -143,6 +143,21 @@ namespace Cocos2D
             while (reader.Read() && reader.NodeType != XmlNodeType.Element) ;
             if (!reader.EOF)
                 root = LoadFromNode(reader);
+        }
+
+        private Stream SeekableStream(Stream data)
+        {
+            if (data.CanSeek)
+                return data;
+
+            // Read the asset into memory in one go. This results in a ~50% reduction
+            // in load times on Android due to slow Android asset streams.
+            MemoryStream memStream = new MemoryStream();
+            data.CopyTo(memStream);
+            memStream.Seek(0, SeekOrigin.Begin);
+            data.Close();
+
+            return memStream;
         }
 
         private PlistObjectBase LoadFromNode(XmlReader reader)
