@@ -77,9 +77,6 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>external lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="zlib.net">
-      <HintPath>external lib\zlib.net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" Condition="'$(windir)' != '' " />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
