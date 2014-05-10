@@ -4,9 +4,9 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GZipInputStream=WP7Contrib.Communications.Compression.GZipStream; // Found in Support/Compression/GZipStream
-#if IOS || ANDROID
+#if IOS || ANDROID || MACOS
 using Cocos2D.Compression.ICSharpCode.SharpZipLib.Zip;
-#elif
+#else
 using ICSharpCode.SharpZipLib.Zip;
 #endif
 
