@@ -67,9 +67,6 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>external lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="zlib.net">
-      <HintPath>external lib\zlib.net.dll</HintPath>
-    </Reference>
     <Reference Include="MonoMac, Version=0.0.0.0, Culture=neutral">
       <Private>False</Private>
     </Reference>
