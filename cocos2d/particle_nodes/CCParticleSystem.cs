@@ -4,7 +4,11 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GZipInputStream=WP7Contrib.Communications.Compression.GZipStream; // Found in Support/Compression/GZipStream
+#if IOS || ANDROID
+using Cocos2D.Compression.ICSharpCode.SharpZipLib.Zip;
+#elif
 using ICSharpCode.SharpZipLib.Zip;
+#endif
 
 namespace Cocos2D
 {
