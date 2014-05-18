@@ -128,7 +128,7 @@ namespace Cocos2D
                 else
                 {
                     bDidDraw = true;
-                    int idx = (int)Math.Round(bs.CurrentTime / bs.Bolt.StrikeTime * (float)(bs.Segments.Count - 1));
+                    int idx = (int)System.Math.Round(bs.CurrentTime / bs.Bolt.StrikeTime * (float)(bs.Segments.Count - 1));
                     if (idx > bs.LastSegmentIndex)
                     {
                         for (int j = bs.LastSegmentIndex; j < idx && j < bs.Segments.Count; j++)
