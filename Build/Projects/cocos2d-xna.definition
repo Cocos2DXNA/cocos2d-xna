@@ -277,6 +277,7 @@
     <Compile Include="Math\CCMathHelper.cs" />
     <Compile Include="Math\CCRandom.cs" />
     <Compile Include="Math\CCSplineMath.cs" />
+    <Compile Include="Math\CCLightningTrack.cs" />
     <Compile Include="menu_nodes\CCMenu.cs" />
     <Compile Include="menu_nodes\CCMenuItem.cs" />
     <Compile Include="menu_nodes\CCMenuItemAtlasFont.cs" />
@@ -286,10 +287,12 @@
     <Compile Include="menu_nodes\CCMenuItemSprite.cs" />
     <Compile Include="menu_nodes\CCMenuItemToggle.cs" />
     <Compile Include="misc_nodes\CCMotionStreak.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
     <Compile Include="misc_nodes\CCProgressTimer.cs" />
     <Compile Include="misc_nodes\CCRenderTexture.cs" />
     <Compile Include="misc_nodes\CCClippingNode.cs" />
     <Compile Include="misc_nodes\CCDrawNode.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
     <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="particle_nodes\CCParticleBatchNode.cs" />
