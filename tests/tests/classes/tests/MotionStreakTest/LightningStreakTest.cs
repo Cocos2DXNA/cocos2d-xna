@@ -28,6 +28,7 @@ namespace tests
                 CCPoint end = t.Location;
                 float fadeTime = CCMacros.CCRandomBetween0And1() * 5f;
                 CCLightningStreak s = new CCLightningStreak(center, end, fadeTime, 5f, 4.0f, new CCColor3B(0, 0, 255), TestResource.s_fire);
+                s.Duration = fadeTime / 2f;
                 AddChild(s);
             }
         }

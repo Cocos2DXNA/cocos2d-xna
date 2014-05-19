@@ -10,6 +10,7 @@ namespace Cocos2D
         private CCLightningTrack _Track;
         private float _CurrentTime = 0f;
         private bool _Cyclical = false;
+        private float _StreakLifetime = 1f;
 
         public CCLightningStreak(CCPoint start, CCPoint end, float fadeTime, float minSegLength, float streakWidth, CCColor3B color, string pathToTexture)
             : base(fadeTime, minSegLength, streakWidth, color, pathToTexture)
@@ -37,6 +38,18 @@ namespace Cocos2D
             _Track.Sway = sway;
         }
 
+        public virtual float Duration
+        {
+            get
+            {
+                return (_StreakLifetime);
+            }
+            set
+            {
+                _StreakLifetime = value;
+            }
+        }
+
         /// <summary>
         /// Set to true if you want to re-start the strike when the 'time' has reached 1. The default is
         /// false, which will stop the strike and fade out the segments.
@@ -56,7 +69,7 @@ namespace Cocos2D
         public override void Update(float delta)
         {
             _CurrentTime += delta;
-            if (_CurrentTime > 1f)
+            if (_CurrentTime > Duration)
             {
                 if (_Cyclical)
                 {
