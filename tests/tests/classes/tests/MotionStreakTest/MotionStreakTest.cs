@@ -5,7 +5,7 @@ namespace tests
     public class MotionStreakTest : CCLayer
     {
         private static int sceneIdx = 0;
-        private static int MAX_LAYER = 3;
+        private static int MAX_LAYER = 4;
         
         private string s_pPathB1 = "Images/b1";
         private string s_pPathB2 = "Images/b2";
@@ -28,6 +28,8 @@ namespace tests
                     return new MotionStreakTest2();
                 case 2:
                     return new Issue1358();
+                case 3:
+                    return new LightningStreakTest();
             }
 
             return null;
@@ -114,8 +116,11 @@ namespace tests
 
         private void modeCallback(object pSender)
         {
-            bool fastMode = streak.FastMode;
-            streak.FastMode = !fastMode;
+            if (streak != null)
+            {
+                bool fastMode = streak.FastMode;
+                streak.FastMode = !fastMode;
+            }
         }
 
         public void restartCallback(object pSender)

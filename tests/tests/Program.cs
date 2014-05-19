@@ -143,11 +143,10 @@ namespace tests
             Ouya.Console.Api.OuyaFacade.Instance.Init(this, "f3366755-190b-4b95-af21-ca4a01a99478"); // Our UUID dev ID
 #endif
 
-            Game1.Activity = this;
             var game = new Game1();
 
             var frameLayout = new FrameLayout(this);
-            frameLayout.AddView(game.Window);
+            frameLayout.AddView((View)game.Services.GetService(typeof(View)));
             this.SetContentView(frameLayout);
 
             //SetContentView(game.Window);

@@ -691,6 +691,18 @@ namespace Cocos2D
         }
 
         /// <summary>
+        /// Computes the diagonal length of this size. This method will always compute
+        /// the length using Sqrt()
+        /// </summary>
+        public float Diagonal
+        {
+            get
+            {
+                return ((float)Math.Sqrt(Width * Width + Height * Height));
+            }
+        }
+
+        /// <summary>
         ///     Returns the inversion of this size, which is the height and width swapped.
         /// </summary>
         public CCSize Inverted

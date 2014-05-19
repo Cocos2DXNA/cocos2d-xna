@@ -219,7 +219,7 @@ namespace Cocos2D
         {
             if (m_bReorderChildDirty)
             {
-                int j = 0, count = m_pChildren.count;
+                int count = m_pChildren.count;
                 CCNode[] elements = m_pChildren.Elements;
 
                 Array.Sort(elements, 0, count, this);

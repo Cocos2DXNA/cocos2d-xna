@@ -16,6 +16,8 @@ namespace Cocos2D
         private List<object> m_pHandlersToRemove;
         protected List<CCTouchHandler> m_pStandardHandlers;
         protected List<CCTouchHandler> m_pTargetedHandlers;
+        private bool m_bRearrangeTargetedHandlersUponTouch = false;
+        private bool m_bRearrangeStandardHandlersUponTouch = false;
 
         /// <summary>
         /// Whether or not the events are going to be dispatched. Default: true
@@ -98,14 +100,20 @@ namespace Cocos2D
             }
         }
 
+        public void AddStandardDelegate(ICCStandardTouchDelegate pDelegate)
+        {
+            AddStandardDelegate(pDelegate, pDelegate.TouchPriority);
+            m_bRearrangeStandardHandlersUponTouch = true;
+        }
+
         /// <summary>
         /// Adds a targeted touch delegate to the dispatcher's list.
         /// See TargetedTouchDelegate description.
         /// IMPORTANT: The delegate will be retained.
         /// </summary>
-        public void AddTargetedDelegate(ICCTargetedTouchDelegate pDelegate, int nPriority, bool bSwallowsTouches)
+        public void AddTargetedDelegate(ICCTargetedTouchDelegate pDelegate, int nPriority, bool bConsumesTouches)
         {
-            CCTouchHandler pHandler = CCTargetedTouchHandler.HandlerWithDelegate(pDelegate, nPriority, bSwallowsTouches);
+            CCTouchHandler pHandler = CCTargetedTouchHandler.HandlerWithDelegate(pDelegate, nPriority, bConsumesTouches);
             if (!m_bLocked)
             {
                 ForceAddHandler(pHandler, m_pTargetedHandlers);
@@ -115,6 +123,18 @@ namespace Cocos2D
                 m_pHandlersToAdd.Add(pHandler);
                 m_bToAdd = true;
             }
+        }
+
+        public void AddTargetedDelegate(ICCTargetedTouchDelegate pDelegate, bool bConsumesTouches)
+        {
+            AddTargetedDelegate(pDelegate, pDelegate.TouchPriority, bConsumesTouches);
+            m_bRearrangeTargetedHandlersUponTouch = true;
+        }
+
+        public void AddTargetedDelegate(ICCTargetedTouchDelegate pDelegate)
+        {
+            AddTargetedDelegate(pDelegate, pDelegate.TouchPriority, true);
+            m_bRearrangeTargetedHandlersUponTouch = true;
         }
 
         /// <summary>
@@ -170,6 +190,10 @@ namespace Cocos2D
         public void Touches(List<CCTouch> pTouches, int uIndex)
         {
             m_bLocked = true;
+            if(m_bRearrangeTargetedHandlersUponTouch)
+                RearrangeHandlers(m_pTargetedHandlers);
+            if(m_bRearrangeStandardHandlersUponTouch)
+                RearrangeHandlers(m_pStandardHandlers);
 
             // optimization to prevent a mutable copy when it is not necessary
             int uTargetedHandlersCount = m_pTargetedHandlers.Count;
@@ -233,7 +257,7 @@ namespace Cocos2D
                             }
                         }
 
-                        if (bClaimed && pHandler.IsSwallowsTouches)
+                        if (bClaimed && pHandler.ConsumesTouches)
                         {
                             if (bNeedsMutableSet)
                             {

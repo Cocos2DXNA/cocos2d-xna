@@ -54,6 +54,7 @@ namespace Cocos2D
     {
         public static SurfaceFormat DefaultAlphaPixelFormat = SurfaceFormat.Color;
         public static bool OptimizeForPremultipliedAlpha = true;
+        public static bool PreserveSourceSurfaceFormat = true;
 
         private CCTextureCacheInfo m_CacheInfo;
         private Texture2D m_Texture2D;
@@ -719,7 +720,7 @@ namespace Cocos2D
             if (texture != null)
             {
                 // usually xnb texture prepared as PremultipliedAlpha
-                return InitWithTexture(texture, DefaultAlphaPixelFormat, true, true);
+                return InitWithTexture(texture, PreserveSourceSurfaceFormat ? texture.Format : DefaultAlphaPixelFormat, true, true);
             }
 
             // try load raw image
@@ -730,7 +731,7 @@ namespace Cocos2D
                 if (texture != null)
                 {
                     // not premultiplied alpha
-                    return InitWithTexture(texture, DefaultAlphaPixelFormat, false, true);
+                    return InitWithTexture(texture, PreserveSourceSurfaceFormat ? texture.Format : DefaultAlphaPixelFormat, false, true);
                 }
             }
 
@@ -859,7 +860,8 @@ namespace Cocos2D
                 );
 
             CCDrawManager.SetRenderTarget(renderTarget);
-            CCDrawManager.spriteBatch.Begin();
+            CCDrawManager.Clear(Color.Transparent);
+            CCDrawManager.spriteBatch.Begin(SpriteSortMode.Immediate, HasPremultipliedAlpha ? BlendState.AlphaBlend : BlendState.NonPremultiplied);
             CCDrawManager.spriteBatch.Draw(texture, new Vector2(0, 0), Color.White);
             CCDrawManager.spriteBatch.End();
             CCDrawManager.SetRenderTarget((CCTexture2D)null);

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ExternalProject Name="PipelineReferences">
+   
+
+  <Platform Type="Linux">
+  </Platform>
+
+
+  <Platform Type="MacOS">
+    <Reference Include="MonoMac, Version=0.0.0.0, Culture=neutral" />
+  </Platform>
+
+
+  <Platform Type="WindowsDX">
+  </Platform>
+
+  <Platform Type="WindowsGL">
+  </Platform>
+
+  <Platform Type="Windows">
+  </Platform>
+
+  <Platform Type="WindowsPhone7">
+  </Platform>
+
+  <Platform Type="XBox360">
+  </Platform>
+</ExternalProject>

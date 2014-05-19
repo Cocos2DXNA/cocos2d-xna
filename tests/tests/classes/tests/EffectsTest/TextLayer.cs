@@ -14,12 +14,12 @@ namespace tests
             var node = new CCNode();
             CCActionInterval effect = getAction();
             node.RunAction(effect);
-            AddChild(node, 0, EffectTestScene.kTagBackground);
+            AddChild(node, 1, EffectTestScene.kTagBackground);
 
             var bg = new CCSprite(TestResource.s_back3);
-            node.AddChild(bg, 0);
+            /*node.*/AddChild(bg, 0);
             bg.AnchorPoint = new CCPoint(0.5f, 0.5f);
-            bg.Position = CCVisibleRect.Center;
+            bg.Position = CCDirector.SharedDirector.WinSize.Center;
 
             var grossini = new CCSprite(TestResource.s_pPathSister2);
             node.AddChild(grossini, 1);

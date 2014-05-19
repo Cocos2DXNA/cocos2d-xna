@@ -31,6 +31,16 @@ namespace Cocos2D
             m_tBlendFunc = CCBlendFunc.NonPremultiplied;
         }
 
+        public CCMotionStreak(float fadeTime, float minSegLength, float streakWidth, CCColor3B color, string pathToTexture)
+        {
+            InitWithFade(fadeTime, minSegLength, streakWidth, color, pathToTexture);
+        }
+
+        public CCMotionStreak(float fadeTime, float minSegLength, float streakWidth, CCColor3B color, CCTexture2D texture)
+        {
+            InitWithFade(fadeTime, minSegLength, streakWidth, color, texture);
+        }
+
         public override CCPoint Position
         {
             set
@@ -84,21 +94,7 @@ namespace Cocos2D
             set { m_bStartingPositionInitialized = value; }
         }
 
-        public static CCMotionStreak Create(float fade, float minSeg, float stroke, CCColor3B color, string path)
-        {
-            var pRet = new CCMotionStreak();
-            pRet.InitWithFade(fade, minSeg, stroke, color, path);
-            return pRet;
-        }
-
-        public static CCMotionStreak Create(float fade, float minSeg, float stroke, CCColor3B color, CCTexture2D texture)
-        {
-            var pRet = new CCMotionStreak();
-            pRet.InitWithFade(fade, minSeg, stroke, color, texture);
-            return pRet;
-        }
-
-        public bool InitWithFade(float fade, float minSeg, float stroke, CCColor3B color, string path)
+        protected virtual bool InitWithFade(float fade, float minSeg, float stroke, CCColor3B color, string path)
         {
             Debug.Assert(!String.IsNullOrEmpty(path), "Invalid filename");
 
@@ -106,7 +102,7 @@ namespace Cocos2D
             return InitWithFade(fade, minSeg, stroke, color, texture);
         }
 
-        public bool InitWithFade(float fade, float minSeg, float stroke, CCColor3B color, CCTexture2D texture)
+        protected virtual bool InitWithFade(float fade, float minSeg, float stroke, CCColor3B color, CCTexture2D texture)
         {
             Position = CCPoint.Zero;
             AnchorPoint = CCPoint.Zero;
