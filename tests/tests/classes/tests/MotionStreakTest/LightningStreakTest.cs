@@ -15,6 +15,9 @@ namespace tests
         {
             base.OnEnter();
             TouchEnabled = true;
+            var sun = new CCParticleSun();
+            sun.Position = CCDirector.SharedDirector.WinSize.Center;
+            AddChild(sun);
         }
 
         public override void TouchesBegan(List<CCTouch> touches)
@@ -27,9 +30,14 @@ namespace tests
                 CCPoint center = new CCPoint(size.Width / 2, size.Height / 2);
                 CCPoint end = t.Location;
                 float fadeTime = CCMacros.CCRandomBetween0And1() * 5f;
-                CCLightningStreak s = new CCLightningStreak(center, end, fadeTime, 5f, 4.0f, new CCColor3B(0, 0, 255), TestResource.s_fire);
-                s.Duration = fadeTime / 2f;
+                CCLightningStreak s = new CCLightningStreak(center, end, fadeTime, 15f, 4.0f, new CCColor3B(0, 0, 255), TestResource.s_fire);
+                s.Duration = .5f;
                 AddChild(s);
+                var target = new CCParticleSun();
+                target.Scale = 0.2f;
+                target.Position = end;
+                AddChild(target);
+                target.RunAction(new CCSequence(new CCFadeOut(fadeTime), new CCRemoveSelf()));
             }
         }
         public override string title()

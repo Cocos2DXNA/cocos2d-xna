@@ -134,7 +134,8 @@ namespace Cocos2D
 //            var start = _Start;
 //            float length = CCPoint.Distance(start, _End);
 //            CCPoint dir = (_End - start) / length;
-            position *= _Length;
+            float u = position;
+            position = u * _TrackLength;
 
             float rem = position;
             for (int i = 0; i < _SegmentLengths.Length; i++)
@@ -145,6 +146,7 @@ namespace Cocos2D
                     CCPoint dir = _Track[i * 2 + 1] - _Track[i * 2];
                     dir.Normalize();
                     CCPoint pt = _Track[i * 2] + dir * rem;
+                    // CCLog.Log("GetPoint() position = {0}, segment={1}, pt={2}, end={3}", position, i, pt, _End);
                     return (pt);
                 }
                 else
@@ -154,6 +156,7 @@ namespace Cocos2D
                 }
             }
             // New algorithm did not work, so use the old algorithm
+            position = u * _Length;
             for (int i = 0; i < _Track.Count; i += 2)
             {
                 if (CCPoint.Dot(_Track[i] - _Start, _uDir) >= position)
