@@ -578,7 +578,7 @@ namespace Cocos2D
             MinX = Math.Min(MinX, x - radius);
             MinY = Math.Min(MinY, y - radius);
             MaxX = Math.Max(MaxX, x + radius);
-            MaxY = Math.Max(MaxY, x + radius);
+            MaxY = Math.Max(MaxY, y + radius);
         }
 
         public void ExpandToCircle(ref CCPointI point, int radius)
