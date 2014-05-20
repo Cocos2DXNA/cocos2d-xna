@@ -23,7 +23,7 @@
   <References>
     <Reference Include="System" />
     <!-- See FrameworkReferences.definition for the platform specific references -->
-    <Reference Include="box2d" />
+    <Reference Include="box2dReferences" />
   </References>
 
   <Properties>
