@@ -24,16 +24,45 @@
       <Project>{DB8508BB-9849-4CC2-BC0F-8EB5DACB3C47}</Project>
       <Name>MonoGame.Framework.iOS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.iOS.csproj">
+      <Project>{D4838656-8545-4DC5-8822-D4AD313E17AC}</Project>
+      <Name>MonoGame.Framework.Net.iOS</Name>
+    </ProjectReference>
+
   </Platform>
 
   <Platform Type="Linux">
+    <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\box2d\box2d.Linux.csproj">
+      <Project>{A84510D8-7AED-411E-9616-DCFEA180969E}</Project>
+      <Name>box2d.Linux</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Linux.csproj">
+      <Project>{734EAA48-F1CA-481A-B391-0285BC0E8B40}</Project>
+      <Name>Lidgren.Network.Linux</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Linux.csproj">
+      <Project>{DB8508BB-9849-4CC2-BC0F-8EB5DACB3C47}</Project>
+      <Name>MonoGame.Framework.Linux</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Linux.csproj">
+      <Project>{1B738549-0449-4504-B978-7BFC347E3F3C}</Project>
+      <Name>MonoGame.Framework.Net.Linux</Name>
+    </ProjectReference>
     <Binary
       Name="Tao.Sdl"
       Path="ThirdParty/GamepadConfig/Tao.Sdl.dll" />
     <Binary
       Name="OpenTK"
       Path="ThirdParty/Dependencies/OpenTK.dll" />
+    <Binary
+      Name="ICSharpCode.SharpZipLib"
+      Path="external lib\ICSharpCode.SharpZipLib.dll" />
+    <Binary
+      Name="zlib.net"
+      Path="external lib\zlib.net.dll" />
   </Platform>
 
   <Platform Type="MacOS">
@@ -58,6 +87,10 @@
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.MacOS.csproj">
       <Project>{36C538E6-C32A-4A8D-A39C-566173D7118E}</Project>
       <Name>MonoGame.Framework.MacOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.MacOS.csproj">
+      <Project>{1294038B-66C2-4359-AFE9-EA06A758CA94}</Project>
+      <Name>MonoGame.Framework.Net.MacOS</Name>
     </ProjectReference>
   </Platform>
 
@@ -86,6 +119,10 @@
       <Project>{BA9476CF-99BA-4D03-92F2-73D2C5E58883}</Project>
       <Name>MonoGame.Framework.Android</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Android.csproj">
+      <Project>{713EE5CA-C850-42AD-AC67-B6546AC8BFFB}</Project>
+      <Name>MonoGame.Framework.Net.Android</Name>
+    </ProjectReference>
   </Platform>
 
   <Platform Type="Ouya">
@@ -105,13 +142,17 @@
       <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
       <Name>box2d.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Android.csproj">
+    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Ouya.csproj">
       <Project>{565129E0-4EE5-4F6F-B403-C3484C9740BE}</Project>
-      <Name>Lidgren.Network.Android</Name>
+      <Name>Lidgren.Network.Ouya</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Ouya.csproj">
       <Project>{BA9476CF-99BA-4D03-92F2-73D2C5E58883}</Project>
       <Name>MonoGame.Framework.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Ouya.csproj">
+      <Project>{F200645B-20E1-4D6F-8C70-38656F633CFA}</Project>
+      <Name>MonoGame.Framework.Net.Ouya</Name>
     </ProjectReference>
     <Binary
       Name="Ouya.Console.Api"
@@ -122,6 +163,18 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Sce.PlayStation.Core" />
+    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.PSMobile.csproj">
+      <Project>{167676EE-E2D5-440A-BB2B-EFBD02BC8493}</Project>
+      <Name>Lidgren.Network.PSMobile</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.PSMobile.csproj">
+      <Project>{EA26E76F-FDFE-4A8C-B5A3-C3B5761E28F9}</Project>
+      <Name>MonoGame.Framework.PSMobile</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.PSMobile.csproj">
+      <Project>{39DBE7E5-BB4E-4E99-A832-C576F13A593B}</Project>
+      <Name>MonoGame.Framework.Net.PSMobile</Name>
+    </ProjectReference>
   </Platform>
 
   <Platform Type="WindowsDX">
@@ -146,6 +199,22 @@
     <Binary
       Name="SharpDX.Direct2D1"
       Path="../MonoGame/ThirdParty/Dependencies/SharpDX/Windows/SharpDX.Direct2D1.dll" />
+    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
+      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
+      <Name>Lidgren.Network.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows.csproj">
+      <Project>{7DE47032-A904-4C29-BD22-2D235E8D91BA}</Project>
+      <Name>MonoGame.Framework.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Windows.csproj">
+      <Project>{87A71215-7CAC-4B80-9D43-1700DECFB828}</Project>
+      <Name>MonoGame.Framework.Net.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\box2d\box2d.WindowsDX.csproj">
+      <Project>{b81b6701-7a78-4846-bf6f-04e0591f0f38}</Project>
+      <Name>box2d.WindowsDX</Name>
+    </ProjectReference>
   </Platform>
 
   <Platform Type="Windows8">
@@ -157,6 +226,10 @@
       <Project>{0518563c-acca-4a14-8c5d-ddbe93e2605f}</Project>
       <Name>MonoGame.Framework.Windows8</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Windows8.csproj">
+      <Project>{A65B8326-1DDD-4E5D-8130-E74F70919E81}</Project>
+      <Name>MonoGame.Framework.Net.Windows8</Name>
     </ProjectReference>
     <Binary Include="ICSharpCode.SharpZipLib" Path="external lib\XBox360\ICSharpCode.SharpZipLib.dll"/>
     <Binary Include="SharpDX" Path="..\MonoGame\ThirdParty\Dependencies\SharpDX\Windows 8 Metro\SharpDX.dll"/>
@@ -179,12 +252,16 @@
     <Binary Include="zlib.net" Path="external lib\zlib.net.dll"/>
     <Binary Include="ICSharpCode.SharpZipLib" Path="external lib\ICSharpCode.SharpZipLib.dll"/>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj">
-      <Project>{7DE47032-A904-4C29-BD22-2D235E8D91BA}</Project>
+      <Project>{6D75E618-19CA-4C51-9546-F10965FBC0B8}</Project>
       <Name>MonoGame.Framework.WindowsGL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
+    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.WindowsGL.csproj">
       <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
-      <Name>Lidgren.Network.Windows</Name>
+      <Name>Lidgren.Network.WindowsGL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.WindowsGL.csproj">
+      <Project>{6D6009F4-0AFB-4806-89D7-7945F20270F5}</Project>
+      <Name>MonoGame.Framework.Net.WindowsGL</Name>
     </ProjectReference>
     <ProjectReference Include="..\box2d\box2d.WindowsGL.csproj">
       <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
@@ -205,6 +282,24 @@
     <Binary
       Name="OpenTK"
       Path="ThirdParty/Dependencies/OpenTK.dll" />
+    <Binary Include="zlib.net" Path="external lib\zlib.net.dll"/>
+    <Binary Include="ICSharpCode.SharpZipLib" Path="external lib\ICSharpCode.SharpZipLib.dll"/>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Angle.csproj">
+      <Project>{ECF3C8B9-0AAC-4C32-B184-FAE88F6244B5}</Project>
+      <Name>MonoGame.Framework.Angle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Angle.csproj">
+      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
+      <Name>Lidgren.Network.Angle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Windows.csproj">
+      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
+      <Name>MonoGame.Framework.Net.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\box2d\box2d.Angle.csproj">
+      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
+      <Name>box2d.Angle</Name>
+    </ProjectReference>
   </Platform>
 
   <Platform Type="WindowsPhone">
@@ -219,6 +314,10 @@
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsPhone.csproj">
       <Project>{BAA9A6E4-7690-4DE0-9531-DE0EAEEC9739}</Project>
       <Name>MonoGame.Framework.WindowsPhone</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.WindowsPhone.csproj">
+      <Project>{C6DA906E-9E4A-428B-8870-07A39B172F83}</Project>
+      <Name>MonoGame.Framework.Net.WindowsPhone</Name>
     </ProjectReference>
   </Platform>
 
