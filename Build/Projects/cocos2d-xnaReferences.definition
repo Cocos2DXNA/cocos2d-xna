@@ -163,6 +163,10 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Sce.PlayStation.Core" />
+    <ProjectReference Include="..\box2d\box2d.PSM.csproj">
+      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
+      <Name>box2d.PSM</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.PSMobile.csproj">
       <Project>{167676EE-E2D5-440A-BB2B-EFBD02BC8493}</Project>
       <Name>Lidgren.Network.PSMobile</Name>

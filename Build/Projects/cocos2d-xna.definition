@@ -21,7 +21,7 @@
   <!-- Common assembly references -->
   <References>
     <Reference Include="System" />
-    <!-- See FrameworkReferences.definition for the platform specific references -->
+    <!-- Include the platform references for the framework -->
     <Reference Include="cocos2d-xnaReferences" />
   </References>
 

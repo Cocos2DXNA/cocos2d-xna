@@ -441,10 +441,6 @@
       <Project>{713ee5ca-c850-42ad-ac67-b6546ac8bffb}</Project>
       <Name>MonoGame.Framework.Net.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Android.csproj">
-      <Project>{565129E0-4EE5-4F6F-B403-C3484C9740BE}</Project>
-      <Name>Lidgren.Network.Android</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Android.csproj">
       <Project>{BA9476CF-99BA-4D03-92F2-73D2C5E58883}</Project>
       <Name>MonoGame.Framework.Android</Name>
