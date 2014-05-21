@@ -23,6 +23,7 @@
     <Reference Include="System" />
     <!-- Include the platform references for the framework -->
     <Reference Include="cocos2d-xnaReferences" />
+    <Reference Include="box2d"/>
   </References>
 
   <Properties>

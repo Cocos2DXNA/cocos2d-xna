@@ -12,10 +12,6 @@
     <Binary
       Name="zlib.net"
       Path="external lib\zlib.net.dll" />
-    <ProjectReference Include="..\box2d\box2d.iOS.csproj">
-      <Project>{7877D4F9-F781-465A-9C1F-D113F246A994}</Project>
-      <Name>box2d.iOS</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.iOS.csproj">
       <Project>{734EAA48-F1CA-481A-B391-0285BC0E8B40}</Project>
       <Name>Lidgren.Network.iOS</Name>
@@ -35,10 +31,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <ProjectReference Include="..\box2d\box2d.Linux.csproj">
-      <Project>{A84510D8-7AED-411E-9616-DCFEA180969E}</Project>
-      <Name>box2d.Linux</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Linux.csproj">
       <Project>{734EAA48-F1CA-481A-B391-0285BC0E8B40}</Project>
       <Name>Lidgren.Network.Linux</Name>
@@ -76,10 +68,6 @@
     <Binary
       Name="zlib.net"
       Path="external lib\zlib.net.dll" />
-    <ProjectReference Include="..\box2d\box2d.MacOS.csproj">
-      <Project>{A84510D8-7AED-411E-9616-DCFEA180969E}</Project>
-      <Name>box2d.MacOS</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.MacOS.csproj">
       <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
       <Name>Lidgren.Network.MacOS</Name>
@@ -107,10 +95,6 @@
     <Binary
       Name="zlib.net"
       Path="external lib\zlib.net.dll" />
-    <ProjectReference Include="..\box2d\box2d.Android.csproj">
-      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
-      <Name>box2d.Android</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Android.csproj">
       <Project>{565129E0-4EE5-4F6F-B403-C3484C9740BE}</Project>
       <Name>Lidgren.Network.Android</Name>
@@ -138,10 +122,6 @@
     <Binary
       Name="zlib.net"
       Path="external lib\zlib.net.dll" />
-    <ProjectReference Include="..\box2d\box2d.Android.csproj">
-      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
-      <Name>box2d.Android</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Ouya.csproj">
       <Project>{565129E0-4EE5-4F6F-B403-C3484C9740BE}</Project>
       <Name>Lidgren.Network.Ouya</Name>
@@ -163,10 +143,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Sce.PlayStation.Core" />
-    <ProjectReference Include="..\box2d\box2d.PSM.csproj">
-      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
-      <Name>box2d.PSM</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.PSMobile.csproj">
       <Project>{167676EE-E2D5-440A-BB2B-EFBD02BC8493}</Project>
       <Name>Lidgren.Network.PSMobile</Name>
@@ -215,17 +191,9 @@
       <Project>{87A71215-7CAC-4B80-9D43-1700DECFB828}</Project>
       <Name>MonoGame.Framework.Net.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\box2d\box2d.WindowsDX.csproj">
-      <Project>{b81b6701-7a78-4846-bf6f-04e0591f0f38}</Project>
-      <Name>box2d.WindowsDX</Name>
-    </ProjectReference>
   </Platform>
 
   <Platform Type="Windows8">
-    <ProjectReference Include="..\box2d\box2d.Windows8.csproj">
-      <Project>{b81b6701-7a78-4846-bf6f-04e0591f0f38}</Project>
-      <Name>box2d.Windows8</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows8.csproj">
       <Project>{0518563c-acca-4a14-8c5d-ddbe93e2605f}</Project>
       <Name>MonoGame.Framework.Windows8</Name>
@@ -267,10 +235,6 @@
       <Project>{6D6009F4-0AFB-4806-89D7-7945F20270F5}</Project>
       <Name>MonoGame.Framework.Net.WindowsGL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\box2d\box2d.WindowsGL.csproj">
-      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
-      <Name>box2d.WindowsGL</Name>
-    </ProjectReference>
   </Platform>
 
   <Platform Type="Angle">
@@ -300,17 +264,9 @@
       <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
       <Name>MonoGame.Framework.Net.Windows</Name>
     </ProjectReference>
-    <ProjectReference Include="..\box2d\box2d.Angle.csproj">
-      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
-      <Name>box2d.Angle</Name>
-    </ProjectReference>
   </Platform>
 
   <Platform Type="WindowsPhone">
-    <ProjectReference Include="..\box2d\box2d.WindowsPhone.csproj">
-      <Project>{1F6DEC85-9C75-45CF-BECA-BD3187A398B1}</Project>
-      <Name>box2d.WindowsPhone</Name>
-    </ProjectReference>
     <ProjectReference Include="external lib\ICSharpCodeSource\src\ICSharpCode.SharpZLib.WP8.csproj">
       <Project>{0E7413FF-EB9E-4714-ACF2-BE3A6A7B2FFD}</Project>
       <Name>ICSharpCode.SharpZLib.WP8</Name>
@@ -349,10 +305,6 @@
     <Binary
       Name="zlib.net"
       Path="external lib\zlib.net.dll" />
-    <ProjectReference Include="..\box2d\box2d.WindowsPhone7.csproj">
-      <Project>{8165599E-6F37-41B7-91CD-C7C66232B5F2}</Project>
-      <Name>box2d.WindowsPhone7</Name>
-    </ProjectReference>
   </Platform>
 
   <Platform Type="Windows">
@@ -378,10 +330,6 @@
     <Binary
       Name="BitMiracle.LibTiff.NET"
       Path="external lib\BitMiracle.LibTiff.NET.dll" />
-    <ProjectReference Include="..\box2d\box2d.Windows.csproj">
-      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
-      <Name>box2d.Windows</Name>
-    </ProjectReference>
   </Platform>
 
   <Platform Type="XBox360">
@@ -404,10 +352,6 @@
     <Binary
       Name="zlib.net"
       Path="external lib\zlib.net.dll" />
-    <ProjectReference Include="..\box2d\box2d.XBox360.csproj">
-      <Project>{2429512B-C898-49C5-84BE-E4A659FC1647}</Project>
-      <Name>box2d.XBox360</Name>
-    </ProjectReference>
   </Platform>
 
 </ExternalProject>
