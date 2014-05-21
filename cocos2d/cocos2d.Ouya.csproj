@@ -417,6 +417,10 @@
     <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Ouya.csproj">
+      <Project>{16b6536c-e165-49af-ba6d-1eaf07bc4c0f}</Project>
+      <Name>MonoGame.Framework.Net.Ouya</Name>
+    </ProjectReference>
     <ProjectReference Include="..\box2d\box2d.Android.csproj">
       <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
       <Name>box2d.Android</Name>
@@ -424,6 +428,10 @@
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Ouya.csproj">
       <Project>{8BEA875D-66D2-4A5F-B137-83D262A3851D}</Project>
       <Name>MonoGame.Framework.Ouya</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Android.csproj">
+      <Project>{565129e0-4ee5-4f6f-b403-c3484c9740be}</Project>
+      <Name>Lidgren.Network.Android</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
@@ -434,7 +442,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="keyboard_dispatcher\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
