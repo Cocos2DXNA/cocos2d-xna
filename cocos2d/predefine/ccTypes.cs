@@ -466,6 +466,14 @@ namespace Cocos2D
             return (int)Math.Sqrt(hside * hside + vside * vside);
         }
 
+        public int DistanceSQ(ref CCPointI p)
+        {
+            var hside = X - p.X;
+            var vside = Y - p.Y;
+
+            return hside * hside + vside * vside;
+        }
+
         public bool Equals(ref CCPointI p)
         {
             return X == p.X && Y == p.Y;
@@ -570,7 +578,7 @@ namespace Cocos2D
             MinX = Math.Min(MinX, x - radius);
             MinY = Math.Min(MinY, y - radius);
             MaxX = Math.Max(MaxX, x + radius);
-            MaxY = Math.Max(MaxY, x + radius);
+            MaxY = Math.Max(MaxY, y + radius);
         }
 
         public void ExpandToCircle(ref CCPointI point, int radius)
@@ -599,6 +607,11 @@ namespace Cocos2D
             MaxY = Math.Max(MaxY, r.MaxY);
         }
 
+        public bool ContainsPoint(int x, int y)
+        {
+            return x >= MinX && x <= MaxX && y >= MinY && y <= MaxY;
+        }
+
         public bool Intersects(ref CCBoundingBoxI rect)
         {
             return !(MaxX < rect.MinX || rect.MaxX < MinX || MaxY < rect.MinY || rect.MaxY < MinY);
@@ -612,7 +625,7 @@ namespace Cocos2D
             MaxY = CCMathHelper.Lerp(a.MaxY, b.MaxY, ratio);
         }
 
-        public CCBoundingBoxI Transform(CCAffineTransform matrix)
+        public CCBoundingBoxI Transform(ref CCAffineTransform matrix)
         {
             var top = MinY;
             var left = MinX;
@@ -625,7 +638,7 @@ namespace Cocos2D
             var bottomRight = new CCPointI(right, bottom);
 
             matrix.Transform(ref topLeft.X, ref topLeft.Y);
-            matrix.Transform(ref topRight.Y, ref topRight.Y);
+            matrix.Transform(ref topRight.X, ref topRight.Y);
             matrix.Transform(ref bottomLeft.X, ref bottomLeft.Y);
             matrix.Transform(ref bottomRight.X, ref bottomRight.Y);
 
@@ -640,6 +653,16 @@ namespace Cocos2D
         public static implicit operator CCRect(CCBoundingBoxI box)
         {
             return new CCRect(box.MinX, box.MinY, box.MaxX - box.MinX, box.MaxY - box.MinY);
+        }
+
+        public static bool operator ==(CCBoundingBoxI b1, CCBoundingBoxI b2)
+        {
+            return b1.MinX == b2.MinX && b1.MaxX == b2.MaxX && b1.MinY == b2.MinY && b1.MaxY == b2.MaxY;
+        }
+
+        public static bool operator !=(CCBoundingBoxI b1, CCBoundingBoxI b2)
+        {
+            return b1.MinX != b2.MinX || b1.MaxX != b2.MaxX || b1.MinY != b2.MinY || b1.MaxY != b2.MaxY;
         }
     }
 

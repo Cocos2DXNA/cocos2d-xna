@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>cocos2d-xna</Name>
+  <ModuleAssemblies />
+  <DefaultAction>Generate</DefaultAction>
+  <SupportedPlatforms>Android,Angle,Linux,Ouya,PSM,Windows8,Windows,WindowsDX,WindowsGL,WindowsPhone7,WindowsPhone,iOS,MacOS,XBox360</SupportedPlatforms>
+  <DefaultWindowsPlatforms>Android,Angle,Linux,Ouya,PSM,Windows8,Windows,WindowsDX,WindowsGL,WindowsPhone,WindowsPhone7,XBox360,iOS</DefaultWindowsPlatforms>
+  <DefaultMacOSPlatforms>Angle,MacOS,iOS,WindowsGL,Android</DefaultMacOSPlatforms>
+  <DefaultLinuxPlatforms>Angle,Linux,WindowsGL</DefaultLinuxPlatforms>
+  <DisableSynchronisation>true</DisableSynchronisation>
+</ModuleInfo>

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "box2d.iOS", "box2d\box2d.iO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network.iOS", "MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.iOS.csproj", "{734EAA48-F1CA-481A-B391-0285BC0E8B40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame.Framework.Net.iOS", "MonoGame.Framework\MonoGame.Framework.Net.iOS.csproj", "{D4838656-8545-4DC5-8822-D4AD313E17AC}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame.Framework.iOS", "MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj", "{DB8508BB-9849-4CC2-BC0F-8EB5DACB3C47}"
 EndProject
 Global
@@ -21,6 +23,18 @@ Global
 		Release|iPhoneSimulator = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.AppStore|iPhone.Build.0 = AppStore|iPhone
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Debug|iPhone.ActiveCfg = Debug|iPhone
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Debug|iPhone.Build.0 = Debug|iPhone
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Release|iPhone.ActiveCfg = Release|iPhone
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Release|iPhone.Build.0 = Release|iPhone
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+                {D4838656-8545-4DC5-8822-D4AD313E17AC}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 		{A83510D8-7AED-411E-9616-DCFEA180969E}.Ad-Hoc|iPhone.ActiveCfg = Debug|iPhone
 		{A83510D8-7AED-411E-9616-DCFEA180969E}.Ad-Hoc|iPhone.Build.0 = Debug|iPhone
 		{A83510D8-7AED-411E-9616-DCFEA180969E}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator

@@ -60,9 +60,11 @@ namespace Cocos2D
             if(_GLExtensions == null) {
                 List<string> extensions = new List<string>();
                 #if GLES
-                var extstring = GL.GetString(RenderbufferStorage.Extensions);                       
-				GraphicsExtensions.CheckGLError();
-				#elif MACOS
+                var extstring = GL.GetString(RenderbufferStorage.Extensions);
+                All error = GL.GetError();
+                if (error != All.False)
+                    CCLog.Log("ERROR: The GL context is in error (" + error + ").");
+                #elif MACOS
 
 				// for right now there are errors with GL before we even get here so the 
 				// CheckGLError for MACOS is throwing errors even though the extensions are read
@@ -72,7 +74,11 @@ namespace Cocos2D
 
 				#else
                 var extstring = GL.GetString(StringName.Extensions);
-				GraphicsExtensions.CheckGLError();
+                ErrorCode error = GL.GetError();
+                if (error != ErrorCode.NoError)
+                {
+                    CCLog.Log("ERROR: The GL context is in error (" + error + ").");
+                }
                 #endif
                 
                 if (!string.IsNullOrEmpty(extstring))

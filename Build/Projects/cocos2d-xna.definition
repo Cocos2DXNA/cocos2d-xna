@@ -1,57 +1,59 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{58B144AA-9409-439B-AEB0-144A1EA483E9}</ProjectGuid>
-    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cocos2D</RootNamespace>
-    <AssemblyName>cocos2d-xna</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <TargetFrameworkVersion>v4.1</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Ouya\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ANDROID;OUYA;OPENGL;GLES;MONOGAME</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AndroidLinkMode>None</AndroidLinkMode>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Ouya\Release\</OutputPath>
-    <DefineConstants>TRACE;ANDROID;OUYA;OPENGL;GLES;MONOGAME</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>external lib\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Android" />
-    <Reference Include="mscorlib" />
-    <Reference Include="OpenTK" />
+<?xml version="1.0" encoding="utf-8"?>
+<Project Name="cocos2d-xna" Path="cocos2d" Type="Library" Platforms="Android,Angle,iOS,Linux,MacOS,Ouya,PSM,WindowsDX,XBox360,Windows,Windows8,WindowsGL,WindowsPhone7,WindowsPhone">
+
+  <ProjectGuids>
+	<Platform Name="Android">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="Angle">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="iOS">7877D4F9-F781-465A-9C1F-D113F246A994</Platform>
+	<Platform Name="Linux">A84510D8-7AED-411E-9616-DCFEA180969E</Platform>
+	<Platform Name="MacOS">A84510D8-7AED-411E-9616-DCFEA180969E</Platform>
+	<Platform Name="Ouya">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="PSM">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="Windows">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="WindowsDX">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="Windows8">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="WindowsGL">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="WindowsPhone">1F6DEC85-9C75-45CF-BECA-BD3187A398B1</Platform>
+	<Platform Name="WindowsPhone7">8165599E-6F37-41B7-91CD-C7C66232B5F2</Platform>
+	<Platform Name="XBox360">2429512B-C898-49C5-84BE-E4A659FC1647</Platform>
+  </ProjectGuids>
+
+  <!-- Common assembly references -->
+  <References>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xml" />
-    <Reference Include="zlib.net">
-      <HintPath>external lib\zlib.net.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
+    <!-- Include the platform references for the framework -->
+    <Reference Include="cocos2d-xnaReferences" />
+    <Reference Include="box2d"/>
+  </References>
+
+  <Properties>
+    
+    <NoWarn>1591,0436</NoWarn>
+
+    <RootNamespace>Cocos2D</RootNamespace>
+	<RemoveXnaAssembliesOnWP8>false</RemoveXnaAssembliesOnWP8>
+    <PlatformSpecificOutputFolder>True</PlatformSpecificOutputFolder>
+
+    <CustomDefinitions>
+      <Platform Name="Android">TRACE;ANDROID;GLES;OPENGL;NET;MONOGAME</Platform>
+      <Platform Name="Angle">TRACE;ANGLE;GLES;OPENGL;OPENAL;NET;MONOGAME</Platform>
+      <Platform Name="iOS">IOS;GLES;IPHONE;OPENGL;OPENAL;NET;MONOGAME</Platform>
+      <Platform Name="Linux">TRACE;LINUX;OPENGL;OPENAL;NET;MONOGAME</Platform>
+      <Platform Name="MacOS">MONOMAC;MACOS;OPENGL;OPENAL;NET;MONOGAME</Platform>
+      <Platform Name="Ouya">TRACE;ANDROID;GLES;OPENGL;OUYA;NET;MONOGAME</Platform>
+      <Platform Name="PSM">PSM;NET;MONOGAME</Platform>
+      <Platform Name="Windows">TRACE;WINDOWS;XNA</Platform>
+      <Platform Name="WindowsDX">TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION;NET;MONOGAME</Platform>
+      <Platform Name="Windows8">TRACE;NETFX_CORE;WINRT;WINDOWS_STOREAPP;DIRECTX;DIRECTX11_1;WINDOWS_MEDIA_ENGINE;NET;MONOGAME</Platform>
+      <Platform Name="WindowsGL">TRACE;WINDOWS;OPENGL;OPENAL;NET;MONOGAME</Platform>
+      <Platform Name="WindowsPhone">TRACE;SILVERLIGHT;WINDOWS_PHONE;WINDOWS_PHONE8;MONOGAME</Platform>
+      <Platform Name="WindowsPhone7">TRACE;WINDOWS_PHONE;XNA</Platform>
+      <Platform Name="XBox360">TRACE;XBOX;XBOX360;XNA</Platform>
+    </CustomDefinitions>
+
+  </Properties>
+
+  <Files>
     <Compile Include="sprite_nodes\CCMaskedSprite.cs" />
     <Compile Include="Actions\action\CCAction.cs" />
     <Compile Include="Actions\action\CCFiniteTimeAction.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Actions\action_ease\CCEaseElasticOut.cs" />
     <Compile Include="Actions\action_ease\CCEaseExponentialIn.cs" />
     <Compile Include="Actions\action_ease\CCEaseExponentialInOut.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="Actions\action_ease\CCEaseExponentialOut.cs" />
     <Compile Include="Actions\action_ease\CCEaseIn.cs" />
     <Compile Include="Actions\action_ease\CCEaseInOut.cs" />
@@ -126,7 +129,6 @@
     <Compile Include="Actions\action_intervals\CCJumpTo.cs" />
     <Compile Include="Actions\action_intervals\CCMoveBy.cs" />
     <Compile Include="Actions\action_intervals\CCMoveTo.cs" />
-    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="Actions\action_intervals\CCRepeat.cs" />
     <Compile Include="Actions\action_intervals\CCRepeatForever.cs" />
     <Compile Include="Actions\action_intervals\CCReverseTime.cs" />
@@ -163,8 +165,8 @@
     <Compile Include="base_nodes\CCNodeRGBA.cs" />
     <Compile Include="CCCamera.cs" />
     <Compile Include="CCConfiguration.cs" />
-    <Compile Include="CCFPSImage.cs" />
     <Compile Include="CCContent.cs" />
+    <Compile Include="CCFPSImage.cs" />
     <Compile Include="CCDirector.cs" />
     <Compile Include="CCDisplayLinkDirector.cs" />
     <Compile Include="CCDrawingPrimitives.cs" />
@@ -172,7 +174,6 @@
     <Compile Include="CCScheduler.cs" />
     <Compile Include="cocoa\CCAffineTransform.cs" />
     <Compile Include="cocoa\CCGeometry.cs" />
-    <Compile Include="cocoa\ICCCopyable.cs" />
     <Compile Include="denshion\CCEffectPlayer.cs" />
     <Compile Include="denshion\CCMusicPlayer.cs" />
     <Compile Include="denshion\CCSimpleAudioEngine.cs" />
@@ -212,9 +213,9 @@
     <Compile Include="extentions\GUI\CCControlExtension\CCControlSwitch.cs" />
     <Compile Include="extentions\GUI\CCControlExtension\CCControlUtils.cs" />
     <Compile Include="extentions\GUI\CCControlExtension\CCInvocation.cs" />
-    <Compile Include="extentions\GUI\CCControlExtension\CCScale9SpriteFile.cs" />
-    <Compile Include="extentions\GUI\CCControlExtension\CCScale9SpriteFrame.cs" />
     <Compile Include="extentions\GUI\CCControlExtension\CCScale9Sprite.cs" />
+    <Compile Include="extentions\GUI\CCControlExtension\CCScale9SpriteFrame.cs" />
+    <Compile Include="extentions\GUI\CCControlExtension\CCScale9SpriteFile.cs" />
     <Compile Include="extentions\GUI\CCControlExtension\CCControlColourPicker.cs" />
     <Compile Include="extentions\GUI\CCControlExtension\CCControlHuePicker.cs" />
     <Compile Include="extentions\GUI\CCControlExtension\CCControlPotentiometer.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="keypad_dispatcher\ICCKeypadDelegate.cs" />
     <Compile Include="keypad_dispatcher\CCKeypadDispatcher.cs" />
     <Compile Include="label_nodes\CCBMFontConfiguration.cs" />
+    <Compile Include="label_nodes\CCLabel.cs" />
     <Compile Include="label_nodes\CCLabelAtlas.cs" />
     <Compile Include="label_nodes\CCLabelBMFont.cs" />
     <Compile Include="label_nodes\CCLabelTTF.cs" />
@@ -276,6 +278,7 @@
     <Compile Include="Math\CCMathHelper.cs" />
     <Compile Include="Math\CCRandom.cs" />
     <Compile Include="Math\CCSplineMath.cs" />
+    <Compile Include="Math\CCLightningTrack.cs" />
     <Compile Include="menu_nodes\CCMenu.cs" />
     <Compile Include="menu_nodes\CCMenuItem.cs" />
     <Compile Include="menu_nodes\CCMenuItemAtlasFont.cs" />
@@ -285,10 +288,12 @@
     <Compile Include="menu_nodes\CCMenuItemSprite.cs" />
     <Compile Include="menu_nodes\CCMenuItemToggle.cs" />
     <Compile Include="misc_nodes\CCMotionStreak.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
     <Compile Include="misc_nodes\CCProgressTimer.cs" />
     <Compile Include="misc_nodes\CCRenderTexture.cs" />
     <Compile Include="misc_nodes\CCClippingNode.cs" />
     <Compile Include="misc_nodes\CCDrawNode.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
     <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="particle_nodes\CCParticleBatchNode.cs" />
@@ -309,11 +314,14 @@
     <Compile Include="Platform\CCSAXParser.cs" />
     <Compile Include="Platform\CCSpriteFontCache.cs" />
     <Compile Include="Platform\CCDrawManager.cs" />
+    <Compile Include="Platform\ContentReaders\CCBMFontPaddingReader.cs" />
+    <Compile Include="Platform\ContentReaders\CCPointReader.cs" />
+    <Compile Include="Platform\ContentReaders\CCRectReader.cs" />
+    <Compile Include="Platform\ContentReaders\CCSizeReader.cs" />
+    <Compile Include="Platform\ContentReaders\KerningHashElementReader.cs" />
     <Compile Include="Platform\ICCSAXDelegator.cs" />
     <Compile Include="Platform\CCInputState.cs" />
-    <Compile Include="Platform\CCOGLES.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Platform\CCOGLES.cs"/>
     <Compile Include="Platform\PList\PlistArray.cs" />
     <Compile Include="Platform\PList\PlistBoolean.cs" />
     <Compile Include="Platform\PList\PlistData.cs" />
@@ -328,8 +336,8 @@
     <Compile Include="Platform\PList\PlistString.cs" />
     <Compile Include="Platform\CCPrimitiveBatch.cs" />
     <Compile Include="Platform\CCRawList.cs" />
-    <Compile Include="Platform\CCReusedObject.cs" />
     <Compile Include="Platform\CCArrayPool.cs" />
+    <Compile Include="Platform\CCReusedObject.cs" />
     <Compile Include="Platform\Zlib\Adler32.cs" />
     <Compile Include="Platform\Zlib\Deflate.cs" />
     <Compile Include="Platform\Zlib\InfBlocks.cs" />
@@ -363,10 +371,6 @@
     <Compile Include="sprite_nodes\CCSpriteSheetCache.cs" />
     <Compile Include="support\CCUserDefault.cs" />
     <Compile Include="support\CCUtils.cs" />
-    <Compile Include="support\Converters\CCRectConverter.cs" />
-    <Compile Include="support\Converters\CCPointConverter.cs" />
-    <Compile Include="support\Converters\CCSizeConverter.cs" />
-    <Compile Include="support\Serialization\CCSerialization.cs" />
     <Compile Include="support\Compression\Adler.cs" />
     <Compile Include="support\Compression\Crc32.cs" />
     <Compile Include="support\Compression\FlushType.cs" />
@@ -413,30 +417,27 @@
     <Compile Include="touch_dispatcher\ICCTouchDelegate.cs" />
     <Compile Include="touch_dispatcher\ICCEGLTouchDelegate.cs" />
     <Compile Include="gamepad_dispatcher\CCGamePadButtonDelegate.cs" />
+    <Compile Include="support\Converters\CCPointConverter.cs" />
+    <Compile Include="support\Converters\CCRectConverter.cs" />
+    <Compile Include="support\Converters\CCSizeConverter.cs" />
+    <Compile Include="support\Serialization\CCSerialization.cs" />
+    <Compile Include="cocoa\ICCCopyable.cs" />
     <Compile Include="keyboard_dispatcher\CCKeyboardDispatcher.cs" />
     <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\box2d\box2d.Android.csproj">
-      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
-      <Name>box2d.Android</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Ouya.csproj">
-      <Project>{f200645b-20e1-4d6f-8c70-38656f633cfa}</Project>
-      <Name>MonoGame.Framework.Net.Ouya</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Ouya.csproj">
-      <Project>{8bea875d-66d2-4a5f-b137-83d262a3851d}</Project>
-      <Name>MonoGame.Framework.Ouya</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <ItemGroup />
+    <Compile Include="label_nodes\CCLabel-Windows.cs">
+      <Platforms>Windows8;WindowsPhone;WindowsDX</Platforms>
+    </Compile>
+    <Compile Include="label_nodes\CCLabel-Android.cs">
+      <Platforms>Android;Ouya</Platforms>
+    </Compile>
+    <Compile Include="label_nodes\CCLabelUtilities-CoreGraphics.cs">
+      <Platforms>MacOS;iOS</Platforms>
+    </Compile>
+    <Compile Include="label_nodes\CCLabel-CoreGraphics.cs">
+      <Platforms>MacOS;iOS</Platforms>
+    </Compile>
+    <Compile Include="label_nodes\CCLabel-Gdi.cs">
+      <Platforms>WindowsGL</Platforms>
+    </Compile>
+  </Files>
 </Project>

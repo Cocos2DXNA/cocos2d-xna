@@ -1816,6 +1816,11 @@ namespace Cocos2D
 
         #region ICCTargetedTouchDelegate Members
 
+        /// <summary>
+        /// Returns true signaling that this node will consume the touch.
+        /// </summary>
+        /// <param name="touch"></param>
+        /// <returns></returns>
         public virtual bool TouchBegan(CCTouch touch)
         {
             return true;

@@ -266,10 +266,9 @@
     <Compile Include="extentions\GUI\CCScrollView\CCTableViewCell.cs" />
     <Compile Include="keypad_dispatcher\ICCKeypadDelegate.cs" />
     <Compile Include="keypad_dispatcher\CCKeypadDispatcher.cs" />
-	  <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
-	  <Compile Include="keyboard_dispatcher\CCKeyboardDispatcher.cs" />
-
-	  <Compile Include="label_nodes\CCBMFontConfiguration.cs" />
+    <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
+    <Compile Include="keyboard_dispatcher\CCKeyboardDispatcher.cs" />
+    <Compile Include="label_nodes\CCBMFontConfiguration.cs" />
     <Compile Include="label_nodes\CCLabelAtlas.cs" />
     <Compile Include="label_nodes\CCLabelBMFont.cs" />
     <Compile Include="layers_scenes_transitions_nodes\CCLayer.cs" />
@@ -449,6 +448,10 @@
     <Compile Include="touch_dispatcher\ICCTouchDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.WindowsGL.csproj">
+      <Project>{6d6009f4-0afb-4806-89d7-7945f20270f5}</Project>
+      <Name>MonoGame.Framework.Net.WindowsGL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj">
       <Project>{7DE47032-A904-4C29-BD22-2D235E8D91BA}</Project>
       <Name>MonoGame.Framework.WindowsGL</Name>
