@@ -78,8 +78,14 @@ namespace tests
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) {
+#if WINRT
+                return;
+#else
                 Exit();
+#endif
+            }
+
 
             // TODO: Add your update logic here
 

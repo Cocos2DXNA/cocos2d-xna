@@ -217,7 +217,7 @@ namespace tests
         public void closeCallback(object pSender)
         {
             CCDirector.SharedDirector.End();
-            CCApplication.SharedApplication.Game.Exit();
+            // CCApplication.SharedApplication.Game.Exit();
         }
 
         public override void TouchesBegan(List<CCTouch> pTouches)
