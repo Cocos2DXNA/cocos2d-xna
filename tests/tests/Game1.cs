@@ -79,7 +79,7 @@ namespace tests
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                Exit();
+                return;
 
             // TODO: Add your update logic here
 

@@ -109,6 +109,8 @@
     <None Include="label_nodes\CCLabel-Gdi.cs" />
     <Compile Include="label_nodes\CCLabel-Windows.cs" />
     <Compile Include="label_nodes\CCLabel.cs" />
+    <Compile Include="Math\CCLightningTrack.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
     <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
     <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="sprite_nodes\CCMaskedSprite.cs" />
