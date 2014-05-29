@@ -475,6 +475,10 @@
       <Project>{7877D4F9-F781-465A-9C1F-D113F246A994}</Project>
       <Name>box2d.iOS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.iOS.csproj">
+      <Project>{d4838656-8545-4dc5-8822-d4ad313e17ac}</Project>
+      <Name>MonoGame.Framework.Net.iOS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.iOS.csproj">
       <Project>{734EAA48-F1CA-481A-B391-0285BC0E8B40}</Project>
       <Name>Lidgren.Network.iOS</Name>
@@ -484,7 +488,5 @@
       <Name>MonoGame.Framework.iOS</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="keyboard_dispatcher\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
