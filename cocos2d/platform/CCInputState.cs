@@ -224,11 +224,14 @@ namespace Cocos2D
             // Get the raw touch state from the TouchPanel
             TouchState = TouchPanel.GetState();
 
-            // Read in any detected gestures into our list for the screens to later process
-            Gestures.Clear();
-            while (TouchPanel.IsGestureAvailable)
+            if (TouchPanel.EnabledGestures != GestureType.None)
             {
-                Gestures.Add(TouchPanel.ReadGesture());
+                // Read in any detected gestures into our list for the screens to later process
+                Gestures.Clear();
+                while (TouchPanel.IsGestureAvailable)
+                {
+                    Gestures.Add(TouchPanel.ReadGesture());
+                }
             }
         }
 
