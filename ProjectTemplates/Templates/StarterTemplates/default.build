@@ -48,6 +48,7 @@
 		<foreach item="Folder" property="folder" in="./">
 			<fileset id="solution">
 			  <include name="${folder}/VSIX/**/*.sln" />
+			  <exclude name="${folder}/VSIX/**/*.vs13.sln" />
 			</fileset>
 			<foreach item="File" property="filename">
 				<in>

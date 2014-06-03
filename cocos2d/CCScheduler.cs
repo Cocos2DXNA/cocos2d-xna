@@ -269,7 +269,7 @@ namespace Cocos2D
                     m_pCurrentTarget = elt;
                     m_bCurrentTargetSalvaged = false;
 
-                    if (!m_pCurrentTarget.Paused)
+                    if (elt != null && !m_pCurrentTarget.Paused)
                     {
                         // The 'timers' array may change while inside this loop
                         for (elt.TimerIndex = 0; elt.TimerIndex < elt.Timers.Count; ++elt.TimerIndex)

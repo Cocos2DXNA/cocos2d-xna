@@ -733,7 +733,7 @@ namespace Cocos2D
 
             if (m_pChildrenByTag != null && m_pChildrenByTag.Count > 0)
             {
-                Debug.Assert(m_pChildren != null && m_pChildren.count > 0);
+                //Debug.Assert(m_pChildren != null && m_pChildren.count > 0);
 
                 List<CCNode> list;
                 if (m_pChildrenByTag.TryGetValue(tag, out list))
@@ -1816,6 +1816,11 @@ namespace Cocos2D
 
         #region ICCTargetedTouchDelegate Members
 
+        /// <summary>
+        /// Returns true signaling that this node will consume the touch.
+        /// </summary>
+        /// <param name="touch"></param>
+        /// <returns></returns>
         public virtual bool TouchBegan(CCTouch touch)
         {
             return true;

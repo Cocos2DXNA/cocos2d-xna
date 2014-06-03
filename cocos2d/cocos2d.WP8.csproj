@@ -85,6 +85,8 @@
   <ItemGroup>
     <None Include="label_nodes\CCLabel-Windows.cs" />
     <None Include="label_nodes\CCLabel.cs" />
+    <Compile Include="Math\CCLightningTrack.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
     <Compile Include="sprite_nodes\CCMaskedSprite.cs" />
     <Compile Include="actions\action\CCAction.cs" />
     <Compile Include="actions\action\CCFiniteTimeAction.cs" />
@@ -164,6 +166,7 @@
     <Compile Include="actions\action_intervals\CCRotateTo.cs" />
     <Compile Include="actions\action_intervals\CCScaleBy.cs" />
     <Compile Include="actions\action_intervals\CCScaleTo.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="actions\action_intervals\CCSequence.cs" />
     <Compile Include="actions\action_intervals\CCSkewBy.cs" />
     <Compile Include="actions\action_intervals\CCSkewTo.cs" />
@@ -263,9 +266,9 @@
     <Compile Include="gamepad_dispatcher\CCGamePadTriggerDelegate.cs" />
     <Compile Include="keypad_dispatcher\ICCKeypadDelegate.cs" />
     <Compile Include="keypad_dispatcher\CCKeypadDispatcher.cs" />
-	  <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
-	  <Compile Include="keyboard_dispatcher\CCKeyboardDispatcher.cs" />
-	  <Compile Include="label_nodes\CCBMFontConfiguration.cs" />
+    <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
+    <Compile Include="keyboard_dispatcher\CCKeyboardDispatcher.cs" />
+    <Compile Include="label_nodes\CCBMFontConfiguration.cs" />
     <Compile Include="label_nodes\CCLabelAtlas.cs" />
     <Compile Include="label_nodes\CCLabelBMFont.cs" />
     <Compile Include="label_nodes\CCLabelTTF.cs" />
@@ -274,7 +277,6 @@
     <Compile Include="layers_scenes_transitions_nodes\CCLayerGradient.cs" />
     <Compile Include="layers_scenes_transitions_nodes\CCLayerMultiplex.cs" />
     <Compile Include="layers_scenes_transitions_nodes\CCScene.cs" />
-    <Compile Include="layers_scenes_transitions_nodes\CCInputScene.cs" />
     <Compile Include="layers_scenes_transitions_nodes\CCLayerRGBA.cs" />
     <Compile Include="layers_scenes_transitions_nodes\transition\CCTransitionFadeDown.cs" />
     <Compile Include="layers_scenes_transitions_nodes\transition\CCTransitionFadeUp.cs" />
@@ -325,6 +327,8 @@
     <Compile Include="misc_nodes\CCRenderTexture.cs" />
     <Compile Include="misc_nodes\CCClippingNode.cs" />
     <Compile Include="misc_nodes\CCDrawNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="particle_nodes\CCParticleBatchNode.cs" />
     <Compile Include="particle_nodes\CCParticleExamples.cs" />
     <Compile Include="particle_nodes\CCParticleSystem.cs" />
@@ -454,6 +458,10 @@
     <ProjectReference Include="..\box2d\box2d.WP8.csproj">
       <Project>{1F6DEC85-9C75-45CF-BECA-BD3187A398B1}</Project>
       <Name>box2d.WP8</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.WindowsPhone.csproj">
+      <Project>{C6DA906E-9E4A-428B-8870-07A39B172F83}</Project>
+      <Name>MonoGame.Framework.Net.WindowsPhone</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsPhone.csproj">
       <Project>{BAA9A6E4-7690-4DE0-9531-DE0EAEEC9739}</Project>

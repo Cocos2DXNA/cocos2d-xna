@@ -3,7 +3,7 @@
 	<Identifier Id="EmptyProject.88879316-5009-4A2F-B9B3-6387A4C46759">
 		<Name>Cocos2D-XNA Empty Game for Android</Name>
 		<Author>Cocos2D-XNA</Author>
-		<Version>1.3</Version>
+		<Version>1.4</Version>
 		<Description xml:space="preserve">Official Cocos2D-XNA for Android minimal skeleton game solution and project to get you up and running fast. Your project will include pre-packaged libraries of MonoGame for Android. A license for Xamarin.Android is required for this project.</Description>
 		<Locale>1033</Locale>
 		<Icon>powered.ico</Icon>
@@ -30,12 +30,14 @@
 		</SupportedProducts>
 		<SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
 	</Identifier>
+	<!--
 	<References>
 		<Reference Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" MinVersion="2.5.40416.9020">
 			<Name>NuGet Package Manager</Name>
 			<MoreInfoUrl>http://docs.nuget.org/</MoreInfoUrl>
 		</Reference>
 	</References>
+	-->
 	<Content>
 		<ProjectTemplate>ProjectTemplates</ProjectTemplate>
 	</Content>

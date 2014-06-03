@@ -615,6 +615,13 @@ namespace Cocos2D
             pt.Y = p1.Y + p2.Y;
             return pt;
         }
+        public static CCPoint operator *(CCPoint p1, CCPoint p2)
+        {
+            CCPoint pt;
+            pt.X = p1.X * p2.X;
+            pt.Y = p1.Y * p2.Y;
+            return pt;
+        }
 
         public static CCPoint operator +(CCPoint p1)
         {
@@ -681,6 +688,18 @@ namespace Cocos2D
         {
             Width = width;
             Height = height;
+        }
+
+        /// <summary>
+        /// Computes the diagonal length of this size. This method will always compute
+        /// the length using Sqrt()
+        /// </summary>
+        public float Diagonal
+        {
+            get
+            {
+                return ((float)Math.Sqrt(Width * Width + Height * Height));
+            }
         }
 
         /// <summary>

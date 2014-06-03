@@ -3,18 +3,22 @@ using System.Collections.Generic;
 
 namespace Cocos2D
 {
+    /// <summary>
+    /// Implementors of this interface will handle touches in serial order, one touch at at time.
+    /// </summary>
     public class CCTargetedTouchHandler : CCTouchHandler
     {
-        protected bool m_bSwallowsTouches;
+        protected bool m_bConsumesTouches;
         protected List<CCTouch> m_pClaimedTouches;
 
         /// <summary>
-        /// whether or not the touches are swallowed
+        /// whether or not the touches are consumed by this handler. A consumed touch will not
+        /// propagate to the other touch handlers.
         /// </summary>
-        public bool IsSwallowsTouches
+        public bool ConsumesTouches
         {
-            get { return m_bSwallowsTouches; }
-            set { m_bSwallowsTouches = value; }
+            get { return m_bConsumesTouches; }
+            set { m_bConsumesTouches = value; }
         }
 
         /// <summary>
@@ -33,7 +37,7 @@ namespace Cocos2D
             if (base.InitWithDelegate(pDelegate, nPriority))
             {
                 m_pClaimedTouches = new List<CCTouch>();
-                m_bSwallowsTouches = bSwallow;
+                m_bConsumesTouches = bSwallow;
 
                 return true;
             }

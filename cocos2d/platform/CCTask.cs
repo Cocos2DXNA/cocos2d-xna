@@ -18,6 +18,12 @@ namespace Cocos2D
 
         private static ICCSelectorProtocol _taskSelector = new TaskSelector();
 
+        public static void RunOnUiThread(Action action)
+        {
+            var scheduler = CCDirector.SharedDirector.Scheduler;
+            scheduler.ScheduleSelector(f => action(), _taskSelector, 0, 0, 0, false);
+        }
+
         public static object RunAsync(Action action)
         {
             return RunAsync(action, null);

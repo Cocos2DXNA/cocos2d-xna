@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -53,6 +54,7 @@ namespace Cocos2D
     {
         public static SurfaceFormat DefaultAlphaPixelFormat = SurfaceFormat.Color;
         public static bool OptimizeForPremultipliedAlpha = true;
+        public static bool PreserveSourceSurfaceFormat = true;
 
         private CCTextureCacheInfo m_CacheInfo;
         private Texture2D m_Texture2D;
@@ -718,7 +720,7 @@ namespace Cocos2D
             if (texture != null)
             {
                 // usually xnb texture prepared as PremultipliedAlpha
-                return InitWithTexture(texture, DefaultAlphaPixelFormat, true, true);
+                return InitWithTexture(texture, PreserveSourceSurfaceFormat ? texture.Format : DefaultAlphaPixelFormat, true, true);
             }
 
             // try load raw image
@@ -729,7 +731,7 @@ namespace Cocos2D
                 if (texture != null)
                 {
                     // not premultiplied alpha
-                    return InitWithTexture(texture, DefaultAlphaPixelFormat, false, true);
+                    return InitWithTexture(texture, PreserveSourceSurfaceFormat ? texture.Format : DefaultAlphaPixelFormat, false, true);
                 }
             }
 
@@ -780,12 +782,12 @@ namespace Cocos2D
 #if NETFX_CORE
                     var methodInfo = typeof(CCTexture2D).GetType().GetTypeInfo().GetDeclaredMethod("InitWithRawData");
 #else
-                    var methodInfo = typeof(CCTexture2D).GetMethod("InitWithRawData", BindingFlags.Public | BindingFlags.Instance);
+                    var methodInfo = typeof(CCTexture2D).GetMethods(BindingFlags.Public | BindingFlags.Instance).First(m => m.Name == "InitWithRawData" && m.IsGenericMethod && m.GetParameters().Length == 7);
 #endif
-                    var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType());
+                    var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType().GetElementType());
                     genericMethod.Invoke(this, new object[]
                         {
-                            Convert.ChangeType(m_CacheInfo.Data, m_CacheInfo.Data.GetType(),System.Globalization.CultureInfo.InvariantCulture),
+                            m_CacheInfo.Data,
                             m_ePixelFormat, m_uPixelsWide, m_uPixelsHigh, 
                             m_bHasPremultipliedAlpha, m_bHasMipmaps, m_tContentSize
                         });
@@ -858,7 +860,8 @@ namespace Cocos2D
                 );
 
             CCDrawManager.SetRenderTarget(renderTarget);
-            CCDrawManager.spriteBatch.Begin();
+            CCDrawManager.Clear(Color.Transparent);
+            CCDrawManager.spriteBatch.Begin(SpriteSortMode.Immediate, HasPremultipliedAlpha ? BlendState.AlphaBlend : BlendState.NonPremultiplied);
             CCDrawManager.spriteBatch.Draw(texture, new Vector2(0, 0), Color.White);
             CCDrawManager.spriteBatch.End();
             CCDrawManager.SetRenderTarget((CCTexture2D)null);

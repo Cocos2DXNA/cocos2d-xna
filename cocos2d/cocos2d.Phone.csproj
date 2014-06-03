@@ -97,6 +97,7 @@
     <Compile Include="actions\action_ease\CCEaseRateAction.cs" />
     <Compile Include="actions\action_ease\CCEaseSineIn.cs" />
     <Compile Include="actions\action_ease\CCEaseSineInOut.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="actions\action_ease\CCEaseSineOut.cs" />
     <Compile Include="actions\action_grid3d\CCFlipX3D.cs" />
     <Compile Include="actions\action_grid3d\CCFlipY3D.cs" />
@@ -252,7 +253,6 @@
     <Compile Include="label_nodes\CCLabelAtlas.cs" />
     <Compile Include="label_nodes\CCLabelBMFont.cs" />
     <Compile Include="label_nodes\CCLabelTTF.cs" />
-    <Compile Include="layers_scenes_transitions_nodes\CCInputScene.cs" />
     <Compile Include="layers_scenes_transitions_nodes\CCLayer.cs" />
     <Compile Include="layers_scenes_transitions_nodes\CCLayerColor.cs" />
     <Compile Include="layers_scenes_transitions_nodes\CCLayerGradient.cs" />
@@ -305,6 +305,8 @@
     <Compile Include="menu_nodes\CCMenuItemToggle.cs" />
     <Compile Include="misc_nodes\CCClippingNode.cs" />
     <Compile Include="misc_nodes\CCDrawNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="misc_nodes\CCMotionStreak.cs" />
     <Compile Include="misc_nodes\CCProgressTimer.cs" />
     <Compile Include="misc_nodes\CCRenderTexture.cs" />

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Name="cocos2d-xna-pipeline" Path="cocos2d.Content.Pipeline.Importers" Type="Library" Platforms="Linux,MacOS,WindowsGL,WindowsDX">
+
+  <ProjectGuids>
+	<Platform Name="Linux">FBE4633D-00D1-4391-8184-63B91DA28D4B</Platform>
+	<Platform Name="MacOS">FBE4633D-00D1-4391-8184-63B91DA28D4B</Platform>
+	<Platform Name="Windows">FBE4633D-00D1-4391-8184-63B91DA28D4B</Platform>
+  </ProjectGuids>
+
+  <References>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MonoGame.Framework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+
+	<!-- Platform specific and special references! -->
+    <Reference Include="PipelineReferences" />
+
+  </References>
+
+  <Properties>
+    
+    <NoWarn>1591,0436</NoWarn>
+
+    <RootNamespace>Cocos2D</RootNamespace>
+    <PlatformSpecificOutputFolder>True</PlatformSpecificOutputFolder>
+
+    <CustomDefinitions>
+      <Platform Name="Linux">TRACE;LINUX</Platform>
+      <Platform Name="MacOS">TRACE;MACOS</Platform>
+      <Platform Name="Windows">TRACE;WINDOWS</Platform>
+    </CustomDefinitions>
+
+  </Properties>
+
+  <Files>
+
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Decompress.cs" />
+    <Compile Include="Font.cs" />
+    <Compile Include="Plist.cs" />
+    <Compile Include="Text\TextImporter.cs" />
+    <Compile Include="Text\TextProcessor.cs" />
+    <Compile Include="TMX\TMXImporter.cs" />
+    <Compile Include="TMX\TMXProcessor.cs" />
+
+  </Files>
+</Project>

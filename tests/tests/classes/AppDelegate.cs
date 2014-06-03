@@ -68,6 +68,20 @@ namespace tests
             {
                 CCSize resourceSize = new CCSize(960, 640);
                 CCContentManager.SharedContentManager.SearchPaths.Add("hd");
+                /*
+                CCContentManager.SharedContentManager.SearchPaths.Add("hd/extensions");
+                CCContentManager.SharedContentManager.SearchPaths.Add("extensions");
+                CCContentManager.SharedContentManager.SearchPaths.Add("hd/animations");
+                CCContentManager.SharedContentManager.SearchPaths.Add("animations");
+                CCContentManager.SharedContentManager.SearchPaths.Add("hd/TileMaps");
+                CCContentManager.SharedContentManager.SearchPaths.Add("TileMaps");
+                CCContentManager.SharedContentManager.SearchPaths.Add("hd/ccb");
+                CCContentManager.SharedContentManager.SearchPaths.Add("ccb");
+                CCContentManager.SharedContentManager.SearchPaths.Add("hd/Images");
+                CCContentManager.SharedContentManager.SearchPaths.Add("Particles");
+                CCContentManager.SharedContentManager.SearchPaths.Add("Sounds");
+                CCContentManager.SharedContentManager.SearchPaths.Add("TileMaps");
+                 */
                 pDirector.ContentScaleFactor = resourceSize.Height / designSize.Height;
             }
 

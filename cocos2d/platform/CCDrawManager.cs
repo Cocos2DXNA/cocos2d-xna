@@ -304,7 +304,15 @@ namespace Cocos2D
             pp.BackBufferHeight = manager.PreferredBackBufferHeight;
             pp.BackBufferFormat = manager.PreferredBackBufferFormat;
             pp.DepthStencilFormat = manager.PreferredDepthStencilFormat;
-            pp.RenderTargetUsage = RenderTargetUsage.DiscardContents; //??? DiscardContents fast
+            pp.RenderTargetUsage = m_presentationParameters.RenderTargetUsage;
+            if (manager.PreferMultiSampling && pp.MultiSampleCount == 0)
+            {
+                pp.MultiSampleCount = 4;
+            }
+            else if (!manager.PreferMultiSampling)
+            {
+                pp.MultiSampleCount = 0;
+            }
         }
 
         public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
@@ -328,11 +336,11 @@ namespace Cocos2D
             m_graphicsService = service;
             m_presentationParameters = new PresentationParameters()
             {
-                RenderTargetUsage = RenderTargetUsage.DiscardContents,
+                RenderTargetUsage = RenderTargetUsage.PreserveContents,
                 DepthStencilFormat = DepthFormat.Depth24Stencil8,
                 BackBufferFormat = SurfaceFormat.Color
             };
-
+            
             service.DeviceCreated += GraphicsDeviceDeviceCreated;
 
             var manager = service as GraphicsDeviceManager;
@@ -364,7 +372,8 @@ namespace Cocos2D
             gdipp.RenderTargetUsage = pp.RenderTargetUsage;
             gdipp.DepthStencilFormat = pp.DepthStencilFormat;
             gdipp.BackBufferFormat = pp.BackBufferFormat;
-            
+            gdipp.MultiSampleCount = pp.MultiSampleCount;
+
             //if (graphicsDevice == null)
             {
                 // Only set the buffer dimensions when the device was not created
@@ -738,6 +747,10 @@ namespace Cocos2D
             for (int i = 0; i < passes.Count; i++)
             {
                 passes[i].Apply();
+                if (count > 65535)
+                {
+                    count = 65535; // Hard limit for XNA
+                }
                 graphicsDevice.DrawUserPrimitives(type, vertices, offset, count);
             }
 
@@ -1192,7 +1205,7 @@ namespace Cocos2D
             CCDirector.SharedDirector.m_obWinSizeInPoints = DesignResolutionSize;
 
             CCDirector.SharedDirector.CreateStatsLabel();
-            CCDirector.SharedDirector.SetGlDefaultValues();
+            CCDirector.SharedDirector.SetRenderDefaultValues();
         }
 
         public static void SetOrientation(DisplayOrientation supportedOrientations)

@@ -29,7 +29,8 @@ namespace Cocos2D
                     var currentItem = (CCMenuItem) GetChildByTag(kCurrentItem);
                     if (currentItem != null)
                     {
-                        currentItem.RemoveFromParentAndCleanup(false);
+                        currentItem.RunAction(new CCRemoveSelf(false));
+//                        currentItem.RemoveFromParentAndCleanup(false);
                     }
 
                     CCMenuItem item = m_pSubItems[m_uSelectedIndex];
@@ -115,16 +116,45 @@ namespace Cocos2D
             base.Activate();
         }
 
+        /// <summary>
+        /// Set this to true if you want to zoom-in/out on the button image like the CCMenuItemLabel works.
+        /// </summary>
+        public bool ZoomBehaviorOnTouch { get; set; }
+        private float m_fOriginalScale = 0f;
+
         public override void Selected()
         {
             base.Selected();
             m_pSubItems[m_uSelectedIndex].Selected();
+            if (ZoomBehaviorOnTouch)
+            {
+                CCAction action = m_pSubItems[m_uSelectedIndex].GetActionByTag(unchecked((int)kZoomActionTag));
+                if (action != null)
+                {
+                    StopAction(action);
+                }
+                else
+                {
+                    m_fOriginalScale = Scale;
+                }
+
+                CCAction zoomAction = new CCScaleTo(0.1f, m_fOriginalScale * 1.2f);
+                zoomAction.Tag = unchecked((int)kZoomActionTag);
+                m_pSubItems[m_uSelectedIndex].RunAction(zoomAction);
+            }
         }
 
         public override void Unselected()
         {
             base.Unselected();
             m_pSubItems[m_uSelectedIndex].Unselected();
+            if (ZoomBehaviorOnTouch)
+            {
+                m_pSubItems[m_uSelectedIndex].StopActionByTag(unchecked((int)kZoomActionTag));
+                CCAction zoomAction = new CCScaleTo(0.1f, m_fOriginalScale);
+                zoomAction.Tag = unchecked((int)kZoomActionTag);
+                m_pSubItems[m_uSelectedIndex].RunAction(zoomAction);
+            }
         }
     }
 }

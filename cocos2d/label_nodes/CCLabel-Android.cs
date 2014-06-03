@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Microsoft.Xna.Framework;
 using Android.App;
 using Android.Graphics;
 using Android.Util;
@@ -20,8 +21,7 @@ namespace Cocos2D
         {
             if (_paint == null)
             {
-                var contex = (Activity)CCApplication.SharedApplication.Game.Window.Context;
-                var display = contex.WindowManager.DefaultDisplay;
+                var display = Game.Activity.WindowManager.DefaultDisplay;
                 var metrics = new DisplayMetrics();
                 display.GetMetrics(metrics);
 
@@ -39,7 +39,7 @@ namespace Cocos2D
             if (!String.IsNullOrEmpty(ext) && ext.ToLower() == ".ttf")
             {
                 var path = System.IO.Path.Combine(CCApplication.SharedApplication.Game.Content.RootDirectory, fontName);
-                var activity = (Activity) CCApplication.SharedApplication.Game.Window.Context;
+                var activity = Game.Activity;
 
                 try
                 {
@@ -108,7 +108,10 @@ namespace Cocos2D
 
             var size = GetMeasureString(text);
 
-            CreateBitmap((int) size.Width + 2, (int) size.Height + 2);
+            var w = (int)(Math.Ceiling(size.Width += 2));
+            var h = (int)(Math.Ceiling(size.Height += 2));
+
+            CreateBitmap(w, h);
 
             _canvas.DrawColor(Android.Graphics.Color.Black);
 
