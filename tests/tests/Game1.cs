@@ -79,7 +79,7 @@ namespace tests
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) {
-#if WINRT
+#if WINRT || WINDOWS_STOREAPP || WINDOWS_PHONE8
                 return;
 #else
                 Exit();
