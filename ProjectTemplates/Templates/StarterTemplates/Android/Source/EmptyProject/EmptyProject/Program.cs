@@ -28,11 +28,10 @@ namespace EmptyProject
         {
             base.OnCreate(bundle);
 
-            Game1.Activity = this;
             var game = new Game1();
 
             var frameLayout = new FrameLayout(this);
-            frameLayout.AddView(game.Window);
+            frameLayout.AddView((View)game.Services.GetService(typeof(View)));
             this.SetContentView(frameLayout);
 
             //SetContentView(game.Window);

@@ -193,9 +193,12 @@ namespace Cocos2D
         private CCInputState()
         {
             TouchPanel.EnabledGestures = GestureType.None;
+            ConsumeGamePadState = true;
         }
 
         #region Update
+
+        public bool ConsumeGamePadState { get; set; }
 
         /// <summary>
         /// Reads the latest state user input.
@@ -205,22 +208,32 @@ namespace Cocos2D
             LastMouseState = CurrentMouseState;
             CurrentMouseState = Microsoft.Xna.Framework.Input.Mouse.GetState();
 
-            for (int i = 0; i < MaxInputs; i++)
+            if (CCDirector.SharedDirector.GamePadEnabled && ConsumeGamePadState)
             {
-                LastKeyboardStates[i] = CurrentKeyboardStates[i];
-                LastGamePadStates[i] = CurrentGamePadStates[i];
-
-                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex) i);
-                CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex) i);
-
-                // Keep track of whether a gamepad has ever been
-                // connected, so we can detect if it is unplugged.
-                if (CurrentGamePadStates[i].IsConnected)
+                try
                 {
-                    GamePadWasConnected[i] = true;
+                    for (int i = 0; i < MaxInputs; i++)
+                    {
+                        LastKeyboardStates[i] = CurrentKeyboardStates[i];
+                        LastGamePadStates[i] = CurrentGamePadStates[i];
+
+                        CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i);
+                        CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex)i);
+
+                        // Keep track of whether a gamepad has ever been
+                        // connected, so we can detect if it is unplugged.
+                        if (CurrentGamePadStates[i].IsConnected)
+                        {
+                            GamePadWasConnected[i] = true;
+                        }
+                    }
+                }
+                catch (DllNotFoundException)
+                {
+                    // No gamepad support, so disable it.
+                    ConsumeGamePadState = false;
                 }
             }
-
             // Get the raw touch state from the TouchPanel
             TouchState = TouchPanel.GetState();
 

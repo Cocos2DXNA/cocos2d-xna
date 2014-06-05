@@ -36,10 +36,6 @@ namespace $safeprojectname$
             {
                 CCDirector.SharedDirector.PopScene();
             }
-            else
-            {
-                Exit();
-            }
         }
 
         protected override void Update(GameTime gameTime)

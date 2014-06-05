@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\WindowsDX\Release\</OutputPath>
-    <DefineConstants>TRACE;WINDOWS;MONOGAME;WINDOWSDX</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS;MONOGAME;WINDOWSDX;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
