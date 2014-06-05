@@ -17,7 +17,7 @@ namespace Cocos2D
         private readonly LinkedList<CCTouch> m_pTouches = new LinkedList<CCTouch>();
         private readonly List<CCTouch> movedTouches = new List<CCTouch>();
         private readonly List<CCTouch> newTouches = new List<CCTouch>();
-#if WINDOWS || WINDOWSGL || MACOS || ENABLE_MOUSE
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
         private int _lastMouseId;
         private MouseState _lastMouseState;
         private MouseState _prevMouseState;
@@ -475,50 +475,50 @@ namespace Cocos2D
                 CCRect viewPort = CCDrawManager.ViewPortRect;
                 CCPoint pos;
 
-            _prevMouseState = _lastMouseState;
-            _lastMouseState = mouse;
+                _prevMouseState = _lastMouseState;
+                _lastMouseState = mouse;
 
-            if (_prevMouseState.LeftButton == ButtonState.Released && _lastMouseState.LeftButton == ButtonState.Pressed)
-            {
+                if (_prevMouseState.LeftButton == ButtonState.Released && _lastMouseState.LeftButton == ButtonState.Pressed)
+                {
 #if NETFX_CORE
                     pos = TransformPoint(_lastMouseState.X, _lastMouseState.Y);
                     pos = CCDrawManager.ScreenToWorld(pos.X, pos.Y);
 #else
-                pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
+                    pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
 #endif
-                _lastMouseId++;
-                m_pTouches.AddLast(new CCTouch(_lastMouseId, pos.X, pos.Y));
-                m_pTouchMap.Add(_lastMouseId, m_pTouches.Last);
-                newTouches.Add(m_pTouches.Last.Value);
+                    _lastMouseId++;
+                    m_pTouches.AddLast(new CCTouch(_lastMouseId, pos.X, pos.Y));
+                    m_pTouchMap.Add(_lastMouseId, m_pTouches.Last);
+                    newTouches.Add(m_pTouches.Last.Value);
 
-                m_bCaptured = true;
-            }
-            else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Pressed)
-            {
-                if (m_pTouchMap.ContainsKey(_lastMouseId))
+                    m_bCaptured = true;
+                }
+                else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Pressed)
                 {
-                    if (_prevMouseState.X != _lastMouseState.X || _prevMouseState.Y != _lastMouseState.Y)
+                    if (m_pTouchMap.ContainsKey(_lastMouseId))
                     {
+                        if (_prevMouseState.X != _lastMouseState.X || _prevMouseState.Y != _lastMouseState.Y)
+                        {
 #if NETFX_CORE
                             pos = TransformPoint(_lastMouseState.X, _lastMouseState.Y);
                             pos = CCDrawManager.ScreenToWorld(pos.X, pos.Y);
 #else
-                        pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
+                            pos = CCDrawManager.ScreenToWorld(_lastMouseState.X, _lastMouseState.Y);
 #endif
-                        movedTouches.Add(m_pTouchMap[_lastMouseId].Value);
-                        m_pTouchMap[_lastMouseId].Value.SetTouchInfo(_lastMouseId, pos.X, pos.Y);
+                            movedTouches.Add(m_pTouchMap[_lastMouseId].Value);
+                            m_pTouchMap[_lastMouseId].Value.SetTouchInfo(_lastMouseId, pos.X, pos.Y);
+                        }
                     }
                 }
-            }
-            else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Released)
-            {
-                if (m_pTouchMap.ContainsKey(_lastMouseId))
+                else if (_prevMouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Released)
                 {
-                    endedTouches.Add(m_pTouchMap[_lastMouseId].Value);
-                    m_pTouches.Remove(m_pTouchMap[_lastMouseId]);
-                    m_pTouchMap.Remove(_lastMouseId);
+                    if (m_pTouchMap.ContainsKey(_lastMouseId))
+                    {
+                        endedTouches.Add(m_pTouchMap[_lastMouseId].Value);
+                        m_pTouches.Remove(m_pTouchMap[_lastMouseId]);
+                        m_pTouchMap.Remove(_lastMouseId);
+                    }
                 }
-            }
                 if (newTouches.Count > 0)
                 {
                     m_pDelegate.TouchesBegan(newTouches);
@@ -533,7 +533,7 @@ namespace Cocos2D
                 {
                     m_pDelegate.TouchesEnded(endedTouches);
                 }
-        }
+            }
         }
 #endif
 
