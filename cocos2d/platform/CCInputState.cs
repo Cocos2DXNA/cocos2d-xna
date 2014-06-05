@@ -180,8 +180,10 @@ namespace Cocos2D
 
         public readonly bool[] GamePadWasConnected = new bool[MaxInputs];
 
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
         public MouseState CurrentMouseState;
         public MouseState LastMouseState;
+#endif
 
         public TouchCollection TouchState;
 
@@ -205,8 +207,10 @@ namespace Cocos2D
         /// </summary>
         public void Update(float deltaTime)
         {
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
             LastMouseState = CurrentMouseState;
             CurrentMouseState = Microsoft.Xna.Framework.Input.Mouse.GetState();
+#endif
 
             if (CCDirector.SharedDirector.GamePadEnabled && ConsumeGamePadState)
             {
@@ -355,7 +359,7 @@ namespace Cocos2D
 
         #region Mouse
 
-#if (!XBOX)
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
 
         public MouseState Mouse
         {
