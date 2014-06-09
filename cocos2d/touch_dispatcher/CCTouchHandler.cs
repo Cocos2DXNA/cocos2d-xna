@@ -1,4 +1,5 @@
 
+using System;
 namespace Cocos2D
 {
     /// <summary>
@@ -16,7 +17,7 @@ namespace Cocos2D
         public ICCTouchDelegate Delegate
         {
             get { return m_pDelegate; }
-            set { m_pDelegate = value; }
+            set { m_pDelegate = value; if (value != null) { m_nPriority = value.TouchPriority; } }
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace Cocos2D
         /// <summary>
         /// initializes a TouchHandler with a delegate and a priority 
         /// </summary>
-        public virtual bool InitWithDelegate(ICCTouchDelegate pDelegate, int nPriority)
+        protected virtual bool InitWithDelegate(ICCTouchDelegate pDelegate, int nPriority)
         {
             m_pDelegate = pDelegate;
             m_nPriority = nPriority;
@@ -49,13 +50,25 @@ namespace Cocos2D
             return true;
         }
 
+        public CCTouchHandler(ICCTouchDelegate pDelegate)
+        {
+            m_pDelegate = pDelegate;
+            m_nPriority = pDelegate.TouchPriority;
+            m_nEnabledSelectors = 0;
+        }
+
+        public CCTouchHandler(ICCTouchDelegate pDelegate, int nPriority) : this(pDelegate)
+        {
+            m_nPriority = nPriority;
+        }
+
         /// <summary>
         /// allocates a TouchHandler with a delegate and a priority 
         /// </summary>
+        [Obsolete("Use the CCTouchHandler constructors", true)]
         public static CCTouchHandler Create(ICCTouchDelegate pDelegate, int nPriority)
         {
-            var pHandler = new CCTouchHandler();
-            pHandler.InitWithDelegate(pDelegate, nPriority);
+            var pHandler = new CCTouchHandler(pDelegate, nPriority);
             return pHandler;
         }
     }

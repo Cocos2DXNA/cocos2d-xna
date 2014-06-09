@@ -222,6 +222,10 @@ namespace Cocos2D
                     foreach (CCTargetedTouchHandler pHandler in m_pTargetedHandlers)
                     {
                         var pDelegate = (ICCTargetedTouchDelegate) (pHandler.Delegate);
+                        if (!pDelegate.VisibleForTouches)
+                        {
+                            continue;
+                        }
 
                         bool bClaimed = false;
                         if (sHelper == CCTouchType.Began)
@@ -280,6 +284,10 @@ namespace Cocos2D
                 foreach (CCStandardTouchHandler pHandler in m_pStandardHandlers)
                 {
                     var pDelegate = (ICCStandardTouchDelegate) pHandler.Delegate;
+                    if (!pDelegate.VisibleForTouches)
+                    {
+                        continue;
+                    }
                     switch (sHelper)
                     {
                         case CCTouchType.Began:
@@ -425,15 +433,29 @@ namespace Cocos2D
 
         protected void RearrangeHandlers(List<CCTouchHandler> pArray)
         {
-            pArray.Sort(Less);
+            if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+            {
+                pArray.Sort(HighToLow);
+            }
+            else
+            {
+                pArray.Sort(LowToHigh);
+            }
         }
 
         /// <summary>
-        /// Used for sort
+        /// Used for sorting low to high order of priority
         /// </summary>
-        private int Less(CCTouchHandler p1, CCTouchHandler p2)
+        private int LowToHigh(CCTouchHandler p1, CCTouchHandler p2)
         {
             return p1.Priority - p2.Priority;
+        }
+        /// <summary>
+        /// Used for sorting high to low order of priority
+        /// </summary>
+        private int HighToLow(CCTouchHandler p1, CCTouchHandler p2)
+        {
+            return p2.Priority - p1.Priority;
         }
     }
 
