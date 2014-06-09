@@ -21,6 +21,7 @@ namespace Cocos2D
     {
         public const float kDefaultPadding = 5;
         public const int kCCMenuHandlerPriority = -128;
+        public const int kMaxGraphPriority = 9;
 
         protected bool m_bEnabled;
         protected CCMenuState m_eState;
@@ -156,7 +157,14 @@ namespace Cocos2D
             }
             if (base.Init())
             {
-                TouchPriority = kCCMenuHandlerPriority;
+                if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+                {
+                    TouchPriority = kMaxGraphPriority;
+                }
+                else
+                {
+                    TouchPriority = kCCMenuHandlerPriority;
+                }
                 TouchMode = CCTouchMode.OneByOne;
                 TouchEnabled = true;
 

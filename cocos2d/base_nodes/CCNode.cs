@@ -1698,11 +1698,47 @@ namespace Cocos2D
             }
         }
 
-        public virtual int TouchPriority
+        private bool m_bVisibleToTouches = true;
+
+        public virtual bool VisibleForTouches
         {
-            get { return m_nTouchPriority; }
+            get
+            {
+                return (Visible && m_bVisibleToTouches);
+            }
             set
             {
+                m_bVisibleToTouches = value;
+            }
+        }
+
+        /// <summary>
+        /// Get or set the priority at which touches are sent to this node. When CCConfiguration.UseGraphPriority is true,
+        /// set values that are on the range [0,9]. This method returns a priority value that uses graph priority where
+        /// each graph level is a factor of 10.
+        /// </summary>
+        public virtual int TouchPriority
+        {
+            get {
+                int p = m_nTouchPriority;
+                if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+                {
+                    if (Parent != null)
+                    {
+                        p += 10 * Parent.TouchPriority;
+                    }
+                }
+                return p;
+            }
+            set
+            {
+                if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+                {
+                    if (value < 0 || value > 9)
+                    {
+                        throw (new ArgumentException("TouchPriority should be in the range [0,9]"));
+                    }
+                }
                 if (m_nTouchPriority != value)
                 {
                     m_nTouchPriority = value;

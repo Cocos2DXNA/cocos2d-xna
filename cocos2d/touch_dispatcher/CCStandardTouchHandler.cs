@@ -1,4 +1,5 @@
 
+using System;
 namespace Cocos2D
 {
     /// <summary>
@@ -6,9 +7,14 @@ namespace Cocos2D
     /// </summary>
     public class CCStandardTouchHandler : CCTouchHandler
     {
+        public CCStandardTouchHandler(ICCStandardTouchDelegate pDelegate, int nPriority) : base(pDelegate, nPriority)
+        {
+
+        }
         /// <summary>
         ///  initializes a TouchHandler with a delegate and a priority
         /// </summary>
+        [Obsolete("Use the constructor", true)]
         public virtual bool InitWithDelegate(ICCStandardTouchDelegate pDelegate, int nPriority)
         {
             return base.InitWithDelegate(pDelegate, nPriority);
@@ -19,8 +25,7 @@ namespace Cocos2D
         /// </summary>
         public static CCStandardTouchHandler HandlerWithDelegate(ICCStandardTouchDelegate pDelegate, int nPriority)
         {
-            var pHandler = new CCStandardTouchHandler();
-            pHandler.InitWithDelegate(pDelegate, nPriority);
+            var pHandler = new CCStandardTouchHandler(pDelegate, nPriority);
             return pHandler;
         }
     }

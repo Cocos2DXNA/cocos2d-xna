@@ -14,6 +14,17 @@ namespace Cocos2D
                 return (0);
             }
         }
+        public virtual bool VisibleForTouches
+        {
+            get
+            {
+                return (true);
+            }
+            set
+            {
+                // do nothing
+            }
+        }
         /// <summary>
         /// functions for script call back
         /// </summary>
