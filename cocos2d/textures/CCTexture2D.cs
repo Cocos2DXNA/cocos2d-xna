@@ -213,7 +213,7 @@ namespace Cocos2D
             m_samplerState.AddressW = saveState.AddressW;
         }
 
-        public uint BitsPerPixelForFormat
+        public uint BytesPerPixelForFormat
         {
             //from MG: Microsoft.Xna.Framework.Graphics.GraphicsExtensions
             get
