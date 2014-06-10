@@ -533,7 +533,16 @@ namespace Cocos2D
         public CCNode Parent
         {
             get { return m_pParent; }
-            set { m_pParent = value; }
+            set {
+                if (m_pParent != value)
+                {
+                    if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+                    {
+                        CCDirector.SharedDirector.TouchDispatcher.UpdateGraphPriority(this);
+                    }
+                }
+                m_pParent = value; 
+            }
         }
 
         public virtual bool IgnoreAnchorPointForPosition
@@ -1648,11 +1657,11 @@ namespace Cocos2D
             */
             if (m_eTouchMode == CCTouchMode.AllAtOnce)
             {
-                pDispatcher.AddStandardDelegate(this, 0);
+                pDispatcher.AddStandardDelegate(this, TouchPriority);
             }
             else
             {
-                pDispatcher.AddTargetedDelegate(this, m_nTouchPriority, true);
+                pDispatcher.AddTargetedDelegate(this, TouchPriority, true);
             }
         }
 
@@ -1725,7 +1734,7 @@ namespace Cocos2D
                 {
                     if (Parent != null)
                     {
-                        p += 10 * Parent.TouchPriority;
+                        p += 10 * (Parent.TouchPriority+1);
                     }
                 }
                 return p;
