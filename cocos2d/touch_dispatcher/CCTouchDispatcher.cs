@@ -82,6 +82,21 @@ namespace Cocos2D
         }
 
         /// <summary>
+        /// Use this to update the priority of the given delegate when its graph priority 
+        /// changes due to a parenting change.
+        /// </summary>
+        /// <param name="d"></param>
+        public void UpdateGraphPriority(ICCTouchDelegate d)
+        {
+            CCTouchHandler h = FindHandler(d);
+            if (h != null)
+            {
+                h.Priority = d.TouchPriority;
+                RearrangeAllHandlersUponTouch();
+            }
+        }
+
+        /// <summary>
         /// Adds a standard touch delegate to the dispatcher's list.
         /// See StandardTouchDelegate description.
         /// IMPORTANT: The delegate will be retained.
@@ -98,6 +113,12 @@ namespace Cocos2D
                 m_pHandlersToAdd.Add(pHandler);
                 m_bToAdd = true;
             }
+        }
+
+        public void RearrangeAllHandlersUponTouch()
+        {
+            m_bRearrangeStandardHandlersUponTouch = true;
+            m_bRearrangeTargetedHandlersUponTouch = true;
         }
 
         public void AddStandardDelegate(ICCStandardTouchDelegate pDelegate)
@@ -190,10 +211,16 @@ namespace Cocos2D
         public void Touches(List<CCTouch> pTouches, int uIndex)
         {
             m_bLocked = true;
-            if(m_bRearrangeTargetedHandlersUponTouch)
+            if (m_bRearrangeTargetedHandlersUponTouch)
+            {
                 RearrangeHandlers(m_pTargetedHandlers);
-            if(m_bRearrangeStandardHandlersUponTouch)
+                m_bRearrangeTargetedHandlersUponTouch = false;
+            }
+            if (m_bRearrangeStandardHandlersUponTouch)
+            {
                 RearrangeHandlers(m_pStandardHandlers);
+                m_bRearrangeStandardHandlersUponTouch = false;
+            }
 
             // optimization to prevent a mutable copy when it is not necessary
             int uTargetedHandlersCount = m_pTargetedHandlers.Count;

@@ -274,12 +274,6 @@ namespace Cocos2D
             pDispatcher.SetPriority(newPriority, this);
         }
 
-        public override void RegisterWithTouchDispatcher()
-        {
-            CCDirector pDirector = CCDirector.SharedDirector;
-            pDirector.TouchDispatcher.AddTargetedDelegate(this, kCCMenuHandlerPriority, true);
-        }
-
         public override bool TouchBegan(CCTouch touch)
         {
             if (m_eState != CCMenuState.Waiting || !m_bVisible || !m_bEnabled)
