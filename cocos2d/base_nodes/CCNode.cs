@@ -467,7 +467,19 @@ namespace Cocos2D
 
         public virtual bool Visible
         {
-            get { return m_bVisible; }
+            get { 
+                if (!m_bVisible) {
+                    return(false);
+                }
+                // I am not visible if my parent is not visible
+                if (Parent != null) {
+                    return(Parent.Visible);
+                }
+                // Problem: If I am a root node and I am visible, then maybe I am really not visible
+                // We should do more to validate when a node is part of the scene graph or not.
+                // It's visible at this point
+                return true; 
+            }
             set { m_bVisible = value; }
         }
 
