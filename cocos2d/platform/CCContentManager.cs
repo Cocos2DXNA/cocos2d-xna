@@ -137,7 +137,7 @@ namespace Cocos2D
         private List<string> _searchPaths = new List<string>();
         private List<string> _searchResolutionsOrder = new List<string>(); 
 
-        private Dictionary<string, string> _failedAssets = new Dictionary<string, string>();
+        private Dictionary<Tuple<string, Type>, string> _failedAssets = new Dictionary<Tuple<string, Type>, string>();
 
         public CCContentManager(IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -156,7 +156,8 @@ namespace Cocos2D
 
         public T TryLoad<T>(string assetName, bool weakReference)
         {
-            if (_failedAssets.ContainsKey(assetName))
+            var assetKey = Tuple.Create(assetName, typeof(T));
+            if (_failedAssets.ContainsKey(assetKey))
             {
                 return default(T);
             }
@@ -167,7 +168,7 @@ namespace Cocos2D
             }
             catch (Exception)
             {
-                _failedAssets[assetName] = null;
+                _failedAssets[assetKey] = null;
                 
                 return default(T);
             }
@@ -175,7 +176,8 @@ namespace Cocos2D
 
         public override T Load<T>(string assetName)
         {
-            if (_failedAssets.ContainsKey(assetName))
+            var assetKey = Tuple.Create(assetName, typeof(T));
+            if (_failedAssets.ContainsKey(assetKey))
             {
                 throw new ContentLoadException("Failed to load the asset file from " + assetName);
             }
@@ -186,14 +188,14 @@ namespace Cocos2D
             }
             catch (Exception)
             {
-                _failedAssets[assetName] = null;
+                _failedAssets[assetKey] = null;
 
                 throw;
             }
         }
 
         public T Load<T>(string assetName, bool weakReference)
-        {
+        {            
             if (string.IsNullOrEmpty(assetName))
             {
                 throw new ArgumentNullException("assetName");
