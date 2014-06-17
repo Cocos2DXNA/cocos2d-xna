@@ -1748,6 +1748,7 @@ namespace Cocos2D
                     {
                         p += 10 * (Parent.TouchPriority+1);
                     }
+                    p += ZOrder;
                 }
                 return p;
             }

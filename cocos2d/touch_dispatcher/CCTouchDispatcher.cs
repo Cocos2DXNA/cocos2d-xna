@@ -246,15 +246,19 @@ namespace Cocos2D
 
                 foreach (CCTouch pTouch in pTouches)
                 {
+                    bool bClaimed = false;
                     foreach (CCTargetedTouchHandler pHandler in m_pTargetedHandlers)
                     {
+                        if (bClaimed)
+                        {
+                            break;
+                        }
                         var pDelegate = (ICCTargetedTouchDelegate) (pHandler.Delegate);
                         if (!pDelegate.VisibleForTouches)
                         {
                             continue;
                         }
 
-                        bool bClaimed = false;
                         if (sHelper == CCTouchType.Began)
                         {
                             bClaimed = pDelegate.TouchBegan(pTouch);
@@ -268,7 +272,7 @@ namespace Cocos2D
                         {
                             if (pHandler.ClaimedTouches.Contains(pTouch))
                             {
-                                // moved ended cancelled
+                                // move ended cancelled
                                 bClaimed = true;
 
                                 switch (sHelper)
