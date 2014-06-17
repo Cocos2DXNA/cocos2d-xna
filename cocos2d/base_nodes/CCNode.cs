@@ -319,6 +319,12 @@ namespace Cocos2D
             }
         }
 
+        /// <summary>
+        /// The range of the zorder space local to this node.
+        /// </summary>
+        private int m_LocalMaxZOrder = int.MinValue;
+        private int m_LocalMinZOrder = int.MaxValue;
+
         public int ZOrder
         {
             get { return m_nZOrder; }
@@ -808,6 +814,14 @@ namespace Cocos2D
                 child.OnEnter();
                 child.OnEnterTransitionDidFinish();
             }
+            if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+            {
+                // My graph is changing, so rearrange the handlers
+                if (CCDirector.SharedDirector.TouchDispatcher != null)
+                {
+                    CCDirector.SharedDirector.TouchDispatcher.RearrangeAllHandlersUponTouch();
+                }
+            }
         }
         private void InsertChild(CCNode child, int z, int tag)
         {
@@ -960,8 +974,40 @@ namespace Cocos2D
             child.Parent = null;
 
             m_pChildren.Remove(child);
+
+            // Adjust the zorder range if this removed child sat on the bounds of the range.
+            if (child.ZOrder == m_LocalMaxZOrder || child.ZOrder == m_LocalMinZOrder)
+            {
+                UpdateZOrderRange();
+            }
+            if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+            {
+                // My graph is changing, so rearrange the handlers
+                if (CCDirector.SharedDirector.TouchDispatcher != null)
+                {
+                    CCDirector.SharedDirector.TouchDispatcher.RearrangeAllHandlersUponTouch();
+                }
+            }
         }
         #endregion
+
+        protected virtual void UpdateZOrderRange()
+        {
+            m_LocalMinZOrder = int.MaxValue;
+            m_LocalMaxZOrder = int.MinValue;
+            for (int i = 0; i < m_pChildren.Count; i++)
+            {
+                int z = m_pChildren[i].ZOrder;
+                if (z < m_LocalMinZOrder)
+                {
+                    m_LocalMinZOrder = z;
+                }
+                if (z > m_LocalMaxZOrder)
+                {
+                    m_LocalMaxZOrder = z;
+                }
+            }
+        }
 
         private void ChangedChildTag(CCNode child, int oldTag, int newTag)
         {
@@ -1048,7 +1094,13 @@ namespace Cocos2D
             {
                 return;
             }
-
+            
+            m_MyGraphIndex = CCDirector.SharedDirector.GraphIndex++;
+            if (TouchEnabled && CCConfiguration.SharedConfiguration.UseGraphPriority)
+            {
+                CCDirector.SharedDirector.TouchDispatcher.UpdateGraphPriority(this);
+            }
+            
             CCDrawManager.PushMatrix();
 
             if (m_pGrid != null && m_pGrid.Active)
@@ -1733,6 +1785,8 @@ namespace Cocos2D
             }
         }
 
+        private int m_MyGraphIndex = 0;
+
         /// <summary>
         /// Get or set the priority at which touches are sent to this node. When CCConfiguration.UseGraphPriority is true,
         /// set values that are on the range [0,9]. This method returns a priority value that uses graph priority where
@@ -1744,23 +1798,12 @@ namespace Cocos2D
                 int p = m_nTouchPriority;
                 if (CCConfiguration.SharedConfiguration.UseGraphPriority)
                 {
-                    if (Parent != null)
-                    {
-                        p += 10 * (Parent.TouchPriority+1);
-                    }
-                    p += ZOrder;
+                    return (m_MyGraphIndex);
                 }
                 return p;
             }
             set
             {
-                if (CCConfiguration.SharedConfiguration.UseGraphPriority)
-                {
-                    if (value < 0 || value > 9)
-                    {
-                        throw (new ArgumentException("TouchPriority should be in the range [0,9]"));
-                    }
-                }
                 if (m_nTouchPriority != value)
                 {
                     m_nTouchPriority = value;

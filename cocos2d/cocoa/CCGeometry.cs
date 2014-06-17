@@ -802,6 +802,12 @@ namespace Cocos2D
         public CCPoint Origin;
         public CCSize Size;
 
+        public CCRect(CCSize sz)
+        {
+            Origin = CCPoint.Zero;
+            Size = sz;
+        }
+
         /// <summary>
         ///     Creates the rectangle at (x,y) -> (width,height)
         /// </summary>
