@@ -1,4 +1,4 @@
-#if WINDOWS_PHONE
+#if WINDOWS_PHONE || XBOX360
 using System;
 using System.Collections;
 using System.Collections.Generic;
