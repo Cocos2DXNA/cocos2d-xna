@@ -194,7 +194,6 @@ namespace Cocos2D
         /// </summary>
         private CCInputState()
         {
-            TouchPanel.EnabledGestures = GestureType.None;
             ConsumeGamePadState = true;
         }
 
