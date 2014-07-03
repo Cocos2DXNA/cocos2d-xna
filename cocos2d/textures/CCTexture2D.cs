@@ -510,15 +510,36 @@ namespace Cocos2D
 
                 float spaceWidth = font.MeasureString(" ").X * scale;
 
+                StringBuilder next = new StringBuilder();
+                string last = null;
                 for (int j = 0; j < lineList.Length; ++j)
                 {
                     string[] wordList = lineList[j].Split(' ');
 
-                    float lineWidth = 0;
-                    bool firstWord = true;
+//                    float lineWidth = 0;
+//                    bool firstWord = true;
 
-                    for (int i = 0; i < wordList.Length; ++i)
+                    for (int i = 0; i < wordList.Length; )
                     {
+                        while (i < wordList.Length)
+                        {
+                            if ((font.MeasureString(next.ToString()).X * scale) > dimensions.Width)
+                            {
+                                i--;
+                                break;
+                            }
+                            last = next.ToString();
+                            if (next.Length > 0)
+                            {
+                                next.Append(' ');
+                            }
+                            next.Append(wordList[i]);
+                            i++;
+                        }
+                        textList.Add(i == wordList.Length ? next.ToString() : last);
+                        last = null;
+                        next.Length = 0;
+                        /*
                         float wordWidth = font.MeasureString(wordList[i]).X * scale;
 
                         if ((lineWidth + wordWidth) > dimensions.Width)
@@ -543,6 +564,7 @@ namespace Cocos2D
                         {
                             lineWidth += wordWidth;
                         }
+
                         if (!firstWord)
                         {
                             nextText.Append(' ');
@@ -551,6 +573,7 @@ namespace Cocos2D
 
                         nextText.Append(wordList[i]);
                         firstWord = false;
+                         */
                     }
 
                     textList.Add(nextText.ToString());
