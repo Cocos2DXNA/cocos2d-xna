@@ -47,10 +47,6 @@ namespace $safeprojectname$
 			CCDirector pDirector = CCDirector.SharedDirector;
 			pDirector.SetOpenGlView();
 
-
-			// 2D projection
-			pDirector.Projection = CCDirectorProjection.Projection2D;
-
 			var resPolicy = CCResolutionPolicy.ExactFit; // This will stretch out your game
 			CCDrawManager.SetDesignResolutionSize(preferredWidth, 
 			                                      preferredHeight, 
