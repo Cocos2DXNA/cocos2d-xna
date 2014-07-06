@@ -10,8 +10,8 @@ namespace EmptyProject.Win8XAML
 
 		// TODO: Set the preferred window bounds for the game, which is the
 		// design resolution of your game.
-		private int preferredWidth;
-		private int preferredHeight;
+		private int preferredWidth = 1024;
+		private int preferredHeight = 768;
 
 		public AppDelegate(Game game, GraphicsDeviceManager graphics)
 			: base(game, graphics)
@@ -25,10 +25,6 @@ namespace EmptyProject.Win8XAML
 			
 			
 			graphics.PreferMultiSampling = false;
-			
-			// TODO: Set your window dimensions here
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 768;
 		}
 		
 		/// <summary>
@@ -53,9 +49,6 @@ namespace EmptyProject.Win8XAML
 			pDirector.SetOpenGlView();
 
 
-			// 2D projection
-			pDirector.Projection = CCDirectorProjection.Projection2D;
-
 			var resPolicy = CCResolutionPolicy.ExactFit; // This will stretch out your game
 			CCDrawManager.SetDesignResolutionSize(preferredWidth, 
 			                                      preferredHeight, 
@@ -67,6 +60,10 @@ namespace EmptyProject.Win8XAML
 			// set FPS. the default value is 1.0/60 if you don't call this
 			pDirector.AnimationInterval = 1.0 / 60;
 			
+
+			//
+			// HERE! This is where you start your game. Create the first scene for your
+			// game, or reconstruct the state of the last save.
             CCScene pScene = IntroLayer.Scene;
 
             pDirector.RunWithScene(pScene);
