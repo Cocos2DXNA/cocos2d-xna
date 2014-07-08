@@ -14,6 +14,17 @@ using Microsoft.Xna.Framework;
 namespace GameStarterKit
 {
 
+/*
+Note: https://monogame.codeplex.com/discussions/361463
+If your game is landscape only and you plan to support a portrait-only lock screen
+then you need to add the configuration changes option that Aranda mentions:
+
+  , ConfigurationChanges = ConfigChanges.Orientation 
+                           | ConfigChanges.Keyboard 
+                           | ConfigChanges.KeyboardHidden 
+                           | (ConfigChanges)1024 /* ConfigChanges.ScreenSize */
+
+*/
     [Activity(
         Label = "$safeprojectname$",
                AlwaysRetainTaskState = true,
