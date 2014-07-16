@@ -37,7 +37,9 @@ namespace Cocos2D
                     AddChild(item, 0, kCurrentItem);
                     CCSize s = item.ContentSize;
                     ContentSize = s;
-                    item.Position = new CCPoint(s.Width / 2, s.Height / 2);
+                    // Issue #433, setting the subitem position will misalign it with the
+                    // other menu items, if there are sibling menu items
+                   // item.Position = new CCPoint(s.Width / 2, s.Height / 2);
                 }
             }
         }

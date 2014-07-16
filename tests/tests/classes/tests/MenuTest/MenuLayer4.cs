@@ -101,12 +101,44 @@ namespace tests
 
         public void menuCallback(object pSender)
         {
-            //UXLOG("selected item: %x index:%d", dynamic_cast<CCMenuItemToggle*>(sender)->selectedItem(), dynamic_cast<CCMenuItemToggle*>(sender)->selectedIndex() ); 
         }
 
         public void backCallback(object pSender)
         {
             ((CCLayerMultiplex)m_pParent).SwitchTo(0);
+        }
+    }
+
+    public class MenuLayer5 : CCLayer
+    {
+        private CCSize _targetButtonSize = new CCSize(128, 64);
+
+        public MenuLayer5()
+        {
+            var randomFilterMenuItem = CocosExtensions.CreateScaledMenuItemLabel(_targetButtonSize, 20, 4, CCColor3B.Blue, new CCColor3B(Microsoft.Xna.Framework.Color.Black), 
+                new CCColor3B(Microsoft.Xna.Framework.Color.White), "Random Surprise!", () =>
+            {
+                CCLog.Log("Random action");
+            });
+            CocosExtensions.AddJiggle(randomFilterMenuItem);
+
+            var backMenuItem = CocosExtensions.CreateScaledMenuItemLabel(_targetButtonSize, 20, 4, CCColor3B.Blue, new CCColor3B(Microsoft.Xna.Framework.Color.Black), 
+                new CCColor3B(Microsoft.Xna.Framework.Color.White), "Back", null);
+            var backMenuItemToggle = new CCMenuItemToggle((o) =>
+            {
+                CCLog.Log("Back toggle touched");
+            },
+            new[] { backMenuItem });
+            CocosExtensions.AddJiggle(backMenuItemToggle);
+
+            var menu = new CCMenu(new[]
+                {
+                    randomFilterMenuItem, 
+                    backMenuItemToggle, 
+                });
+            AddChild(menu);
+            menu.Position = CCDirector.SharedDirector.WinSize.Center;
+            menu.AlignItemsVertically();
         }
     }
 }
