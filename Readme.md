@@ -73,9 +73,9 @@ MonoGame has it's own external dependencies so we will also need to obtain those
 
 > $ git submodule init
 
-> $ git submodule update ThirdParty/Libs
+> $ git submodule update ThirdParty/Dependencies
 
-Notice above that we only need the ThirdParty/Libs to actually build Cocos2D-XNA.
+Notice above that we only need the ThirdParty/Dependencies to actually build Cocos2D-XNA. Also make sure that you are on the develop branch of MonoGame and the master branch of Dependencies.
 
 You now have everything you need to start start developing with Cocos2D-XNA
 
