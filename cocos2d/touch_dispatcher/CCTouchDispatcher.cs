@@ -245,7 +245,18 @@ namespace Cocos2D
             //
             if (touchType != CCTouchType.Began)
             {
+#if WINDOWS_PHONE || XBOX360
+                List<CCTouch> focused = new List<CCTouch>();
+                foreach (CCTouch t in pTouches)
+                {
+                    if (t.Consumer != null)
+                    {
+                        focused.Add(t);
+                    }
+                }
+#else
                 var focused = pTouches.FindAll((t) => t.Consumer != null);
+#endif
                 if (focused != null)
                 {
                     foreach (CCTouch t in focused)
