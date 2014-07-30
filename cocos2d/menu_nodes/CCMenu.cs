@@ -359,7 +359,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -375,7 +375,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -401,7 +401,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
-                    if (pChild.Visible)
+                    if (pChild.VisibleInParent)
                     {
                         width += pChild.ContentSize.Width * pChild.ScaleX + padding;
                         height = Math.Max(height, pChild.ContentSize.Height * pChild.ScaleY);
@@ -416,7 +416,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
-                    if (pChild.Visible)
+                    if (pChild.VisibleInParent)
                     {
                         pChild.Position = new CCPoint(x + pChild.ContentSize.Width * pChild.ScaleX / 2.0f, 0);
                         x += pChild.ContentSize.Width * pChild.ScaleX + padding;
@@ -442,7 +442,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren.Elements[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -484,7 +484,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren.Elements[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -543,7 +543,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren.Elements[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -593,7 +593,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren.Elements[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -636,7 +636,7 @@ namespace Cocos2D
                 for (int i = m_pChildren.count-1; i >= 0; i--)
                 {
                     var pChild = m_pChildren.Elements[i] as CCMenuItem;
-                    if (pChild != null && pChild.Visible && pChild.Enabled)
+                    if (pChild != null && pChild.VisibleInParent && pChild.Enabled)
                     {
                         CCPoint local = pChild.ConvertToNodeSpace(touchLocation);
                         CCRect r = pChild.Rectangle;

@@ -471,6 +471,22 @@ namespace Cocos2D
             set { m_pGrid = value; }
         }
 
+        /// <summary>
+        /// Returns whether or not the node is visible IN the parent node.
+        /// This simply returns the value of m_bVisible.
+        /// </summary>
+        public virtual bool VisibleInParent
+        {
+            get
+            {
+                return (m_bVisible);
+            }
+        }
+
+        /// <summary>
+        /// This returns true if the node is visible and the parent is visible. Otherwise,
+        /// it returns false.
+        /// </summary>
         public virtual bool Visible
         {
             get { 
