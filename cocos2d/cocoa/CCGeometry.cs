@@ -765,6 +765,11 @@ namespace Cocos2D
             return (new CCSize(p.Width + f, p.Height + f));
         }
 
+        public static CCSize operator +(CCSize p, CCSize q)
+        {
+            return (new CCSize(p.Width + q.Width, p.Height + q.Height));
+        }
+
         public static CCSize operator -(CCSize p, float f)
         {
             return (new CCSize(p.Width - f, p.Height - f));
