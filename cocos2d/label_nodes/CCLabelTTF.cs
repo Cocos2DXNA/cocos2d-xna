@@ -164,13 +164,13 @@ namespace Cocos2D
             }
         }
 
-        [Obsolete("Use Label Property")]
+        [Obsolete("Use Text Property")]
         public void SetString(string label)
         {
             Text = label;
         }
         
-        [Obsolete("Use Label Property")]
+        [Obsolete("Use Text Property")]
         public string GetString() 
         {
             return Text;
