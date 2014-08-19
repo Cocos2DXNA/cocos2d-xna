@@ -2,7 +2,10 @@
 
 Copyright (c) The Cocos2D-XNA Team
 
-This work is copyrighted by the Cocos2D-XNA group. This copyright is non-transferrable and resides solely with the authors of this intellectual work product. Any use of this work, in whole or in part, is subject to the MIT License and the Copyright laws of the United States of America.
+This work is copyrighted by the Cocos2D-XNA group. This copyright is 
+non-transferrable and resides solely with the authors of this intellectual 
+work product. Any use of this work, in whole or in part, is subject to 
+the MIT License and the Copyright laws of the United States of America.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +27,12 @@ THE SOFTWARE.
 
 # Members
 
-The Cocos2D-XNA group is comprised of Totally Evil Entertainment, LLC., and the Cocos2D-X group. This intellectual work product was originally authoried by Zhe Wang of the Cocos2D-X group and was substantially modified by Totally Evil Entertainment to create Cocos2D-XNA.
+The Cocos2D-XNA group is comprised of Totally Evil Entertainment, LLC., and the 
+Cocos2D-X group. This intellectual work product was originally authoried by 
+Zhe Wang of the Cocos2D-X group and was substantially modified by 
+Totally Evil Entertainment to create Cocos2D-XNA.
 
 ### Contributors
 
-There have been many contributors to this effort. Their contributions are governed by the copyright notice aforementioned in this document.
+There have been many contributors to this effort. Their contributions are 
+governed by the copyright notice aforementioned in this document.
