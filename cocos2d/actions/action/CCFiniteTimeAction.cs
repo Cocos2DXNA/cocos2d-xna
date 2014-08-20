@@ -10,17 +10,24 @@ namespace Cocos2D
 
         protected CCFiniteTimeAction(CCFiniteTimeAction finiteTimeAction) : base(finiteTimeAction)
         {
+            m_fDuration = finiteTimeAction.m_fDuration;
         }
 
+        /// <summary>
+        /// Get/set the duration of this action
+        /// </summary>
         public float Duration
         {
             get { return m_fDuration; }
             set { m_fDuration = value; }
         }
 
+        /// <summary>
+        /// Does nothing by default. 
+        /// </summary>
+        /// <returns></returns>
         public virtual CCFiniteTimeAction Reverse()
         {
-            CCLog.Log("cocos2d: FiniteTimeAction#reverse: Implement me");
             return null;
         }
     }

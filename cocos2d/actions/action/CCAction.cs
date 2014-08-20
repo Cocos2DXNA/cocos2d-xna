@@ -1,25 +1,23 @@
 namespace Cocos2D
 {
-    public enum CCActionTag
-    {
-        //! Default tag
-        Invalid = -1,
-    }
 
     public class CCAction : ICCCopyable
     {
-        protected int m_nTag;
+        public const int kInvalidTag = -1;
+
+        protected int m_nTag = kInvalidTag;
         protected CCNode m_pOriginalTarget;
         protected CCNode m_pTarget;
 
         public CCAction()
         {
-            m_nTag = (int) CCActionTag.Invalid;
         }
 
         protected CCAction(CCAction action)
         {
             m_nTag = action.m_nTag;
+            m_pOriginalTarget = action.m_pOriginalTarget;
+            m_pTarget = action.m_pTarget;
         }
 
         public CCNode Target
@@ -55,7 +53,10 @@ namespace Cocos2D
         {
             if (zone != null)
             {
-                ((CCAction) zone).m_nTag = m_nTag;
+                CCAction action = (CCAction)zone;
+                action.m_pOriginalTarget = m_pOriginalTarget;
+                action.m_pTarget = m_pTarget;
+                action.m_nTag = m_nTag;
                 return zone;
             }
             else
