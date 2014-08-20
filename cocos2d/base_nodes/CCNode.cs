@@ -437,13 +437,20 @@ namespace Cocos2D
                 SetTransformIsDirty();
             }
         }
-
+        /// <summary>
+        /// Safely set the X position of the node. This will not create unnecessary temporary 
+        /// instances of the Position's CCPoint instance.
+        /// </summary>
         public float PositionX
         {
             get { return m_obPosition.X; }
             set { SetPosition(value, m_obPosition.Y); }
         }
 
+        /// <summary>
+        /// Safely set the Y position of the node. This will not create unnecessary temporary 
+        /// instances of the Position's CCPoint instance.
+        /// </summary>
         public float PositionY
         {
             get { return m_obPosition.Y; }
@@ -460,11 +467,18 @@ namespace Cocos2D
             get { return m_pChildren == null ? 0 : m_pChildren.count; }
         }
 
+        /// <summary>
+        /// Returns the camera for this node.
+        /// </summary>
         public CCCamera Camera
         {
             get { return m_pCamera ?? (m_pCamera = new CCCamera()); }
         }
 
+        /// <summary>
+        /// This is only valid when the node is used in a CCGrid action. Expect this to be
+        /// null when no grid action is active.
+        /// </summary>
         public CCGridBase Grid
         {
             get { return m_pGrid; }
