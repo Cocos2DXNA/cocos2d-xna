@@ -59,6 +59,15 @@ namespace Cocos2D
             get { return m_strFontName; }
         }
 
+        public override CCColor3B Color
+        {
+            set
+            {
+                base.Color = value;
+                RecreateLabel();
+            }
+        }
+
         [Obsolete("Use ItemFontSize")]
         public uint FontSizeObj
         {
@@ -96,6 +105,7 @@ namespace Cocos2D
         protected virtual void RecreateLabel()
         {
             CCLabelTTF label = new CCLabelTTF((m_pLabel as ICCLabelProtocol).Text, m_strFontName, m_uFontSize);
+            label.Color = Color;
             Label = label;
         }
     }
