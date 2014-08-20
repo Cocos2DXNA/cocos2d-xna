@@ -76,7 +76,7 @@ namespace Cocos2D
             get { return m_fTotalDelayUnits; }
         }
 
-        public bool InitWithSpriteFrames(List<CCSpriteFrame> pFrames, float delay)
+        protected virtual bool InitWithSpriteFrames(List<CCSpriteFrame> pFrames, float delay)
         {
             if (pFrames != null)
             {/*
@@ -107,7 +107,7 @@ namespace Cocos2D
             return true;
         }
 
-        public bool InitWithAnimationFrames(List<CCAnimationFrame> arrayOfAnimationFrames, float delayPerUnit, uint loops)
+        protected virtual bool InitWithAnimationFrames(List<CCAnimationFrame> arrayOfAnimationFrames, float delayPerUnit, uint loops)
         {
             if (arrayOfAnimationFrames != null)
             {/*

@@ -44,6 +44,13 @@ namespace Cocos2D
             return (CCAction) Copy(null);
         }
 
+        /// <summary>
+        /// Copy/Duplicatae protocol for making a self copy of this object instance. If null is 
+        /// given as the parameter then selfie of this instance is returned. Otherwise, the state
+        /// of this instance is copied to the given target.
+        /// </summary>
+        /// <param name="zone"></param>
+        /// <returns></returns>
         public virtual object Copy(ICCCopyable zone)
         {
             if (zone != null)
