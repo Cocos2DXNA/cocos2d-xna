@@ -175,7 +175,6 @@ namespace tests.FontTest
             rightColor.AnchorPoint = new CCPoint(0, 0.5f);
 
             leftColor.Position = new CCPoint(0, s.Height / 2);
-            ;
             centerColor.Position = new CCPoint(blockSize.Width, s.Height / 2);
             rightColor.Position = new CCPoint(blockSize.Width * 2, s.Height / 2);
 
@@ -211,20 +210,21 @@ namespace tests.FontTest
 			                                  blockSize, CCTextAlignment.Right,
 			                                  SystemFontTestScene.verticalAlignment[SystemFontTestScene.vAlignIdx]);
 
-			top.AnchorPoint = new CCPoint(0.5f, 1);
-			left.AnchorPoint = new CCPoint(0, 0.5f);
-			center.AnchorPoint = new CCPoint(0, 0.5f);
-			right.AnchorPoint = new CCPoint(0, 0.5f);
+            top.AnchorPoint = CCPoint.AnchorMiddleBottom;
+            left.AnchorPoint = CCPoint.AnchorMiddle;// new CCPoint(0, 0.5f);
+			center.AnchorPoint = CCPoint.AnchorMiddle;
+            right.AnchorPoint = CCPoint.AnchorMiddle;
 
-			top.Position = new CCPoint(s.Width / 2, s.Height - 20);
-			left.Position = new CCPoint(0, s.Height / 2);
-			center.Position = new CCPoint(blockSize.Width, s.Height / 2);
-			right.Position = new CCPoint(blockSize.Width * 2, s.Height / 2);
+            float yMax = s.Height / 2f + 50f;
+			top.Position = new CCPoint(s.Width / 2f, s.Height - 20f);
+			left.Position = new CCPoint(s.Width/3f, yMax - 50);
+			center.Position = new CCPoint(s.Width/2f, yMax - 50);
+			right.Position = new CCPoint(s.Width * 2f/3f, yMax - 50);
 
-			AddChild(left, 0, kTagLabel1);
-			AddChild(right, 0, kTagLabel2);
-			AddChild(center, 0, kTagLabel3);
-			AddChild(top, 0, kTagLabel4);
+			AddChild(left, 3, kTagLabel1);
+			AddChild(right, 3, kTagLabel2);
+			AddChild(center, 3, kTagLabel3);
+			AddChild(top, 3, kTagLabel4);
 		}
 
 		public void restartCallback(object pSender)
