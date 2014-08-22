@@ -536,7 +536,24 @@ namespace Cocos2D
                             next.Append(wordList[i]);
                             i++;
                         }
-                        textList.Add(i == wordList.Length ? next.ToString() : last);
+                        if (i == wordList.Length)
+                        {
+                            string nstr = next.ToString();
+                            if ((font.MeasureString(nstr).X * scale) > dimensions.Width)
+                            {
+                                // Last line could have bleed into the margin
+                                textList.Add(last);
+                                textList.Add(wordList[wordList.Length - 1]); // last word bleeds
+                            }
+                            else
+                            {
+                                textList.Add(nstr);
+                            }
+                        }
+                        else
+                        {
+                            textList.Add(last);
+                        }
                         last = null;
                         next.Length = 0;
                         /*
