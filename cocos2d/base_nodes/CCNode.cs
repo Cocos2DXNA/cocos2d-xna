@@ -319,6 +319,12 @@ namespace Cocos2D
             }
         }
 
+        /// <summary>
+        /// The range of the zorder space local to this node.
+        /// </summary>
+        private int m_LocalMaxZOrder = int.MinValue;
+        private int m_LocalMinZOrder = int.MaxValue;
+
         public int ZOrder
         {
             get { return m_nZOrder; }
@@ -431,13 +437,20 @@ namespace Cocos2D
                 SetTransformIsDirty();
             }
         }
-
+        /// <summary>
+        /// Safely set the X position of the node. This will not create unnecessary temporary 
+        /// instances of the Position's CCPoint instance.
+        /// </summary>
         public float PositionX
         {
             get { return m_obPosition.X; }
             set { SetPosition(value, m_obPosition.Y); }
         }
 
+        /// <summary>
+        /// Safely set the Y position of the node. This will not create unnecessary temporary 
+        /// instances of the Position's CCPoint instance.
+        /// </summary>
         public float PositionY
         {
             get { return m_obPosition.Y; }
@@ -454,20 +467,55 @@ namespace Cocos2D
             get { return m_pChildren == null ? 0 : m_pChildren.count; }
         }
 
+        /// <summary>
+        /// Returns the camera for this node.
+        /// </summary>
         public CCCamera Camera
         {
             get { return m_pCamera ?? (m_pCamera = new CCCamera()); }
         }
 
+        /// <summary>
+        /// This is only valid when the node is used in a CCGrid action. Expect this to be
+        /// null when no grid action is active.
+        /// </summary>
         public CCGridBase Grid
         {
             get { return m_pGrid; }
             set { m_pGrid = value; }
         }
 
+        /// <summary>
+        /// Returns whether or not the node is visible IN the parent node.
+        /// This simply returns the value of m_bVisible.
+        /// </summary>
+        public virtual bool VisibleInParent
+        {
+            get
+            {
+                return (m_bVisible);
+            }
+        }
+
+        /// <summary>
+        /// This returns true if the node is visible and the parent is visible. Otherwise,
+        /// it returns false.
+        /// </summary>
         public virtual bool Visible
         {
-            get { return m_bVisible; }
+            get { 
+                if (!m_bVisible) {
+                    return(false);
+                }
+                // I am not visible if my parent is not visible
+                if (Parent != null) {
+                    return(Parent.Visible);
+                }
+                // Problem: If I am a root node and I am visible, then maybe I am really not visible
+                // We should do more to validate when a node is part of the scene graph or not.
+                // It's visible at this point
+                return true; 
+            }
             set { m_bVisible = value; }
         }
 
@@ -533,7 +581,16 @@ namespace Cocos2D
         public CCNode Parent
         {
             get { return m_pParent; }
-            set { m_pParent = value; }
+            set {
+                if (m_pParent != value)
+                {
+                    if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+                    {
+                        CCDirector.SharedDirector.TouchDispatcher.UpdateGraphPriority(this);
+                    }
+                }
+                m_pParent = value; 
+            }
         }
 
         public virtual bool IgnoreAnchorPointForPosition
@@ -787,6 +844,14 @@ namespace Cocos2D
                 child.OnEnter();
                 child.OnEnterTransitionDidFinish();
             }
+            if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+            {
+                // My graph is changing, so rearrange the handlers
+                if (CCDirector.SharedDirector.TouchDispatcher != null)
+                {
+                    CCDirector.SharedDirector.TouchDispatcher.RearrangeAllHandlersUponTouch();
+                }
+            }
         }
         private void InsertChild(CCNode child, int z, int tag)
         {
@@ -939,8 +1004,40 @@ namespace Cocos2D
             child.Parent = null;
 
             m_pChildren.Remove(child);
+
+            // Adjust the zorder range if this removed child sat on the bounds of the range.
+            if (child.ZOrder == m_LocalMaxZOrder || child.ZOrder == m_LocalMinZOrder)
+            {
+                UpdateZOrderRange();
+            }
+            if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+            {
+                // My graph is changing, so rearrange the handlers
+                if (CCDirector.SharedDirector.TouchDispatcher != null)
+                {
+                    CCDirector.SharedDirector.TouchDispatcher.RearrangeAllHandlersUponTouch();
+                }
+            }
         }
         #endregion
+
+        protected virtual void UpdateZOrderRange()
+        {
+            m_LocalMinZOrder = int.MaxValue;
+            m_LocalMaxZOrder = int.MinValue;
+            for (int i = 0; i < m_pChildren.Count; i++)
+            {
+                int z = m_pChildren[i].ZOrder;
+                if (z < m_LocalMinZOrder)
+                {
+                    m_LocalMinZOrder = z;
+                }
+                if (z > m_LocalMaxZOrder)
+                {
+                    m_LocalMaxZOrder = z;
+                }
+            }
+        }
 
         private void ChangedChildTag(CCNode child, int oldTag, int newTag)
         {
@@ -1027,7 +1124,13 @@ namespace Cocos2D
             {
                 return;
             }
-
+            
+            m_MyGraphIndex = CCDirector.SharedDirector.GraphIndex++;
+            if (TouchEnabled && CCConfiguration.SharedConfiguration.UseGraphPriority)
+            {
+                CCDirector.SharedDirector.TouchDispatcher.UpdateGraphPriority(this);
+            }
+            
             CCDrawManager.PushMatrix();
 
             if (m_pGrid != null && m_pGrid.Active)
@@ -1648,11 +1751,11 @@ namespace Cocos2D
             */
             if (m_eTouchMode == CCTouchMode.AllAtOnce)
             {
-                pDispatcher.AddStandardDelegate(this, 0);
+                pDispatcher.AddStandardDelegate(this, TouchPriority);
             }
             else
             {
-                pDispatcher.AddTargetedDelegate(this, m_nTouchPriority, true);
+                pDispatcher.AddTargetedDelegate(this, TouchPriority, true);
             }
         }
 
@@ -1698,9 +1801,37 @@ namespace Cocos2D
             }
         }
 
+        private bool m_bVisibleToTouches = true;
+
+        public virtual bool VisibleForTouches
+        {
+            get
+            {
+                return (Visible && m_bVisibleToTouches);
+            }
+            set
+            {
+                m_bVisibleToTouches = value;
+            }
+        }
+
+        private int m_MyGraphIndex = 0;
+
+        /// <summary>
+        /// Get or set the priority at which touches are sent to this node. When CCConfiguration.UseGraphPriority is true,
+        /// set values that are on the range [0,9]. This method returns a priority value that uses graph priority where
+        /// each graph level is a factor of 10.
+        /// </summary>
         public virtual int TouchPriority
         {
-            get { return m_nTouchPriority; }
+            get {
+                int p = m_nTouchPriority;
+                if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+                {
+                    return (m_MyGraphIndex);
+                }
+                return p;
+            }
             set
             {
                 if (m_nTouchPriority != value)

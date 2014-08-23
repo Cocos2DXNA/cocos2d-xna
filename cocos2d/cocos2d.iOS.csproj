@@ -108,7 +108,9 @@
     <Compile Include="Actions\action_ease\CCEaseBackIn.cs" />
     <Compile Include="Actions\action_ease\CCEaseBackInOut.cs" />
     <Compile Include="misc_nodes\CCLightning.cs" />
-    <Compile Include="Actions\action_ease\CCEaseBackOut.cs" />
+	<Compile Include="misc_nodes\CCLightningStreak.cs" />
+	<Compile Include="Math\CCLightningTrack.cs" />
+	<Compile Include="Actions\action_ease\CCEaseBackOut.cs" />
     <Compile Include="Actions\action_ease\CCEaseBounceIn.cs" />
     <Compile Include="Actions\action_ease\CCEaseBounceInOut.cs" />
     <Compile Include="Actions\action_ease\CCEaseBounceOut.cs" />

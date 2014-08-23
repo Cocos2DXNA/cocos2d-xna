@@ -8,6 +8,10 @@
         {
         }
 
+        /// <summary>
+        /// Sets the FlipX property of the target sprite to the given value.
+        /// </summary>
+        /// <param name="x"></param>
         public CCFlipX(bool x)
         {
             InitWithFlipX(x);

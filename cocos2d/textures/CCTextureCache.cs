@@ -318,7 +318,7 @@ namespace Cocos2D
 
                 if (texture != null)
                 {
-                    var bytes = texture.Width * texture.Height * 4;
+                    var bytes = texture.Width * texture.Height * (int)pair.Value.BytesPerPixelForFormat;
                     CCLog.Log("{0} {1} x {2} => {3} KB.", pair.Key, texture.Width, texture.Height, bytes / 1024);
                     total += bytes;
                 }

@@ -184,13 +184,13 @@ namespace Cocos2D
                 if (m_pSelectedImage != null)
                 {
                     m_pSelectedImage.Visible = false;
-                    if (ZoomBehaviorOnTouch)
-                    {
-                        StopActionByTag(unchecked((int)kZoomActionTag));
-                        CCAction zoomAction = new CCScaleTo(0.1f, m_fOriginalScale);
-                        zoomAction.Tag = unchecked((int)kZoomActionTag);
-                        RunAction(zoomAction);
-                    }
+                }
+                if (ZoomBehaviorOnTouch)
+                {
+                    StopActionByTag(unchecked((int)kZoomActionTag));
+                    CCAction zoomAction = new CCScaleTo(0.1f, m_fOriginalScale);
+                    zoomAction.Tag = unchecked((int)kZoomActionTag);
+                    RunAction(zoomAction);
                 }
 
                 if (m_pDisabledImage != null)

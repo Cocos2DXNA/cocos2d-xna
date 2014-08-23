@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cocos2d.Content.Pipeline.Importers", "..\cocos2d.Content.Pipeline.Importers\cocos2d.Content.Pipeline.Importers.csproj", "{FBE4633D-00D1-4391-8184-63B91DA28D4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cocos2d.Windows", "..\cocos2d\cocos2d.Windows.csproj", "{0C0AFDFF-A4E4-49F4-B6DB-A761B0DB64A8}"
@@ -107,8 +109,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

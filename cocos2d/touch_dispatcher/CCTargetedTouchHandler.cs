@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 
 namespace Cocos2D
@@ -29,9 +30,15 @@ namespace Cocos2D
             get { return m_pClaimedTouches; }
         }
 
+        public CCTargetedTouchHandler(ICCTargetedTouchDelegate pDelegate, int nPriority, bool bSwallow) : base(pDelegate, nPriority)
+        {
+            m_pClaimedTouches = new List<CCTouch>();
+            m_bConsumesTouches = bSwallow;
+        }
         /// <summary>
         ///  initializes a TargetedTouchHandler with a delegate, a priority and whether or not it swallows touches or not
         /// </summary>
+        [Obsolete("Use the constructor", true)]
         public bool InitWithDelegate(ICCTargetedTouchDelegate pDelegate, int nPriority, bool bSwallow)
         {
             if (base.InitWithDelegate(pDelegate, nPriority))
@@ -50,8 +57,7 @@ namespace Cocos2D
         /// </summary>
         public static CCTargetedTouchHandler HandlerWithDelegate(ICCTargetedTouchDelegate pDelegate, int nPriority, bool bSwallow)
         {
-            var pHandler = new CCTargetedTouchHandler();
-            pHandler.InitWithDelegate(pDelegate, nPriority, bSwallow);
+            var pHandler = new CCTargetedTouchHandler(pDelegate, nPriority, bSwallow);
             return pHandler;
         }
     }

@@ -217,7 +217,9 @@ namespace tests
         public void closeCallback(object pSender)
         {
             CCDirector.SharedDirector.End();
-            // CCApplication.SharedApplication.Game.Exit();
+#if (WINDOWS && !WINRT) || WINDOWSGL || WINDOWSDX || MACOS
+            CCApplication.SharedApplication.Game.Exit();
+#endif
         }
 
         public override void TouchesBegan(List<CCTouch> pTouches)

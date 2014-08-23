@@ -653,6 +653,8 @@ namespace Cocos2D
             }
         }
 
+        public int GraphIndex { get; set; }
+
         /// <summary>
         /// Draw the scene.
         /// This method is called every frame. Don't call it manually.
@@ -676,6 +678,7 @@ namespace Cocos2D
             // draw the scene
             if (m_pRunningScene != null)
             {
+                GraphIndex = 0;
                 m_pRunningScene.Visit();
             }
 

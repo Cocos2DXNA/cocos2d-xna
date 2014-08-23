@@ -42,7 +42,7 @@ namespace Cocos2D
         {
             if (m_bDispatchEvents)
             {
-                Touches(touches, (int) CCTouchType.Moved);
+                Touches(touches, CCTouchType.Moved);
             }
         }
 
@@ -50,7 +50,7 @@ namespace Cocos2D
         {
             if (m_bDispatchEvents)
             {
-                Touches(touches, (int) CCTouchType.Ended);
+                Touches(touches, CCTouchType.Ended);
             }
         }
 
@@ -58,7 +58,7 @@ namespace Cocos2D
         {
             if (m_bDispatchEvents)
             {
-                Touches(touches, (int) CCTouchType.Cancelled);
+                Touches(touches, CCTouchType.Cancelled);
             }
         }
 
@@ -82,6 +82,21 @@ namespace Cocos2D
         }
 
         /// <summary>
+        /// Use this to update the priority of the given delegate when its graph priority 
+        /// changes due to a parenting change.
+        /// </summary>
+        /// <param name="d"></param>
+        public void UpdateGraphPriority(ICCTouchDelegate d)
+        {
+            CCTouchHandler h = FindHandler(d);
+            if (h != null)
+            {
+                h.Priority = d.TouchPriority;
+                RearrangeAllHandlersUponTouch();
+            }
+        }
+
+        /// <summary>
         /// Adds a standard touch delegate to the dispatcher's list.
         /// See StandardTouchDelegate description.
         /// IMPORTANT: The delegate will be retained.
@@ -98,6 +113,12 @@ namespace Cocos2D
                 m_pHandlersToAdd.Add(pHandler);
                 m_bToAdd = true;
             }
+        }
+
+        public void RearrangeAllHandlersUponTouch()
+        {
+            m_bRearrangeStandardHandlersUponTouch = true;
+            m_bRearrangeTargetedHandlersUponTouch = true;
         }
 
         public void AddStandardDelegate(ICCStandardTouchDelegate pDelegate)
@@ -187,13 +208,19 @@ namespace Cocos2D
             RearrangeHandlers(m_pStandardHandlers);
         }
 
-        public void Touches(List<CCTouch> pTouches, int uIndex)
+        public void Touches(List<CCTouch> pTouches, CCTouchType touchType)
         {
             m_bLocked = true;
-            if(m_bRearrangeTargetedHandlersUponTouch)
+            if (m_bRearrangeTargetedHandlersUponTouch)
+            {
                 RearrangeHandlers(m_pTargetedHandlers);
-            if(m_bRearrangeStandardHandlersUponTouch)
+                m_bRearrangeTargetedHandlersUponTouch = false;
+            }
+            if (m_bRearrangeStandardHandlersUponTouch)
+            {
                 RearrangeHandlers(m_pStandardHandlers);
+                m_bRearrangeStandardHandlersUponTouch = false;
+            }
 
             // optimization to prevent a mutable copy when it is not necessary
             int uTargetedHandlersCount = m_pTargetedHandlers.Count;
@@ -210,7 +237,48 @@ namespace Cocos2D
                 pMutableTouches = pTouches;
             }
 
-            var sHelper = (CCTouchType) uIndex;
+//            var sHelper = (CCTouchType) touchType;
+
+            //
+            // Process non-began touches that were consumed by a handler and they 
+            // need to be focused on their targets
+            //
+            if (touchType != CCTouchType.Began)
+            {
+#if WINDOWS_PHONE || XBOX360
+                List<CCTouch> focused = new List<CCTouch>();
+                foreach (CCTouch t in pTouches)
+                {
+                    if (t.Consumer != null)
+                    {
+                        focused.Add(t);
+                    }
+                }
+#else
+                var focused = pTouches.FindAll((t) => t.Consumer != null);
+#endif
+                if (focused != null)
+                {
+                    foreach (CCTouch t in focused)
+                    {
+                        var pDelegate = (ICCTargetedTouchDelegate)(t.Consumer.Delegate);
+                        switch (touchType)
+                        {
+                            case CCTouchType.Moved:
+                                pDelegate.TouchMoved(t);
+                                break;
+                            case CCTouchType.Ended:
+                                pDelegate.TouchEnded(t);
+                                t.Consumer.ClaimedTouches.Remove(t);
+                                break;
+                            case CCTouchType.Cancelled:
+                                pDelegate.TouchCancelled(t);
+                                t.Consumer.ClaimedTouches.Remove(t);
+                                break;
+                        }
+                    }
+                }
+            }
 
             // process the target handlers 1st
             if (uTargetedHandlersCount > 0)
@@ -219,28 +287,37 @@ namespace Cocos2D
 
                 foreach (CCTouch pTouch in pTouches)
                 {
+                    bool bClaimed = false;
                     foreach (CCTargetedTouchHandler pHandler in m_pTargetedHandlers)
                     {
+                        if (bClaimed)
+                        {
+                            break;
+                        }
                         var pDelegate = (ICCTargetedTouchDelegate) (pHandler.Delegate);
+                        if (!pDelegate.VisibleForTouches)
+                        {
+                            continue;
+                        }
 
-                        bool bClaimed = false;
-                        if (sHelper == CCTouchType.Began)
+                        if (touchType == CCTouchType.Began)
                         {
                             bClaimed = pDelegate.TouchBegan(pTouch);
 
                             if (bClaimed)
                             {
                                 pHandler.ClaimedTouches.Add(pTouch);
+                                pTouch.Consumer = pHandler;
                             }
                         }
                         else
                         {
                             if (pHandler.ClaimedTouches.Contains(pTouch))
                             {
-                                // moved ended cancelled
+                                // move ended cancelled
                                 bClaimed = true;
 
-                                switch (sHelper)
+                                switch (touchType)
                                 {
                                     case CCTouchType.Moved:
                                         pDelegate.TouchMoved(pTouch);
@@ -280,7 +357,11 @@ namespace Cocos2D
                 foreach (CCStandardTouchHandler pHandler in m_pStandardHandlers)
                 {
                     var pDelegate = (ICCStandardTouchDelegate) pHandler.Delegate;
-                    switch (sHelper)
+                    if (!pDelegate.VisibleForTouches)
+                    {
+                        continue;
+                    }
+                    switch (touchType)
                     {
                         case CCTouchType.Began:
                             pDelegate.TouchesBegan(pMutableTouches);
@@ -425,15 +506,29 @@ namespace Cocos2D
 
         protected void RearrangeHandlers(List<CCTouchHandler> pArray)
         {
-            pArray.Sort(Less);
+            if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+            {
+                pArray.Sort(HighToLow);
+            }
+            else
+            {
+                pArray.Sort(LowToHigh);
+            }
         }
 
         /// <summary>
-        /// Used for sort
+        /// Used for sorting low to high order of priority
         /// </summary>
-        private int Less(CCTouchHandler p1, CCTouchHandler p2)
+        private int LowToHigh(CCTouchHandler p1, CCTouchHandler p2)
         {
             return p1.Priority - p2.Priority;
+        }
+        /// <summary>
+        /// Used for sorting high to low order of priority
+        /// </summary>
+        private int HighToLow(CCTouchHandler p1, CCTouchHandler p2)
+        {
+            return p2.Priority - p1.Priority;
         }
     }
 

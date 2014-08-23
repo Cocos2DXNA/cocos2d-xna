@@ -337,6 +337,7 @@
     <Compile Include="platform\CCRawList.cs" />
     <Compile Include="platform\CCArrayPool.cs" />
     <Compile Include="platform\CCReusedObject.cs" />
+    <Compile Include="platform\Tuple.cs" />
     <Compile Include="platform\Zlib\Adler32.cs" />
     <Compile Include="platform\Zlib\Deflate.cs" />
     <Compile Include="platform\Zlib\InfBlocks.cs" />

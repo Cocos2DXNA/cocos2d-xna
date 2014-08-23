@@ -1014,7 +1014,9 @@
     <Compile Include="classes\tests\SpriteTest\SpriteTestScene.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="classes\tests\SpriteTest\SpriteZOrder.cs">
+<Compile Include="classes\tests\MotionStreakTest\LightningStreakTest.cs" />
+<Compile Include="classes\tests\ParallaxTest\ParallaxScrollTest.cs" />
+<Compile Include="classes\tests\SpriteTest\SpriteZOrder.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="classes\tests\SpriteTest\SpriteZVertex.cs">
@@ -1629,6 +1631,10 @@
     <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.iOS.csproj">
       <Project>{DB8508BB-9849-4CC2-BC0F-8EB5DACB3C47}</Project>
       <Name>MonoGame.Framework.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.iOS.csproj">
+      <Project>{d4838656-8545-4dc5-8822-d4ad313e17ac}</Project>
+      <Name>MonoGame.Framework.Net.iOS</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

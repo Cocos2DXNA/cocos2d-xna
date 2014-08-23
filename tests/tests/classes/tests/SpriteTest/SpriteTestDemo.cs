@@ -85,6 +85,7 @@ namespace tests
 
         private void ClearCaches()
         {
+            CCTextureCache.SharedTextureCache.DumpCachedTextureInfo();
             CCSpriteFrameCache.PurgeSharedSpriteFrameCache();
             CCTextureCache.PurgeSharedTextureCache();
         }

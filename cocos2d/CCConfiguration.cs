@@ -59,6 +59,11 @@ namespace Cocos2D
         }
 
         /// <summary>
+        /// Set this to true if you want to enforce graph priority for touch delegation.
+        /// </summary>
+        public bool UseGraphPriority { get; set; }
+
+        /// <summary>
         /// OpenGL Max texture size.
         /// </summary>
         public int MaxTextureSize

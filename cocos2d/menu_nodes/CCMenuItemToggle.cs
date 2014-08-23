@@ -6,7 +6,7 @@ namespace Cocos2D
     public class CCMenuItemToggle : CCMenuItem
     {
         public List<CCMenuItem> m_pSubItems;
-        private int m_uSelectedIndex;
+        private int m_uSelectedIndex=-1;
 
         public CCMenuItemToggle()
         {
@@ -29,15 +29,12 @@ namespace Cocos2D
                     var currentItem = (CCMenuItem) GetChildByTag(kCurrentItem);
                     if (currentItem != null)
                     {
-                        currentItem.RunAction(new CCRemoveSelf(false));
-//                        currentItem.RemoveFromParentAndCleanup(false);
+                        currentItem.Visible = false;
+                        currentItem.Tag = CCNode.kCCNodeTagInvalid;
                     }
-
                     CCMenuItem item = m_pSubItems[m_uSelectedIndex];
-                    AddChild(item, 0, kCurrentItem);
-                    CCSize s = item.ContentSize;
-                    ContentSize = s;
-                    item.Position = new CCPoint(s.Width / 2, s.Height / 2);
+                    item.Visible = true;
+                    item.Tag = kCurrentItem;
                 }
             }
         }
@@ -64,10 +61,30 @@ namespace Cocos2D
         public bool InitWithTarget(Action<object> selector, CCMenuItem[] items)
         {
             base.InitWithTarget(selector);
+            CascadeColorEnabled = true;
+            CascadeOpacityEnabled = true;
             m_pSubItems = new List<CCMenuItem>();
+            float w = float.MinValue;
+            float h = float.MinValue;
             foreach (CCMenuItem item in items)
             {
                 m_pSubItems.Add(item);
+                AddChild(item, 0);
+                item.Visible = false;
+                if (w < item.ContentSize.Width)
+                {
+                    w = item.ContentSize.Width;
+                }
+                if (h < item.ContentSize.Height)
+                {
+                    h = item.ContentSize.Height;
+                }
+                item.AnchorPoint = CCPoint.AnchorMiddle;
+            }
+            ContentSize = new CCSize(w, h);
+            foreach (CCMenuItem item in items)
+            {
+                item.Position = ContentSize.Center;
             }
             m_uSelectedIndex = int.MaxValue;
             SelectedIndex = 0;
@@ -87,6 +104,9 @@ namespace Cocos2D
             m_pSubItems = new List<CCMenuItem>();
             m_pSubItems.Add(item);
             m_uSelectedIndex = int.MaxValue;
+            ContentSize = item.ContentSize;
+            AddChild(item, 0);
+            item.Visible = true;
             SelectedIndex = 0;
 
             CascadeColorEnabled = true;
