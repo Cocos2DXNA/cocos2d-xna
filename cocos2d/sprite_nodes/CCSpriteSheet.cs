@@ -12,7 +12,7 @@ namespace Cocos2D
         private readonly Dictionary<string, CCSpriteFrame> _spriteFrames = new Dictionary<string, CCSpriteFrame>();
         private readonly Dictionary<string, string> _spriteFramesAliases = new Dictionary<string, string>();
 
-		private PlistType plistType;
+		private PlistType plistType = PlistType.Cocos2D;
 
 		// We need to read the sprite sheet textures relative to the plist file path.
 		// When we have the sprite sheet split between multiple image files 
@@ -206,6 +206,7 @@ namespace Cocos2D
             try
             {
                 document.LoadFromXmlFile(stream);
+                plistType = GetPlistType(document.Root.AsDictionary);
             }
             catch (Exception)
             {

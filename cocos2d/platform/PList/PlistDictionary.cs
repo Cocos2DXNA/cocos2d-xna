@@ -68,6 +68,14 @@ namespace Cocos2D
 			}
 		}
 
+        public IList<string> Keys
+        {
+            get
+            {
+                return (keys);
+            }
+        }
+
 		public override void Write (System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("dict");
