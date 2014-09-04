@@ -93,6 +93,7 @@ namespace Cocos2D
                 {
                     m_pfnSelector(this);
                 }
+                if(OnActivated!=null)
                 OnActivated(this);
 
                 //if (m_functionName.size() && CCScriptEngineManager.sharedScriptEngineManager().getScriptEngine())
@@ -108,6 +109,7 @@ namespace Cocos2D
         public virtual void Selected()
         {
             m_bIsSelected = true;
+            if(OnSelected != null)
             OnSelected(this);
         }
 
@@ -117,6 +119,7 @@ namespace Cocos2D
         public virtual void Unselected()
         {
             m_bIsSelected = false;
+            if(OnUnselected!=null)
             OnUnselected(this);
         }
 
