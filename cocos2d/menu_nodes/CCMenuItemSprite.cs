@@ -93,12 +93,12 @@ namespace Cocos2D
             ZoomBehaviorOnTouch = false;
         }
 
-		public CCMenuItemSprite(Action<object> selector)
+        public CCMenuItemSprite(Action<CCMenuItem> selector)
             : base(selector)
         {
         }
 
-		public CCMenuItemSprite(string normalSprite, string selectedSprite, Action<object> selector)
+        public CCMenuItemSprite(string normalSprite, string selectedSprite, Action<CCMenuItem> selector)
             :this(new CCSprite(normalSprite), new CCSprite(selectedSprite), null, selector)
         {
         }

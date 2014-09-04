@@ -13,7 +13,7 @@ namespace Cocos2D
             InitWithTarget(null);
         }
 
-        public CCMenuItemToggle(Action<object> selector, params CCMenuItem[] items)
+        public CCMenuItemToggle(Action<CCMenuItem> selector, params CCMenuItem[] items)
         {
             InitWithTarget(selector, items);
         }
@@ -58,7 +58,7 @@ namespace Cocos2D
             }
         }
 
-        public bool InitWithTarget(Action<object> selector, CCMenuItem[] items)
+        public bool InitWithTarget(Action<CCMenuItem> selector, CCMenuItem[] items)
         {
             base.InitWithTarget(selector);
             CascadeColorEnabled = true;

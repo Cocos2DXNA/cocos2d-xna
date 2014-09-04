@@ -13,12 +13,12 @@ namespace Cocos2D
         {
         }
 
-		public CCMenuItemImage(string normalImage, string selectedImage, Action<object> selector)
+        public CCMenuItemImage(string normalImage, string selectedImage, Action<CCMenuItem> selector)
             :this(normalImage, selectedImage, null, selector)
         {
         }
 
-		public CCMenuItemImage(string normalImage, string selectedImage, string disabledImage, Action<object> selector)
+        public CCMenuItemImage(string normalImage, string selectedImage, string disabledImage, Action<CCMenuItem> selector)
             : base(selector)
         {
 
