@@ -108,12 +108,12 @@ namespace Cocos2D
         {
         }
 
-		public CCMenuItemSprite(CCNode normalSprite, CCNode selectedSprite, Action<object> selector)
+		public CCMenuItemSprite(CCNode normalSprite, CCNode selectedSprite, Action<CCMenuItem> selector)
             :this(normalSprite, selectedSprite, null, selector)
         {
         }
 
-		public CCMenuItemSprite(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite, Action<object> selector)
+        public CCMenuItemSprite(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite, Action<CCMenuItem> selector)
         {
             InitWithTarget(selector);
 
