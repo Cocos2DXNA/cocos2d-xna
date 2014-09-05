@@ -508,19 +508,14 @@ namespace Cocos2D
 
                 string[] lineList = text.Split('\n');
 
-                float spaceWidth = font.MeasureString(" ").X * scale;
-
                 StringBuilder next = new StringBuilder();
                 string last = null;
                 for (int j = 0; j < lineList.Length; ++j)
                 {
                     string[] wordList = lineList[j].Split(' ');
-
-//                    float lineWidth = 0;
-//                    bool firstWord = true;
-
                     for (int i = 0; i < wordList.Length; )
                     {
+                        // Run through the list of words to create a sentence that fits in the dimensions.Width space
                         while (i < wordList.Length)
                         {
                             if ((font.MeasureString(next.ToString()).X * scale) > dimensions.Width)
@@ -536,61 +531,27 @@ namespace Cocos2D
                             next.Append(wordList[i]);
                             i++;
                         }
-                        if (i == wordList.Length)
+                        if (i == wordList.Length || i == -1) // -1 means the default width was too small for the string.
                         {
                             string nstr = next.ToString();
                             if ((font.MeasureString(nstr).X * scale) > dimensions.Width)
                             {
                                 // Last line could have bleed into the margin
-                                textList.Add(last);
+                                if(last != null && last.Length > 0)
+                                    textList.Add(last); // Single word label has a null last which can cause problems
                                 textList.Add(wordList[wordList.Length - 1]); // last word bleeds
                             }
-                            else
+                            else if(nstr.Length > 0)
                             {
                                 textList.Add(nstr);
                             }
                         }
-                        else
+                        else if(last.Length > 0)
                         {
                             textList.Add(last);
                         }
                         last = null;
                         next.Length = 0;
-                        /*
-                        float wordWidth = font.MeasureString(wordList[i]).X * scale;
-
-                        if ((lineWidth + wordWidth) > dimensions.Width)
-                        {
-                            lineWidth = wordWidth;
-
-                            if (nextText.Length > 0)
-                            {
-                                firstWord = true;
-                                textList.Add(nextText.ToString());
-                                nextText.Length = 0;
-                            }
-                            else
-                            {
-                                lineWidth += wordWidth;
-                                firstWord = false;
-                                textList.Add(wordList[i]);
-                                continue;
-                            }
-                        }
-                        else
-                        {
-                            lineWidth += wordWidth;
-                        }
-
-                        if (!firstWord)
-                        {
-                            nextText.Append(' ');
-                            lineWidth += spaceWidth;
-                        }
-
-                        nextText.Append(wordList[i]);
-                        firstWord = false;
-                         */
                     }
 
                     textList.Add(nextText.ToString());
@@ -599,6 +560,11 @@ namespace Cocos2D
 #else
                     nextText.Clear();
 #endif
+                }
+
+                if (textList.Count == 0 && text.Length > 0)
+                {
+                    textList.Add(text);
                 }
 
                 if (dimensions.Height == 0)

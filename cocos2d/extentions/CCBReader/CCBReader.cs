@@ -137,7 +137,7 @@ namespace Cocos2D
 
     public interface ICCBSelectorResolver
     {
-		Action<object> OnResolveCCBCCMenuItemSelector(object target, string pSelectorName);
+		Action<CCMenuItem> OnResolveCCBCCMenuItemSelector(object target, string pSelectorName);
         Action<CCNode> OnResolveCCBCCCallFuncSelector(Object pTarget, string pSelectorName);
 		Action<object, CCControlEvent> OnResolveCCBCCControlSelector(object target, string pSelectorName);
     }
