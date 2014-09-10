@@ -49,7 +49,7 @@ namespace Cocos2D
 #endif
 
 #if !WINDOWS_PHONE
-        static Threading()
+        static CCTask()
         {
 #if WINDOWS_STOREAPP
             mainThreadId = Environment.CurrentManagedThreadId;
