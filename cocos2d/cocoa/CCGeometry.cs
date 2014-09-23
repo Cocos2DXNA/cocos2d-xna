@@ -795,6 +795,14 @@ namespace Cocos2D
             size.Height = point.Y;
             return size;
         }
+
+        public CCRect AsRect
+        {
+            get
+            {
+                return (new CCRect(0, 0, Width, Height));
+            }
+        }
     }
 
 #if !WINDOWS_PHONE && !XBOX && !NETFX_CORE

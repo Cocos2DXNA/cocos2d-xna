@@ -946,7 +946,7 @@ namespace Cocos2D
             return pRet;
         }
 
-        public override void Draw()
+        public override void Visit()
         {
             if (m_bLabelDirty)
             {
@@ -954,7 +954,7 @@ namespace Cocos2D
                 m_bLabelDirty = false;
             }
 
-            base.Draw();
+            base.Visit();
         }
     }
 }
