@@ -759,7 +759,7 @@ namespace Cocos2D
 
         public override void Reinit()
         {
-            CCLog.Log("reinit called on texture '{0}' {1}x{2}", Name, m_tContentSize.Width, m_tContentSize.Height);
+            CCLog.Log("reinit called on '{0}'", ToString());
 
             Texture2D textureToDispose = null;
             if (m_Texture2D != null && !m_Texture2D.IsDisposed && !m_bManaged)
