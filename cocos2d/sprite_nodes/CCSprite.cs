@@ -106,6 +106,12 @@ namespace Cocos2D
             private set { m_obOffsetPosition = value; }
         }
 
+        public override void SetPosition(float x, float y)
+        {
+            base.SetPosition(x, y);
+            SET_DIRTY_RECURSIVELY();
+        }
+
         public override CCPoint Position
         {
             get { return base.Position; }

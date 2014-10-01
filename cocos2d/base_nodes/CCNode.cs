@@ -741,7 +741,7 @@ namespace Cocos2D
             y = m_obPosition.Y;
         }
 
-        public void SetPosition(float x, float y)
+        public virtual void SetPosition(float x, float y)
         {
             m_obPosition.X = x;
             m_obPosition.Y = y;
