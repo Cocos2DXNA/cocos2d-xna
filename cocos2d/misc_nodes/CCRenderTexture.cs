@@ -39,16 +39,26 @@ namespace Cocos2D
             InitWithWidthAndHeight(w, h, format, depthFormat, usage);
         }
 
-        protected virtual bool InitWithWidthAndHeight(int w, int h, SurfaceFormat colorFormat, DepthFormat depthFormat, RenderTargetUsage usage)
+        private void TextureReInit()
         {
-            w = (int)Math.Ceiling(w * CCMacros.CCContentScaleFactor());
-            h = (int)Math.Ceiling(h * CCMacros.CCContentScaleFactor());
+            m_pRenderTarget2D = null;
+            m_pTexture = null;
+            if (m_pSprite != null)
+            {
+                m_pSprite.RemoveFromParent();
+                m_pSprite = null;
+            }
+            MakeTexture();
+        }
 
+        private void MakeTexture()
+        {
             m_pTexture = new CCTexture2D();
-			m_pTexture.IsAntialiased = false;
+            m_pTexture.OnReInit = TextureReInit;
+            m_pTexture.IsAntialiased = false;
 
-            m_pRenderTarget2D = CCDrawManager.CreateRenderTarget(w, h, colorFormat, depthFormat, usage);
-            m_pTexture.InitWithTexture(m_pRenderTarget2D, colorFormat, true, false);
+            m_pRenderTarget2D = CCDrawManager.CreateRenderTarget(m_Width, m_Height, m_ColorFormat, m_DepthFormat, m_Usage);
+            m_pTexture.InitWithTexture(m_pRenderTarget2D, m_ColorFormat, true, false);
 
             m_bFirstUsage = true;
 
@@ -57,12 +67,30 @@ namespace Cocos2D
             m_pSprite.BlendFunc = CCBlendFunc.AlphaBlend;
 
             AddChild(m_pSprite);
+        }
 
+        private SurfaceFormat m_ColorFormat;
+        private DepthFormat m_DepthFormat;
+        private RenderTargetUsage m_Usage;
+        private int m_Width, m_Height;
+
+        protected virtual bool InitWithWidthAndHeight(int w, int h, SurfaceFormat colorFormat, DepthFormat depthFormat, RenderTargetUsage usage)
+        {
+            m_Width = (int)Math.Ceiling(w * CCMacros.CCContentScaleFactor());
+            m_Height = (int)Math.Ceiling(h * CCMacros.CCContentScaleFactor());
+            m_ColorFormat = colorFormat;
+            m_DepthFormat = depthFormat;
+            m_Usage = usage;
+            MakeTexture();
             return true;
         }
 
         public virtual void Begin()
         {
+            if (m_pTexture.IsDisposed)
+            {
+                TextureReInit();
+            }
             // Save the current matrix
             CCDrawManager.PushMatrix();
 

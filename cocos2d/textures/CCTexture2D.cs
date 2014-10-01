@@ -69,6 +69,8 @@ namespace Cocos2D
         private bool m_bManaged;
         private bool m_bAntialiased;
 
+        public Action OnReInit;
+
         public CCTexture2D()
         {
             m_samplerState = SamplerState.LinearClamp;
@@ -760,7 +762,6 @@ namespace Cocos2D
         public override void Reinit()
         {
             CCLog.Log("reinit called on '{0}'", ToString());
-
             Texture2D textureToDispose = null;
             if (m_Texture2D != null && !m_Texture2D.IsDisposed && !m_bManaged)
             {
@@ -818,6 +819,10 @@ namespace Cocos2D
             if (textureToDispose != null && !textureToDispose.IsDisposed)
             {
                 textureToDispose.Dispose();
+            }
+            if (OnReInit != null)
+            {
+                OnReInit();
             }
         }
 
