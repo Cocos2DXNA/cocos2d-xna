@@ -17,11 +17,12 @@ namespace Cocos2D
 
         protected override void OnHandlePropTypeBlock(CCNode node, CCNode parent, string propertyName, BlockData pBlockData, CCBReader reader)
         {
+            MenuItemBlockData mi = (MenuItemBlockData)pBlockData;
             if (propertyName == PROPERTY_BLOCK)
             {
                 if (null != pBlockData) // Add this condition to allow CCMenuItemImage without target/selector predefined 
                 {
-                    ((CCMenuItem) node).SetTarget(pBlockData.mSELMenuHandler);
+                    ((CCMenuItem) node).SetTarget(mi.mSELMenuItemHandler);
                 }
             }
             else

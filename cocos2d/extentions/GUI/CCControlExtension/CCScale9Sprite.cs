@@ -237,6 +237,11 @@ namespace Cocos2D
             return true;
         }
 
+        public bool UpdateWithBatchNode(CCSpriteBatchNode batchnode, CCSize bounds, bool rotated, CCRect capInsets)
+        {
+            return(UpdateWithBatchNode(batchnode, bounds.AsRect, rotated, capInsets));
+        }
+
         public bool UpdateWithBatchNode(CCSpriteBatchNode batchnode, CCRect rect, bool rotated, CCRect capInsets)
         {
             var opacity = Opacity;

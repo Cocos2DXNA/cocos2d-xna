@@ -690,6 +690,13 @@ namespace Cocos2D
             Height = height;
         }
 
+        public CCSize Clamp(CCSize max)
+        {
+            float w = (Width > max.Width) ? max.Width : Width;
+            float h = (Height > max.Height) ? max.Height : Height;
+            return (new CCSize(w, h));
+        }
+
         /// <summary>
         /// Computes the diagonal length of this size. This method will always compute
         /// the length using Sqrt()
@@ -794,6 +801,14 @@ namespace Cocos2D
             size.Width = point.X;
             size.Height = point.Y;
             return size;
+        }
+
+        public CCRect AsRect
+        {
+            get
+            {
+                return (new CCRect(0, 0, Width, Height));
+            }
         }
     }
 

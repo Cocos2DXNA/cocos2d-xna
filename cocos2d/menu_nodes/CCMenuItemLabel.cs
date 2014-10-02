@@ -11,7 +11,7 @@ namespace Cocos2D
 
         protected CCMenuItemLabel() {}
 
-		public CCMenuItemLabel (CCNode label, Action<object> selector)
+        public CCMenuItemLabel(CCNode label, Action<CCMenuItem> selector)
         {
             InitWithLabel(label, selector);
         }
@@ -67,7 +67,7 @@ namespace Cocos2D
             }
         }
 
-		protected bool InitWithLabel(CCNode label, Action<object> selector)
+        protected bool InitWithLabel(CCNode label, Action<CCMenuItem> selector)
         {
             base.InitWithTarget(selector);
             m_fOriginalScale = 1.0f;

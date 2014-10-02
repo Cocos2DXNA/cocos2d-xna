@@ -304,7 +304,7 @@ namespace Cocos2D
                         {
                             bClaimed = pDelegate.TouchBegan(pTouch);
 
-                            if (bClaimed)
+                            if (bClaimed && pHandler.ConsumesTouches)
                             {
                                 pHandler.ClaimedTouches.Add(pTouch);
                                 pTouch.Consumer = pHandler;

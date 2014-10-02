@@ -41,7 +41,7 @@ namespace Cocos2D
 
         protected internal override void StartWithTarget(CCNode target)
         {
-            Debug.Assert(target is ICCActionTweenDelegate, "target must implement CCActionTweenDelegate");
+            Debug.Assert(_tweenAction != null || target is ICCActionTweenDelegate, "target must implement CCActionTweenDelegate");
             base.StartWithTarget(target);
             m_fDelta = m_fTo - m_fFrom;
         }

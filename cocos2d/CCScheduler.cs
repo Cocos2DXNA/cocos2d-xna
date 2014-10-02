@@ -500,7 +500,10 @@ namespace Cocos2D
                 for (int i = 0; i < element.Timers.Count; i++)
                 {
                     var timer = element.Timers[i];
-
+                    if (timer == null)
+                    {
+                        continue;
+                    }
                     if (selector == timer.Selector)
                     {
                         if (timer == element.CurrentTimer && (!element.CurrentTimerSalvaged))

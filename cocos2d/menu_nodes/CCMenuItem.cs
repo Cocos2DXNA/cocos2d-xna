@@ -11,6 +11,11 @@ namespace Cocos2D
     {
         public const int kCurrentItem = 32767;
         public const uint kZoomActionTag = 0xc0c05002;
+
+        public event Action<CCMenuItem> OnActivated;
+        public event Action<CCMenuItem> OnSelected;
+        public event Action<CCMenuItem> OnUnselected;
+
         protected static uint _fontSize = 32;
         protected static string _fontName = "arial";
         protected static bool _fontNameRelease = false;
@@ -19,7 +24,7 @@ namespace Cocos2D
         protected bool m_bIsSelected;
 
         protected string m_functionName;
-        protected Action<object> m_pfnSelector;
+        protected Action<CCMenuItem> m_pfnSelector;
 
         public CCMenuItem()
         {
@@ -33,7 +38,7 @@ namespace Cocos2D
         /// </summary>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public CCMenuItem(Action<object> selector)
+        public CCMenuItem(Action<CCMenuItem> selector)
         {
             InitWithTarget(selector);
         }
@@ -54,7 +59,7 @@ namespace Cocos2D
         /// </summary>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public bool InitWithTarget(Action<object> selector)
+        public bool InitWithTarget(Action<CCMenuItem> selector)
         {
             AnchorPoint = new CCPoint(0.5f, 0.5f);
             m_pfnSelector = selector;
@@ -88,6 +93,8 @@ namespace Cocos2D
                 {
                     m_pfnSelector(this);
                 }
+                if(OnActivated!=null)
+                OnActivated(this);
 
                 //if (m_functionName.size() && CCScriptEngineManager.sharedScriptEngineManager().getScriptEngine())
                 //{
@@ -102,6 +109,8 @@ namespace Cocos2D
         public virtual void Selected()
         {
             m_bIsSelected = true;
+            if(OnSelected != null)
+            OnSelected(this);
         }
 
         /// <summary>
@@ -110,6 +119,8 @@ namespace Cocos2D
         public virtual void Unselected()
         {
             m_bIsSelected = false;
+            if(OnUnselected!=null)
+            OnUnselected(this);
         }
 
         /// <summary>
@@ -123,10 +134,11 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// set the target/selector of the menu item
+        /// set the target/selector of the menu item. You should use the events associated with the menu
+        /// item lifecycle.
         /// </summary>
         /// <param name="selector"></param>
-        public virtual void SetTarget(Action<object> selector)
+        public virtual void SetTarget(Action<CCMenuItem> selector)
         {
             m_pfnSelector = selector;
         }
