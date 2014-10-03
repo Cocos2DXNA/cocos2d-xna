@@ -844,6 +844,14 @@ namespace Cocos2D
                 child.OnEnter();
                 child.OnEnterTransitionDidFinish();
             }
+            if (zOrder < m_LocalMinZOrder)
+            {
+                m_LocalMinZOrder = zOrder;
+            }
+            if (zOrder > m_LocalMaxZOrder)
+            {
+                m_LocalMaxZOrder = zOrder;
+            }
             if (CCConfiguration.SharedConfiguration.UseGraphPriority)
             {
                 // My graph is changing, so rearrange the handlers
@@ -853,14 +861,22 @@ namespace Cocos2D
                 }
             }
         }
-        private void InsertChild(CCNode child, int z, int tag)
+        private void InsertChild(CCNode child, int zOrder, int tag)
         {
             m_bReorderChildDirty = true;
             m_pChildren.Add(child);
 
             ChangedChildTag(child, kCCNodeTagInvalid, tag);
 
-            child.m_nZOrder = z;
+            child.m_nZOrder = zOrder;
+            if (zOrder < m_LocalMinZOrder)
+            {
+                m_LocalMinZOrder = zOrder;
+            }
+            if (zOrder > m_LocalMaxZOrder)
+            {
+                m_LocalMaxZOrder = zOrder;
+            }
         }
         #endregion
 
@@ -1079,7 +1095,7 @@ namespace Cocos2D
         
         #region Child Sorting
 
-        int IComparer<CCNode>.Compare(CCNode n1, CCNode n2)
+        public virtual int Compare(CCNode n1, CCNode n2)
         {
             if (n1.m_nZOrder < n2.m_nZOrder || (n1.m_nZOrder == n2.m_nZOrder && n1.m_uOrderOfArrival < n2.m_uOrderOfArrival))
             {
@@ -1155,7 +1171,7 @@ namespace Cocos2D
                 // draw children zOrder < 0
                 for (; i < count; ++i)
                 {
-                    if (elements[i].Visible && elements[i].m_nZOrder < 0)
+                    if (elements[i].m_bVisible && elements[i].m_nZOrder < 0)
                     {
                         elements[i].Visit();
                     }
@@ -1171,11 +1187,11 @@ namespace Cocos2D
                 for (; i < count; ++i)
                 {
                     // Draw the z >= 0 order children next.
-                    if (elements[i].Visible/* && elements[i].m_nZOrder >= 0*/)
+                    if (elements[i].m_bVisible)
                     {
-                    elements[i].Visit();
+                        elements[i].Visit();
+                    }
                 }
-            }
             }
             else
             {
