@@ -1095,7 +1095,7 @@ namespace Cocos2D
         
         #region Child Sorting
 
-        int IComparer<CCNode>.Compare(CCNode n1, CCNode n2)
+        public virtual int Compare(CCNode n1, CCNode n2)
         {
             if (n1.m_nZOrder < n2.m_nZOrder || (n1.m_nZOrder == n2.m_nZOrder && n1.m_uOrderOfArrival < n2.m_uOrderOfArrival))
             {
