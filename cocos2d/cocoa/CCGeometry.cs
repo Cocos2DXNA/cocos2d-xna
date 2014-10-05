@@ -592,6 +592,13 @@ namespace Cocos2D
             return p1.X != p2.X || p1.Y != p2.Y;
         }
 
+		public static CCPoint operator -(CCPoint p1, CCSize p2)
+		{
+			CCPoint pt;
+			pt.X = p1.X - p2.Width;
+			pt.Y = p1.Y - p2.Height;
+			return pt;
+		}
         public static CCPoint operator -(CCPoint p1, CCPoint p2)
         {
             CCPoint pt;
@@ -607,6 +614,13 @@ namespace Cocos2D
             pt.Y = -p1.Y;
             return pt;
         }
+		public static CCPoint operator +(CCPoint p1, CCSize p2)
+		{
+			CCPoint pt;
+			pt.X = p1.X + p2.Width;
+			pt.Y = p1.Y + p2.Height;
+			return pt;
+		}
 
         public static CCPoint operator +(CCPoint p1, CCPoint p2)
         {
