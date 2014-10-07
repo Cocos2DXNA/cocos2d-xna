@@ -109,9 +109,9 @@ namespace tests.Extensions
             if (methodInfo != null)
             {
 #if NETFX_CORE
-				return (Action<object>)methodInfo.CreateDelegate(typeof(Action<CCMenuItem>), this);
+				return (Action<CCMenuItem>)methodInfo.CreateDelegate(typeof(Action<CCMenuItem>), this);
 #else
-                return (Action<object>)Delegate.CreateDelegate(typeof(Action<CCMenuItem>), this, methodInfo);
+                return (Action<CCMenuItem>)Delegate.CreateDelegate(typeof(Action<CCMenuItem>), this, methodInfo);
 #endif
             }
             else
