@@ -357,7 +357,7 @@ namespace Cocos2D
             {
                 if (m_pSpriteFrames.ContainsKey(pair.Key))
                 {
-                    keysToRemove.Remove(pair.Key);
+                    keysToRemove.Add(pair.Key);
                 }
             }
 
