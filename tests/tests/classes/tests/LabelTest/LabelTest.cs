@@ -714,8 +714,9 @@ namespace Cocos2D
             //
             // text = text.Replace(Environment.NewLine, "\n").Replace("\r\n", "\n").Replace("\n", " \n "); // @@ hack
             CCLabelBMFont descLabel = new CCLabelBMFont(text, Font, w);
+            descLabel.LineBreakWithoutSpace = true;
             descLabel.Scale = scale;
-            // descLabel.SetString(text, true);
+            descLabel.SetString(text, true);
             descLabel.AnchorPoint = new CCPoint(0, 0);
             descLabel.Color = new CCColor3B(255, 255, 210);
             scrollView.Bounceable = false;
