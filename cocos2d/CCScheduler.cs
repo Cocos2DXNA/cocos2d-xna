@@ -281,7 +281,7 @@ namespace Cocos2D
                 for (int i = 0; i < count; i++)
                 {
                     ICCSelectorProtocol key = s_pTmpSelectorArray[i];
-                    if (!m_pHashForTimers.ContainsKey(key))
+					if (key == null || !m_pHashForTimers.ContainsKey(key))
                     {
                         continue;
                     }
