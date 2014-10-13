@@ -120,16 +120,28 @@ namespace Cocos2D
             }
         }
 
+        /// <summary>
+        /// Create the dictionary key for this texture. Duplicate assets using different compression are not supported.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private string CreateAssetKey(string file)
+        {
+            var assetName = file;
+            if (Path.HasExtension(assetName))
+            {
+                assetName = CCFileUtils.RemoveExtension(assetName);
+            }
+            return (assetName);
+        }
+
         public CCTexture2D AddImage(string fileimage)
 		{
 			Debug.Assert (!String.IsNullOrEmpty (fileimage), "TextureCache: fileimage MUST not be NULL");
 
 			CCTexture2D texture = null;
 
-			var assetName = fileimage;
-			if (Path.HasExtension (assetName)) {
-				assetName = CCFileUtils.RemoveExtension (assetName);
-			}
+            var assetName = CreateAssetKey(fileimage);
 
 			lock (m_pDictLock) {
 				m_pTextures.TryGetValue (assetName, out texture);
@@ -221,11 +233,7 @@ namespace Cocos2D
             CCTexture2D texture = null;
             try
             {
-                if (Path.HasExtension(key))
-                {
-                    key = CCFileUtils.RemoveExtension(key);
-                }
-
+                key = CreateAssetKey(key);
                 m_pTextures.TryGetValue(key, out texture);
             }
             catch (ArgumentNullException)
@@ -296,12 +304,7 @@ namespace Cocos2D
             {
                 return;
             }
-
-            if (Path.HasExtension(textureKeyName))
-            {
-                textureKeyName = CCFileUtils.RemoveExtension(textureKeyName);
-            }
-
+            textureKeyName = CreateAssetKey(textureKeyName);
             m_pTextures.Remove(textureKeyName);
         }
 

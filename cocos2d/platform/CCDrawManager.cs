@@ -892,6 +892,11 @@ namespace Cocos2D
             return new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Color);
         }
 
+        /// <summary>
+        /// Sets the render target for all drawing to the given texture's core texture. The texture
+        /// must be a RenderTarget2D or else you will get an assert/exception.
+        /// </summary>
+        /// <param name="pTexture">The target of future drawing, which must be a RenderTarget2D</param>
         public static void SetRenderTarget(CCTexture2D pTexture)
         {
             if (pTexture == null)
@@ -905,6 +910,24 @@ namespace Cocos2D
             }
         }
 
+        /// <summary>
+        /// Resets the default render target to be the display render target (null)
+        /// </summary>
+        public static void ResetToDisplayRenderTarget()
+        {
+            if (graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
+            {
+                graphicsDevice.SetRenderTarget(null);
+                graphicsDevice.Viewport = m_savedViewport;
+            }
+            m_currRenderTarget = null;
+        }
+
+        /// <summary>
+        /// Sets the render target to the given target. This is where your drawing will happen 
+        /// if the given parameter is not null.
+        /// </summary>
+        /// <param name="renderTarget"></param>
         public static void SetRenderTarget(RenderTarget2D renderTarget)
         {
             if (graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
@@ -923,10 +946,17 @@ namespace Cocos2D
             m_currRenderTarget = renderTarget;
         }
 
+        /// <summary>
+        /// Returns the current render target. If this is null, then your drawing
+        /// is set to draw directly to the display frame buffer.
+        /// </summary>
+        /// <returns></returns>
         public static RenderTarget2D GetRenderTarget()
         {
             return m_currRenderTarget;
         }
+
+        #region Quad Buffer Integrity Checks
 
         private static void CheckQuadsIndexBuffer(int capacity)
         {
@@ -985,6 +1015,10 @@ namespace Cocos2D
                 }
             }
         }
+
+        #endregion
+
+        #region Drawing Vertices and Quads
 
         public static void DrawQuad(ref CCV3F_C4B_T2F_Quad quad)
         {
@@ -1082,6 +1116,10 @@ namespace Cocos2D
             DrawCount++;
         }
 
+        #endregion
+
+        #region Blanking The Display
+
         public static void Clear(ClearOptions options, Color color, float depth, int stencil)
         {
             graphicsDevice.Clear(options, color, depth, stencil);
@@ -1101,6 +1139,8 @@ namespace Cocos2D
         {
             graphicsDevice.Clear(color);
         }
+
+        #endregion
 
         /// <summary>
         /// Set zoom factor for frame. This method is for debugging big resolution (e.g.new ipad) app on
