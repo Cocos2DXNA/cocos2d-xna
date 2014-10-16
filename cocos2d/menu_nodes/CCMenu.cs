@@ -352,10 +352,11 @@ namespace Cocos2D
         public void AlignItemsVerticallyWithPadding(float padding)
         {
             float width = 0f;
-            float height = -padding;
+            float height = 0f; 
 
             if (m_pChildren != null && m_pChildren.count > 0)
             {
+                height = -padding;
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
@@ -366,12 +367,9 @@ namespace Cocos2D
                     height += pChild.ContentSize.Height * pChild.ScaleY + padding;
                     width = Math.Max(width, pChild.ContentSize.Width * pChild.ScaleX);
                 }
-            }
 
-            float y = height / 2.0f;
+                float y = height / 2.0f;
 
-            if (m_pChildren != null && m_pChildren.count > 0)
-            {
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
@@ -395,9 +393,10 @@ namespace Cocos2D
         public void AlignItemsHorizontallyWithPadding(float padding)
         {
             float height = 0f;
-            float width = -padding;
+            float width = 0f;
             if (m_pChildren != null && m_pChildren.count > 0)
             {
+                width = -padding;
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
@@ -407,12 +406,9 @@ namespace Cocos2D
                         height = Math.Max(height, pChild.ContentSize.Height * pChild.ScaleY);
                     }
                 }
-            }
 
-            float x = -width / 2.0f;
+                float x = -width / 2.0f;
 
-            if (m_pChildren != null && m_pChildren.count > 0)
-            {
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];

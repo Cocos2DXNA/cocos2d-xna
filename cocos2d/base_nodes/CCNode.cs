@@ -325,6 +325,9 @@ namespace Cocos2D
         private int m_LocalMaxZOrder = int.MinValue;
         private int m_LocalMinZOrder = int.MaxValue;
 
+        public int LocalMaxZForChildren { get { return (m_LocalMaxZOrder); } }
+        public int LocalMInZForChildren { get { return (m_LocalMinZOrder); } }
+
         public int ZOrder
         {
             get { return m_nZOrder; }
