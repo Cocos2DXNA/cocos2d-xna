@@ -30,7 +30,6 @@ using System.Text;
 using MonoTouch;
 using MonoTouch.Foundation;
 #endif
-
 namespace Cocos2D
 {
     public enum CCGlesVersion
