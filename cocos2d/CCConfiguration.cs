@@ -26,7 +26,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+#if IOS
+using MonoTouch;
+using MonoTouch.Foundation;
+#endif
 namespace Cocos2D
 {
     public enum CCGlesVersion
