@@ -392,4 +392,128 @@ namespace tests.Extensions
 		}
 	}
 
+    class CCControlButtonTest_Issue448 : CCControlScene
+    {
+        private CCTexture2D _TheTexture;
+        private const int kTheLayer = 1001;
+        private const int kTheButtons = 1002;
+        private float max_w = 0f, max_h = 0f;
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            ScheduleUpdate();
+        }
+
+        private float elapsedTime = 0f;
+        public override void Update(float dt)
+        {
+            base.Update(dt);
+            elapsedTime += dt;
+            if (elapsedTime > 3f)
+            {
+                if (_TheTexture != null)
+                {
+                    _TheTexture.XNATexture.Dispose();
+                    _TheTexture = null;
+                }
+                CreateTheButtons();
+                elapsedTime = 0f;
+                var title = new CCLabelTTF("Refreshing the buttons", "Arial", 30);
+                AddChild(title, 25);
+                title.Position = ContentSize.Center;
+                title.RunAction(new CCFadeOut(1f));
+            }
+        }
+
+        /*
+         * This is a test of the texture reinit on the control button.
+         */
+        public override bool Init()
+        {
+            if (base.Init())
+            {
+                CCSize screenSize = CCDirector.SharedDirector.WinSize;
+
+                var layer = new CCNode();
+                AddChild(layer, 1, kTheLayer);
+
+                CreateTheButtons();
+
+                layer.AnchorPoint = new CCPoint(0.5f, 0.5f);
+                layer.ContentSize = new CCSize(max_w, max_h);
+                layer.Position = new CCPoint(screenSize.Width / 2.0f, screenSize.Height / 2.0f);
+
+                // Add the black background
+                var backgroundButton = new CCScale9SpriteFile("extensions/buttonBackground");
+                backgroundButton.ContentSize = new CCSize(max_w + 14, max_h + 14);
+                backgroundButton.Position = new CCPoint(screenSize.Width / 2.0f, screenSize.Height / 2.0f);
+                AddChild(backgroundButton);
+                return true;
+            }
+            return false;
+        }
+
+
+        private void CreateTheButtons()
+        {
+            CCNode theLayer = GetChildByTag(kTheLayer);
+            theLayer.RemoveAllChildrenByTag(kTheButtons);
+            int space = 10; // px
+
+            max_w = 0f;
+            max_h = 0f;
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+
+
+                    // Add the buttons
+                    var button = standardButtonWithTitle(CCRandom.Next(30).ToString());
+                    button.SetAdjustBackgroundImage(false);  // Tells the button that the background image must not be adjust
+                    // It'll use the prefered size of the background image
+                    button.Position = new CCPoint(button.ContentSize.Width / 2 + (button.ContentSize.Width + space) * i,
+                                           button.ContentSize.Height / 2 + (button.ContentSize.Height + space) * j);
+                    theLayer.AddChild(button, kTheButtons);
+
+                    max_w = Math.Max(button.ContentSize.Width * (i + 1) + space * i, max_w);
+                    max_h = Math.Max(button.ContentSize.Height * (j + 1) + space * j, max_h);
+                }
+            }
+        }
+
+        public CCControlButton standardButtonWithTitle(string title)
+        {
+            _TheTexture = CCTextureCache.SharedTextureCache.AddImage("extensions/button");
+            /** Creates and return a button with a default background and title color. */
+            var backgroundButton = new CCScale9SpriteFile("extensions/button");
+            backgroundButton.PreferredSize = new CCSize(55, 55);  // Set the prefered size
+            var backgroundHighlightedButton = new CCScale9SpriteFile("extensions/buttonHighlighted");
+            backgroundHighlightedButton.PreferredSize = new CCSize(55, 55);  // Set the prefered size
+
+            var titleButton = new CCLabelTTF(title, "Arial", 30);
+
+            titleButton.Color = new CCColor3B(159, 168, 176);
+
+            var button = new CCControlButton(titleButton, backgroundButton);
+            button.SetBackgroundSpriteForState(backgroundHighlightedButton, CCControlState.Highlighted);
+            button.SetTitleColorForState(CCTypes.CCWhite, CCControlState.Highlighted);
+
+            return button;
+        }
+
+        public new static CCScene sceneWithTitle(string title)
+        {
+            var pScene = new CCScene();
+            var controlLayer = new CCControlButtonTest_Issue448();
+            if (controlLayer != null)
+            {
+                controlLayer.getSceneTitleLabel().Text = (title);
+                pScene.AddChild(controlLayer);
+            }
+            return pScene;
+        }
+    }
 }
