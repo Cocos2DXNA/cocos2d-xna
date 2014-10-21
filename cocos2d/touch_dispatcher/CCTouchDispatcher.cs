@@ -243,6 +243,9 @@ namespace Cocos2D
             // Process non-began touches that were consumed by a handler and they 
             // need to be focused on their targets
             //
+            /*
+             * Remove this preprocessing step for these touches. Let't the claim/unclaimed logic
+             * handle targeted touches.
             if (touchType != CCTouchType.Began)
             {
 #if WINDOWS_PHONE || XBOX360
@@ -259,6 +262,8 @@ namespace Cocos2D
 #endif
                 if (focused != null)
                 {
+                    // Thes touches already were handled by another consumer, so continue to send them to that
+                    // consumer. Make sure we remove them from the other lists.
                     foreach (CCTouch t in focused)
                     {
                         var pDelegate = (ICCTargetedTouchDelegate)(t.Consumer.Delegate);
@@ -279,6 +284,7 @@ namespace Cocos2D
                     }
                 }
             }
+             */
 
             // process the target handlers 1st
             if (uTargetedHandlersCount > 0)
@@ -287,6 +293,25 @@ namespace Cocos2D
 
                 foreach (CCTouch pTouch in pTouches)
                 {
+                    if (pTouch.Consumer != null)
+                    {
+                        var pDelegate = (ICCTargetedTouchDelegate)(pTouch.Consumer.Delegate);
+                        switch (touchType)
+                        {
+                            case CCTouchType.Moved:
+                                pDelegate.TouchMoved(pTouch);
+                                break;
+                            case CCTouchType.Ended:
+                                pDelegate.TouchEnded(pTouch);
+                                pTouch.Consumer.ClaimedTouches.Remove(pTouch);
+                                break;
+                            case CCTouchType.Cancelled:
+                                pDelegate.TouchCancelled(pTouch);
+                                pTouch.Consumer.ClaimedTouches.Remove(pTouch);
+                                break;
+                        }
+                        continue;
+                    }
                     bool bClaimed = false;
                     foreach (CCTargetedTouchHandler pHandler in m_pTargetedHandlers)
                     {

@@ -1478,12 +1478,12 @@ namespace Cocos2D
 
         public void Schedule(Action<float> selector)
         {
-            Schedule(selector, 0.0f, CCScheduler.kCCRepeatForever, 0.0f);
+            Schedule(selector, 0f, CCScheduler.kCCRepeatForever, 0f);
         }
 
         public void Schedule(Action<float> selector, float interval)
         {
-            Schedule(selector, interval, CCScheduler.kCCRepeatForever, 0.0f);
+            Schedule(selector, interval, CCScheduler.kCCRepeatForever, 0f);
         }
 
         public void Schedule(Action<float> selector, float interval, uint repeat, float delay)

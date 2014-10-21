@@ -150,8 +150,10 @@ namespace Cocos2D
                 return(Android.OS.Build.VERSION.Release);
 #elif IOS
                 return(MonoTouch.Constants.Version);
-#else
+#elif !WINRT
                 return (Environment.OSVersion.Version.ToString());
+#else
+                return (string.Empty);
 #endif
             }
         }

@@ -61,7 +61,7 @@ namespace Cocos2D
             m_fDelay = delay;
             m_bUseDelay = delay > 0f;
             m_uRepeat = repeat;
-            m_bRunForever = m_uRepeat == uint.MaxValue;
+            m_bRunForever = (m_uRepeat == CCScheduler.kCCRepeatForever);
         }
 
         /*
@@ -102,6 +102,11 @@ namespace Cocos2D
                         }
                         */
                         Interval = OriginalInterval - (m_fElapsed - Interval);
+                        m_fElapsed = 0f;
+                        if (Interval < 0f)
+                        {
+                            Interval = OriginalInterval;
+                        }
                     }
                 }
                 else
@@ -180,7 +185,7 @@ namespace Cocos2D
 {
     public class CCScheduler
     {
-        public const uint kCCRepeatForever = uint.MaxValue - 1;
+        public const uint kCCRepeatForever = uint.MaxValue;
         public const int kCCPrioritySystem = int.MinValue;
         public const int kCCPriorityNonSystemMin = kCCPrioritySystem + 1;
 
