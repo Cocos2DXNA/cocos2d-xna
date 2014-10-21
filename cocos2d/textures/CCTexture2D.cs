@@ -88,7 +88,7 @@ namespace Cocos2D
         {
             get
             {
-                if (m_Texture2D != null && m_Texture2D.IsDisposed)
+                if (m_Texture2D == null || m_Texture2D.IsDisposed)
                 {
                     Reinit();
                 }
@@ -761,7 +761,9 @@ namespace Cocos2D
 
         public override void Reinit()
         {
-            CCLog.Log("reinit called on '{0}'", ToString());
+			CCLog.Log("reinit called on {1} '{0}' {2}", ToString(), m_CacheInfo.CacheType, 
+				(m_CacheInfo.CacheType == CCTextureCacheType.AssetFile || m_CacheInfo.CacheType == CCTextureCacheType.String) ? m_CacheInfo.Data : string.Empty);
+
             Texture2D textureToDispose = null;
             if (m_Texture2D != null && !m_Texture2D.IsDisposed && !m_bManaged)
             {

@@ -151,13 +151,14 @@ namespace Cocos2D
 
 				if (texture.InitWithFile (fileimage)) {
 					lock (m_pDictLock) {
-						m_pTextures[assetName] = texture;
+						m_pTextures [assetName] = texture;
 					}
 				} else {
 					return null;
 				}
+			} else if (!texture.IsTextureDefined) {
+				texture.Reinit ();
 			}
-                
 			return texture;
 		}
 
