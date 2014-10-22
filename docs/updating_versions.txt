@@ -1,0 +1,11 @@
+To build a new release nuget, you need to update several version descriptors:
+
+cocos2d-xna/ProjectTemplates
+
+*.nuspec : X.Y.Z.W  to new X.Y.Z.W
+*.csproj : X.Y.Z.W  to new X.Y.Z.W
+
+cocos2d-xna/scripts
+
+*.build : X.Y.Z.W  to new X.Y.Z.W
+
