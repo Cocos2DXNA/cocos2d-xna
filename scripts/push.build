@@ -39,70 +39,70 @@
 
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.Android.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.Android.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.Ouya.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.Ouya.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.iOS.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.iOS.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.MGCB.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.MGCB.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.Windows.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.Windows.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.Windows8.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.Windows8.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsDX.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsDX.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsGL.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsGL.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsPhone7.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsPhone7.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsPhone8.1.4.2.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsPhone8.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
