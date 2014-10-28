@@ -934,7 +934,7 @@ namespace Cocos2D
         }
 
 
-        private static CCBMFontConfiguration FNTConfigLoadFile(string file)
+        public static CCBMFontConfiguration FNTConfigLoadFile(string file)
         {
             CCBMFontConfiguration pRet;
 
@@ -947,7 +947,7 @@ namespace Cocos2D
             return pRet;
         }
 
-        private static CCBMFontConfiguration FNTConfigLoadFile(string fntName, Stream src)
+        public static CCBMFontConfiguration FNTConfigLoadFile(string fntName, Stream src)
         {
             CCBMFontConfiguration pRet;
 
