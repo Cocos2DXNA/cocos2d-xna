@@ -56,6 +56,12 @@ namespace Cocos2D
         private CCConfiguration()
         { }
 
+        public bool DisplayStats
+        {
+            get { return CCDirector.SharedDirector.DisplayStats; }
+            set { CCDirector.SharedDirector.DisplayStats = value; }
+        }
+
 
 #if IOS
         public string AppVersion

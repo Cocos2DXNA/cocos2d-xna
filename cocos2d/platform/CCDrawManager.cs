@@ -1243,8 +1243,10 @@ namespace Cocos2D
 
             // reset director's member variables to fit visible rect
             CCDirector.SharedDirector.m_obWinSizeInPoints = DesignResolutionSize;
-
-            CCDirector.SharedDirector.CreateStatsLabel();
+            if (CCConfiguration.SharedConfiguration.DisplayStats)
+            {
+                CCDirector.SharedDirector.CreateStatsLabel();
+            }
             CCDirector.SharedDirector.SetRenderDefaultValues();
         }
 
