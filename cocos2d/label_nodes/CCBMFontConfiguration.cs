@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Content;
+using System.IO;
 
 namespace Cocos2D
 {
@@ -71,6 +72,20 @@ namespace Cocos2D
                 }
             }
             return null;
+        }
+
+        public static CCBMFontConfiguration Create(Stream fntFile, string fntFileName)
+        {
+            var pRet = new CCBMFontConfiguration();
+            using (StreamReader sr = new StreamReader(fntFile))
+            {
+                string contents = sr.ReadToEnd();
+                if (pRet.InitWithString(contents, fntFileName))
+                {
+                    return pRet;
+                }
+            }
+            return (null);
         }
 
         protected virtual bool InitWithFNTFile(string fntFile)
