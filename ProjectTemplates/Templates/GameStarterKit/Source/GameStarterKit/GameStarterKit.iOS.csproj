@@ -102,13 +102,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Reference Include="box2diOS, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="box2d, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\cocos2d\Bin\iPhone\Release\box2diOS.dll</HintPath>
+      <HintPath>..\..\..\..\..\cocos2d\Bin\iPhone\Release\box2d.dll</HintPath>
     </Reference>
-    <Reference Include="cocos2d-xna.iOS, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="cocos2d-xna.iOS, Version=2.2.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\cocos2d\Bin\iPhone\Release\cocos2d-xna.iOS.dll</HintPath>
+      <HintPath>..\..\..\..\..\cocos2d\Bin\iPhone\Release\cocos2d-xna.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
