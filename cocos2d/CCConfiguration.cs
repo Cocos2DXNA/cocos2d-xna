@@ -26,7 +26,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+#if IOS
+using MonoTouch;
+using MonoTouch.Foundation;
+#endif
 namespace Cocos2D
 {
     public enum CCGlesVersion
@@ -52,6 +55,30 @@ namespace Cocos2D
 
         private CCConfiguration()
         { }
+
+        public bool DisplayStats
+        {
+            get { return CCDirector.SharedDirector.DisplayStats; }
+            set { CCDirector.SharedDirector.DisplayStats = value; }
+        }
+
+
+#if IOS
+        public string AppVersion
+        {
+            get
+            {
+                return(NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleShortVersionString").ToString());
+            }
+        }
+        public string AppBuildVersion
+        {
+            get
+            {
+                return(NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleVersion").ToString());
+            }
+        }
+#endif
 
         public CCGlesVersion getGlesVersion()
         {
@@ -118,14 +145,23 @@ namespace Cocos2D
         }
 
         /// <summary>
-        /// returns the OS version.
-        ///  - On iOS devices it returns the firmware version.
-        /// - On Mac returns the OS version
+        /// Returns the Android Version "Release" name, on iOS it returns the MonoTouch product version.
         /// @since v0.99.5
         /// </summary>
-        public uint OSVersion
+        public string OSVersion
         {
-            get { return m_uOSVersion; }
+            get 
+            {
+#if ANDROID
+                return(Android.OS.Build.VERSION.Release);
+#elif IOS
+                return(MonoTouch.Constants.Version);
+#elif !WINRT
+                return (Environment.OSVersion.Version.ToString());
+#else
+                return (string.Empty);
+#endif
+            }
         }
 
         /// <summary>

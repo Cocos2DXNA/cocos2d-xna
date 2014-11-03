@@ -43,7 +43,7 @@
   <target name="monogame" description="Build MonoGame Release" depends="checkos">
     <if test="${os == 'Win32NT'}">
     	<copy file="MonoGame.build" tofile="MonoGame/default.build" overwrite="true"/>
-  	    <exec program="protobuild.exe" basedir="${project::get-base-directory()}\tools" workingdir="${project::get-base-directory()}\MonoGame"/>
+  	    <exec program="protobuild.exe" basedir="${project::get-base-directory()}\MonoGame" workingdir="${project::get-base-directory()}\MonoGame"/>
     	<nant buildfile="MonoGame/default.build" target="build" />
     </if>
 
