@@ -591,12 +591,12 @@ namespace Cocos2D
 
         private static bool m_bHasStencilBuffer = true;
 
-        public static void BeginDraw()
+        public static bool BeginDraw()
         {
             if (graphicsDevice == null || graphicsDevice.IsDisposed)
             {
                 // We are existing the game
-                return;
+                return(false);
             }
 
             if (m_bNeedReinitResources)
@@ -624,6 +624,7 @@ namespace Cocos2D
                 Clear(Color.Black);
             }
             DrawCount = 0;
+            return (true);
         }
 
         public static void EndDraw()

@@ -210,13 +210,15 @@ namespace Cocos2D
         {
             GameTime = gameTime;
 
-            CCDrawManager.BeginDraw();
+            if (CCDrawManager.BeginDraw())
+            {
 
-            CCDirector.SharedDirector.MainLoop(gameTime);
+                CCDirector.SharedDirector.MainLoop(gameTime);
 
-            base.Draw(gameTime);
+                base.Draw(gameTime);
 
-            CCDrawManager.EndDraw();
+                CCDrawManager.EndDraw();
+            }
         }
 
         #region Gesture Support
