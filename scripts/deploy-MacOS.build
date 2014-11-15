@@ -16,7 +16,6 @@
         </if>
       </if>
     </if>
-    <echo message="Detected : ${os}"/>
   </target>
 
   <target name="clean">
@@ -24,13 +23,14 @@
     </delete>
   </target>
 
-  <target name="build" description="Build NuGet Release">
+  <target name="build" description="Build NuGet Release" depends="checkos">
 
     <call target="buildnugets"/>
 
   </target>
 
   <target name="buildnugets" description="Build NuGet Packages">
+    <echo message="Detected : ${os}"/>
     <if test="${os == 'MacOS'}">
       <property name="nuget.cmd.dir.path" value="${project::get-base-directory()}\tools\NuGet.exe" overwrite="true" /> 	
       <property name="nuspec.file.dir.path" value="${project::get-base-directory()}\ProjectTemplates\NuGet\" overwrite="true" />
