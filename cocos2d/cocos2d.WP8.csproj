@@ -459,10 +459,6 @@
       <Project>{1F6DEC85-9C75-45CF-BECA-BD3187A398B1}</Project>
       <Name>box2d.WP8</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.WindowsPhone.csproj">
-      <Project>{C6DA906E-9E4A-428B-8870-07A39B172F83}</Project>
-      <Name>MonoGame.Framework.Net.WindowsPhone</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsPhone.csproj">
       <Project>{BAA9A6E4-7690-4DE0-9531-DE0EAEEC9739}</Project>
       <Name>MonoGame.Framework.WindowsPhone</Name>

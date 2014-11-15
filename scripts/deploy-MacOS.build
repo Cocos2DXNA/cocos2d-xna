@@ -3,7 +3,7 @@
   <description>Default Cocos2D-XNA Automated Build script</description>
   <property name="apikey" value="${environment::get-variable('NUGET_API_KEY')}"/>
   <property name="os" value="${operating-system::get-platform(environment::get-operating-system())}" />
-  <property name="mdtooldir" value="/Applications/MonoDevelop.app/Contents/MacOS"/>
+  <property name="mdtooldir" value="/Applications/Xamarin Studio.app/Contents/MacOS"/>
   <!--property name="psmtooldir" value="C:\Program Files (x86)\SCE\PSM\tools\PsmStudio\bin" /-->
 
   <target name="checkos" description="check the operating system">
@@ -12,7 +12,7 @@
       <if test="${directory::exists('/Applications') and directory::exists('/Library')}">
         <property name="os" value="MacOS"/>
         <if test="${not directory::exists(mdtooldir)}">
-          <property name="mdtooldir" value="${path::get-full-path('/Applications/Xamarin Studio.app/Contents/MacOS')}"/>
+          <property name="mdtooldir" value="${path::get-full-path('/Applications/MonoDevelop.app/Contents/MacOS')}"/>
         </if>
       </if>
     </if>
@@ -32,7 +32,7 @@
 
   <target name="buildnugets" description="Build NuGet Packages">
     <if test="${os == 'MacOS'}">
-      <property name="nuget.cmd.dir.path" value="${project::get-base-directory()}\tools\nuget.exe" overwrite="true" /> 	
+      <property name="nuget.cmd.dir.path" value="${project::get-base-directory()}\tools\NuGet.exe" overwrite="true" /> 	
       <property name="nuspec.file.dir.path" value="${project::get-base-directory()}\ProjectTemplates\NuGet\" overwrite="true" />
       <property name="packages.dir.path" value="${nuspec.file.dir.path}bin" overwrite="true" />
       
@@ -45,26 +45,30 @@
 
       <mkdir dir="${packages.dir.path}" />
 
-      <exec program="${nuget.cmd.dir.path}">
+      <exec program="/usr/bin/mono">
+	  <arg value="${nuget.cmd.dir.path}"/>
         <arg value="pack"/>
 	<arg value="${nuspec.file.dir.path}Cocos2D.MacOS.nuspec"/>
 	<arg value="-OutputDirectory"/>
 	<arg value="${packages.dir.path}"/>
       </exec> 
-      <exec program="${nuget.cmd.dir.path}">
+      <exec program="/usr/bin/mono">
+	  <arg value="${nuget.cmd.dir.path}"/>
         <arg value="pack"/>
 	<arg value="${nuspec.file.dir.path}Cocos2D.iOS.nuspec"/>
 	<arg value="-OutputDirectory"/>
 	<arg value="${packages.dir.path}"/>
       </exec> 
-      <exec program="${nuget.cmd.dir.path}">
+      <exec program="/usr/bin/mono">
+	  <arg value="${nuget.cmd.dir.path}"/>
         <arg value="push"/>
 	<arg value="${packages.dir.path}\Cocos2D-XNA.MacOS.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
-      <exec program="${nuget.cmd.dir.path}">
+      <exec program="/usr/bin/mono">
+	  <arg value="${nuget.cmd.dir.path}"/>
         <arg value="push"/>
 	<arg value="${packages.dir.path}\Cocos2D-XNA.iOS.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
