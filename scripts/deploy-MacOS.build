@@ -4,7 +4,6 @@
   <property name="apikey" value="${environment::get-variable('NUGET_API_KEY')}"/>
   <property name="os" value="${operating-system::get-platform(environment::get-operating-system())}" />
   <property name="mdtooldir" value="/Applications/Xamarin Studio.app/Contents/MacOS"/>
-  <!--property name="psmtooldir" value="C:\Program Files (x86)\SCE\PSM\tools\PsmStudio\bin" /-->
 
   <target name="checkos" description="check the operating system">
     <property name="os" value="${operating-system::get-platform(environment::get-operating-system())}"/>
@@ -19,7 +18,7 @@
   </target>
 
   <target name="clean">
-    <delete dir="${project::get-base-directory()}\cocos2d\obj" verbose="true">
+    <delete dir="${project::get-base-directory()}/cocos2d/obj" verbose="true">
     </delete>
   </target>
 
@@ -32,8 +31,8 @@
   <target name="buildnugets" description="Build NuGet Packages">
     <echo message="Detected : ${os}"/>
     <if test="${os == 'MacOS'}">
-      <property name="nuget.cmd.dir.path" value="${project::get-base-directory()}\tools\NuGet.exe" overwrite="true" /> 	
-      <property name="nuspec.file.dir.path" value="${project::get-base-directory()}\ProjectTemplates\NuGet\" overwrite="true" />
+      <property name="nuget.cmd.dir.path" value="${project::get-base-directory()}/tools/NuGet.exe" overwrite="true" /> 	
+      <property name="nuspec.file.dir.path" value="${project::get-base-directory()}/ProjectTemplates/NuGet/" overwrite="true" />
       <property name="packages.dir.path" value="${nuspec.file.dir.path}bin" overwrite="true" />
       
                 <echo message="" />
@@ -62,7 +61,7 @@
       <exec program="/usr/bin/mono">
 	  <arg value="${nuget.cmd.dir.path}"/>
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.MacOS.1.5.0.0.nupkg"/>
+	<arg value="${packages.dir.path}/Cocos2D-XNA.MacOS.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
@@ -70,7 +69,7 @@
       <exec program="/usr/bin/mono">
 	  <arg value="${nuget.cmd.dir.path}"/>
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.iOS.1.5.0.0.nupkg"/>
+	<arg value="${packages.dir.path}/Cocos2D-XNA.iOS.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
