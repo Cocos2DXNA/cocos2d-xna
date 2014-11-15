@@ -32,6 +32,7 @@
 
 
   <target name="buildnugets" description="Build NuGet Packages">
+    <echo message="Detected : ${os}"/>
     <if test="${os == 'Win32NT'}">
       <property name="nuget.cmd.dir.path" value="${project::get-base-directory()}\tools\nuget.exe" overwrite="true" /> 	
       <property name="nuspec.file.dir.path" value="${project::get-base-directory()}\ProjectTemplates\NuGet\" overwrite="true" />
