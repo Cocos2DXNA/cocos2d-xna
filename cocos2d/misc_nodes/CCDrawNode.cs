@@ -223,6 +223,18 @@ namespace Cocos2D
             DrawPolygon(pt, 4, cf, 0, new CCColor4F(0f, 0f, 0f, 0f));
         }
 
+		public void DrawRect(CCRect rect, CCColor4F color, float borderWidth, CCColor4F borderColor)
+		{
+			float x1 = rect.MinX;
+			float y1 = rect.MinY;
+			float x2 = rect.MaxX;
+			float y2 = rect.MaxY;
+			CCPoint[] pt = new CCPoint[] { 
+				new CCPoint(x1,y1), new CCPoint(x2,y1), new CCPoint(x2,y2), new CCPoint(x1,y2)
+			};
+			DrawPolygon(pt, 4, color, borderWidth, borderColor);
+		}
+
         public void DrawPolygon(CCPoint[] verts, int count, CCColor4F fillColor, float borderWidth,
                                 CCColor4F borderColor)
         {
