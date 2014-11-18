@@ -461,7 +461,7 @@
       <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
       <Name>box2d.WindowsDX</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Windows.csproj">
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.Windows.csproj">
       <Project>{87a71215-7cac-4b80-9d43-1700decfb828}</Project>
       <Name>MonoGame.Framework.Net.Windows</Name>
     </ProjectReference>

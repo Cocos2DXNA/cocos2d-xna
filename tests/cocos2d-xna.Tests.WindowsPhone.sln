@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "box2d.WP8", "..\box2d\box2d
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.SharpZLib.WP8", "..\cocos2d\external lib\ICSharpCodeSource\src\ICSharpCode.SharpZLib.WP8.csproj", "{0E7413FF-EB9E-4714-ACF2-BE3A6A7B2FFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame.Framework.Net.WindowsPhone", "..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.WindowsPhone.csproj", "{C6DA906E-9E4A-428B-8870-07A39B172F83}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame.Framework.Net.WindowsPhone", "..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.WindowsPhone.csproj", "{C6DA906E-9E4A-428B-8870-07A39B172F83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

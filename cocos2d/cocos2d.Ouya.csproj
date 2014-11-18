@@ -421,7 +421,7 @@
       <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
       <Name>box2d.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Net.Ouya.csproj">
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.Ouya.csproj">
       <Project>{f200645b-20e1-4d6f-8c70-38656f633cfa}</Project>
       <Name>MonoGame.Framework.Net.Ouya</Name>
     </ProjectReference>
