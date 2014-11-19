@@ -31,7 +31,7 @@
   <target name="buildnugets" description="Build NuGet Packages">
     <echo message="Detected : ${os}"/>
     <if test="${os == 'MacOS'}">
-      <property name="nuget.cmd.dir.path" value="${project::get-base-directory()}/tools/NuGet.exe" overwrite="true" /> 	
+      <property name="nuget.cmd.dir.path" value="${project::get-base-directory()}/tools/nuget.sh" overwrite="true" /> 	
       <property name="nuspec.file.dir.path" value="${project::get-base-directory()}/ProjectTemplates/NuGet/" overwrite="true" />
       <property name="packages.dir.path" value="${nuspec.file.dir.path}bin" overwrite="true" />
       
@@ -44,30 +44,26 @@
 
       <mkdir dir="${packages.dir.path}" />
 
-      <exec program="/usr/bin/mono">
-	  <arg value="${nuget.cmd.dir.path}"/>
+      <exec program="${nuget.cmd.dir.path}">
         <arg value="pack"/>
 	<arg value="${nuspec.file.dir.path}Cocos2D.MacOS.nuspec"/>
 	<arg value="-OutputDirectory"/>
 	<arg value="${packages.dir.path}"/>
       </exec> 
-      <exec program="/usr/bin/mono">
-	  <arg value="${nuget.cmd.dir.path}"/>
+      <exec program="${nuget.cmd.dir.path}">
         <arg value="pack"/>
 	<arg value="${nuspec.file.dir.path}Cocos2D.iOS.nuspec"/>
 	<arg value="-OutputDirectory"/>
 	<arg value="${packages.dir.path}"/>
       </exec> 
-      <exec program="/usr/bin/mono">
-	  <arg value="${nuget.cmd.dir.path}"/>
+      <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
 	<arg value="${packages.dir.path}/Cocos2D-XNA.MacOS.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
-      <exec program="/usr/bin/mono">
-	  <arg value="${nuget.cmd.dir.path}"/>
+      <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
 	<arg value="${packages.dir.path}/Cocos2D-XNA.iOS.1.5.0.0.nupkg"/>
 	<arg value="-s"/>
