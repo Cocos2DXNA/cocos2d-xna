@@ -16,8 +16,6 @@
   </metadata>
 
   <files>
-    <!--file src="..\..\MonoGame\Tools\MGCB\bin\Release\*.dll" target="tools\MGCB" />
-    <file src="..\..\MonoGame\Tools\MGCB\bin\Release\*.exe" target="tools\MGCB" /-->
     <file src="..\..\MonoGame\Tools\MGCB\bin\Release\**\*.*" target="tools\MGCB" />
 
   </files>
