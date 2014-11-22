@@ -319,6 +319,8 @@ namespace Cocos2D
         public virtual void Clear()
         {
             m_pVertices.Clear();
+            m_bDirty = true;
+            _toDraw = null;
         }
 
         public bool FilterPrimitivesByAlpha
