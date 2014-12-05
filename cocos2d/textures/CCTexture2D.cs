@@ -291,7 +291,11 @@ namespace Cocos2D
                 int size = m_uPixelsHigh * m_uPixelsWide;
                 if (IsTextureDefined)
                 {
+#if !XNA
                     size *= XNATexture.Format.GetSize();
+#else
+                    size *= (int)BytesPerPixelForFormat;
+#endif
                 }
                 return (size);
             }

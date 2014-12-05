@@ -230,7 +230,9 @@ namespace Cocos2D
             // Dump the old one
             if (Texture != null)
             {
-                Texture.Dispose();
+                CCTexture2D tmp = Texture;
+                Texture = null;
+                tmp.Dispose();
             }
 
             // let system compute label's width or height when its value is 0
