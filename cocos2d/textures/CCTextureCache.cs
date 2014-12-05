@@ -260,18 +260,39 @@ namespace Cocos2D
                 {
                     tmp.Add(pair.Key, new WeakReference(pair.Value));
                 }
-
+#if DEBUG
+                int original = m_pTextures.Count;
+#endif
                 m_pTextures.Clear();
 
                 GC.Collect();
 
+#if DEBUG
+                int culled = 0;
+                long memory = 0L;
+#endif
                 foreach (var pair in tmp)
                 {
                     if (pair.Value.IsAlive)
                     {
-                        m_pTextures.Add(pair.Key, (CCTexture2D) pair.Value.Target);
+                        CCTexture2D tex = (CCTexture2D) pair.Value.Target;
+                        m_pTextures.Add(pair.Key, tex);
+#if DEBUG
+                        memory += (long)tex.TotalBytes;
+                        CCLog.Log("CCTextureCache: RemoveUnusedTextures, saving {0}", tex.ToString());
+#endif
                     }
+#if DEBUG
+                    else {
+                        culled++;
+                    }
+#endif
                 }
+#if DEBUG
+                memory = memory >> 10; // KB
+                memory = memory >> 10; // MB
+                CCLog.Log("CCTextureCache: RemoveUnusedTextures removed {0} out of {1} textures for {2} MB.", culled, original, memory);
+#endif
             }
         }
 

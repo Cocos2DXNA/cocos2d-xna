@@ -259,11 +259,14 @@ namespace Cocos2D
 //				                                           new CCColor4B(Microsoft.Xna.Framework.Color.White) );
 //			}
 //#endif
-            Texture = tex;
+            if (result)
+            {
+                Texture = tex;
 
-            CCRect rect = CCRect.Zero;
-            rect.Size = m_pobTexture.ContentSize;
-            SetTextureRect(rect);
+                CCRect rect = CCRect.Zero;
+                rect.Size = m_pobTexture.ContentSize;
+                SetTextureRect(rect);
+            }
         }
     }
 }
