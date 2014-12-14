@@ -58,7 +58,7 @@ namespace Cocos2D
             // by 3% in heavy based action games.
             if (m_fDuration == 0)
             {
-                m_fDuration = float.Epsilon;
+                m_fDuration = CCMacros.FLT_EPSILON;
             }
 
             m_elapsed = 0;
@@ -102,7 +102,7 @@ namespace Cocos2D
 
             Update(Math.Max(0f,
                             Math.Min(1, m_elapsed /
-                                        Math.Max(m_fDuration, float.Epsilon)
+                                Math.Max(m_fDuration, CCMacros.FLT_EPSILON)
                                 )
                        )
                 );
