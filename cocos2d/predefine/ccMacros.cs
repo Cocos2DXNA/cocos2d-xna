@@ -74,9 +74,8 @@ namespace Cocos2D
             return angle * 57.29577951f; // PI * 180
         }
 
-        // On Arm float.Epsilon is too small and evalutates to 0
-        // http://msdn.microsoft.com/en-us/library/system.single.epsilon(v=vs.110).aspx
-        public static readonly float FLT_EPSILON = 1.175494351E-38f;
+        [Obsolete("use float.Epsilon instead")]
+        public static readonly float FLT_EPSILON = float.Epsilon; // Was:  1.192092896e-07F;
 
         public static float CCContentScaleFactor()
         {
