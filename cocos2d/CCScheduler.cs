@@ -229,14 +229,7 @@ namespace Cocos2D
                     next = node.Next;
                     if (!node.Value.Paused && !node.Value.MarkedForDeletion)
                     {
-                        try
-                        {
-                            node.Value.Target.Update(dt);
-                        }
-                        catch (Exception ex)
-                        {
-                            CCLog.Log("Target of update has crashed with exception {0}", ex);
-                        }
+                        node.Value.Target.Update(dt);
                     }
                 }
 
@@ -247,14 +240,7 @@ namespace Cocos2D
                     next = node.Next;
                     if (!node.Value.Paused && !node.Value.MarkedForDeletion)
                     {
-                        try
-                        {
-                            node.Value.Target.Update(dt);
-                        }
-                        catch (Exception ex)
-                        {
-                            CCLog.Log("Target of update has crashed with exception {0}", ex);
-                        }
+                        node.Value.Target.Update(dt);
                     }
                 }
 
@@ -264,14 +250,7 @@ namespace Cocos2D
                     next = node.Next;
                     if (!node.Value.Paused && !node.Value.MarkedForDeletion)
                     {
-                        try
-                        {
-                            node.Value.Target.Update(dt);
-                        }
-                        catch (Exception ex)
-                        {
-                            CCLog.Log("Target of update has crashed with exception {0}", ex);
-                        }
+                        node.Value.Target.Update(dt);
                     }
                 }
 
@@ -303,14 +282,7 @@ namespace Cocos2D
                             elt.CurrentTimer = elt.Timers[elt.TimerIndex];
 							if(elt.CurrentTimer != null) {
 	                            elt.CurrentTimerSalvaged = false;
-                                try
-                                {
-                                    elt.CurrentTimer.Update(dt);
-                                }
-                                catch (Exception ex)
-                                {
-                                    CCLog.Log("Timer has crashed during update with exception {0}", ex);
-                                }
+                                elt.CurrentTimer.Update(dt);
 	                            elt.CurrentTimer = null;
 							}
                         }
