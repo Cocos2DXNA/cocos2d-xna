@@ -189,6 +189,9 @@ namespace Cocos2D
         public const int kCCPrioritySystem = int.MinValue;
         public const int kCCPriorityNonSystemMin = kCCPrioritySystem + 1;
 
+        private static HashTimeEntry[] s_pTmpHashSelectorArray = new HashTimeEntry[128];
+        private static ICCSelectorProtocol[] s_pTmpSelectorArray = new ICCSelectorProtocol[128];
+
         private readonly Dictionary<ICCSelectorProtocol, HashTimeEntry> m_pHashForTimers =
             new Dictionary<ICCSelectorProtocol, HashTimeEntry>();
 
@@ -206,8 +209,25 @@ namespace Cocos2D
 
         public float TimeScale = 1.0f;
 
-        private static HashTimeEntry[] s_pTmpHashSelectorArray = new HashTimeEntry[128];
-        private static ICCSelectorProtocol[] s_pTmpSelectorArray = new ICCSelectorProtocol[128];
+        public event Action<Exception> OnUnhandledException;
+
+        private void UpdateTarget(ICCSelectorProtocol target, float dt)
+        {
+            if (OnUnhandledException == null)
+            {
+                target.Update(dt);
+                return;
+            }
+
+            try
+            {
+                target.Update(dt);
+            }
+            catch (Exception exception)
+            {
+                OnUnhandledException(exception);
+            }
+        }
 
         internal void update(float dt)
         {
@@ -229,14 +249,7 @@ namespace Cocos2D
                     next = node.Next;
                     if (!node.Value.Paused && !node.Value.MarkedForDeletion)
                     {
-                        try
-                        {
-                            node.Value.Target.Update(dt);
-                        }
-                        catch (Exception ex)
-                        {
-                            CCLog.Log("Target of update has crashed with exception {0}", ex);
-                        }
+                        UpdateTarget(node.Value.Target, dt);
                     }
                 }
 
@@ -247,14 +260,7 @@ namespace Cocos2D
                     next = node.Next;
                     if (!node.Value.Paused && !node.Value.MarkedForDeletion)
                     {
-                        try
-                        {
-                            node.Value.Target.Update(dt);
-                        }
-                        catch (Exception ex)
-                        {
-                            CCLog.Log("Target of update has crashed with exception {0}", ex);
-                        }
+                        UpdateTarget(node.Value.Target, dt);
                     }
                 }
 
@@ -264,14 +270,7 @@ namespace Cocos2D
                     next = node.Next;
                     if (!node.Value.Paused && !node.Value.MarkedForDeletion)
                     {
-                        try
-                        {
-                            node.Value.Target.Update(dt);
-                        }
-                        catch (Exception ex)
-                        {
-                            CCLog.Log("Target of update has crashed with exception {0}", ex);
-                        }
+                        UpdateTarget(node.Value.Target, dt);
                     }
                 }
 
@@ -303,15 +302,8 @@ namespace Cocos2D
                             elt.CurrentTimer = elt.Timers[elt.TimerIndex];
 							if(elt.CurrentTimer != null) {
 	                            elt.CurrentTimerSalvaged = false;
-                                try
-                                {
-                                    elt.CurrentTimer.Update(dt);
-                                }
-                                catch (Exception ex)
-                                {
-                                    CCLog.Log("Timer has crashed during update with exception {0}", ex);
-                                }
-	                            elt.CurrentTimer = null;
+                                UpdateTarget(elt.CurrentTimer, dt);
+                                elt.CurrentTimer = null;
 							}
                         }
                     }
