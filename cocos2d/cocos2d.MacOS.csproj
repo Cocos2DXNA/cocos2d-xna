@@ -441,6 +441,8 @@
     <Compile Include="label_nodes\CCLabel-CoreGraphics.cs" />
     <Compile Include="keyboard_dispatcher\CCKeyboardDispatcher.cs" />
     <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
+    <Compile Include="Math\CCLightningTrack.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\box2d\box2d.MacOS.csproj">
@@ -456,7 +458,7 @@
       <Name>MonoGame.Framework.MacOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.MacOS.csproj">
-      <Project>{1294038B-66C2-4359-AFE9-EA06A758CA94}</Project>
+      <Project>{BD9CDABF-D5AC-B29B-8FA9-C1B46D65776F}</Project>
       <Name>MonoGame.Framework.Net.MacOS</Name>
     </ProjectReference>
   </ItemGroup>
