@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Cocos2D;
 using Microsoft.Xna.Framework.Graphics;

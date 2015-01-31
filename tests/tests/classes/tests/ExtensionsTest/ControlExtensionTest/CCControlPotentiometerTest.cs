@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Cocos2D;
 
 namespace tests.Extensions

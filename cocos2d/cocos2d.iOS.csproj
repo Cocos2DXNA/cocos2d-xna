@@ -3,16 +3,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A83510D8-7AED-411E-9616-DCFEA180969E}</ProjectGuid>
-    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <Description>cocos2d for MonoTouch</Description>
     <RootNamespace>Cocos2D</RootNamespace>
     <SynchReleaseVersion>False</SynchReleaseVersion>
     <MtouchSdkVersion>3.0</MtouchSdkVersion>
     <AssemblyName>cocos2d-xna</AssemblyName>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -54,6 +54,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchDebug>True</MtouchDebug>
     <MtouchUseArmv7>false</MtouchUseArmv7>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -64,22 +65,21 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DefineConstants>IPHONE;IOS;GLES;OPENGL;MONOGAME</DefineConstants>
     <MtouchUseArmv7>false</MtouchUseArmv7>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="monotouch" />
-    <Reference Include="OpenTK" />
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>external lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="zlib.net">
       <HintPath>external lib\zlib.net.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="OpenTK-1.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" Condition="'$(windir)' != '' " />
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
@@ -105,9 +105,9 @@
     <Compile Include="Actions\action_ease\CCEaseBackIn.cs" />
     <Compile Include="Actions\action_ease\CCEaseBackInOut.cs" />
     <Compile Include="misc_nodes\CCLightning.cs" />
-	<Compile Include="misc_nodes\CCLightningStreak.cs" />
-	<Compile Include="Math\CCLightningTrack.cs" />
-	<Compile Include="Actions\action_ease\CCEaseBackOut.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
+    <Compile Include="Math\CCLightningTrack.cs" />
+    <Compile Include="Actions\action_ease\CCEaseBackOut.cs" />
     <Compile Include="Actions\action_ease\CCEaseBounceIn.cs" />
     <Compile Include="Actions\action_ease\CCEaseBounceInOut.cs" />
     <Compile Include="Actions\action_ease\CCEaseBounceOut.cs" />
@@ -475,7 +475,7 @@
       <Name>box2d.iOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.iOS.csproj">
-      <Project>{d4838656-8545-4dc5-8822-d4ad313e17ac}</Project>
+      <Project>{D4838656-8545-4DC5-8822-D4AD313E17AC}</Project>
       <Name>MonoGame.Framework.Net.iOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.iOS.csproj">
@@ -488,4 +488,5 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

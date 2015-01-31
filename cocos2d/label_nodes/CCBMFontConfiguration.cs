@@ -8,7 +8,7 @@ using System.Text;
 namespace Cocos2D
 {
 #if IOS
-    [MonoTouch.Foundation.Preserve (AllMembers = true)]
+    [Foundation.Preserve (AllMembers = true)]
 #endif
     public class CCBMFontConfiguration
     {
