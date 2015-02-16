@@ -370,7 +370,7 @@ namespace Cocos2D
                         CCDrawManager.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                             MathHelper.Pi / 3.0f,
                             size.Width / size.Height,
-                            0.1f, 1500 //ZEye * 2f
+                            0.1f, Math.Max(size.Width,size.Height)*2f // 1500 //ZEye * 2f
                             );
 
                         CCDrawManager.ViewMatrix = Matrix.CreateLookAt(
