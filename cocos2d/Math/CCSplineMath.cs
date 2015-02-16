@@ -10,7 +10,7 @@ namespace Cocos2D
         /// <param name="p1">Control point 2</param>
         /// <param name="p2">Control point 3</param>
         /// <param name="p3">Control point 4</param>
-        /// <param name="tension"> The parameter c is a tension parameter that must be in the interval (0,1). In some sense, this can be interpreted as the "length" of the tangent. c=1 will yield all zero tangents, and c=0 yields a Catmull–Rom spline.</param>
+        /// <param name="tension"> The parameter c is a tension parameter that must be in the interval (0,1). In some sense, this can be interpreted as the "length" of the tangent. c=1 will yield all zero tangents, and c=0 yields a Catmullï¿½Rom spline.</param>
         /// <param name="t">Time along the spline</param>
         /// <returns>The point along the spline for the given time (t)</returns>
         public static CCPoint CCCardinalSplineAt(CCPoint p0, CCPoint p1, CCPoint p2, CCPoint p3, float tension, float t)

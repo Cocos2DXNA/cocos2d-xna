@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 #if ANDROID
 using Android.App;
 using Android.Util;

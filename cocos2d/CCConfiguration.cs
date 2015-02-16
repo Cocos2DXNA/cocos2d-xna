@@ -27,8 +27,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 #if IOS
-using MonoTouch;
-using MonoTouch.Foundation;
+using UIKit;
+using CoreGraphics;
+using Foundation;
 #endif
 namespace Cocos2D
 {
@@ -155,7 +156,7 @@ namespace Cocos2D
 #if ANDROID
                 return(Android.OS.Build.VERSION.Release);
 #elif IOS
-                return(MonoTouch.Constants.Version);
+                return(ObjCRuntime.Constants.Version);
 #elif !WINRT
                 return (Environment.OSVersion.Version.ToString());
 #else
