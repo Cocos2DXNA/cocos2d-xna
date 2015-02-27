@@ -938,6 +938,15 @@ namespace Cocos2D
             }
         }
 
+        public CCRect Union(CCRect rect)
+        {
+            float minx = Math.Min(MinX, rect.MinX);
+            float miny = Math.Min(MinY, rect.MinY);
+            float maxx = Math.Max(MaxX, rect.MaxX);
+            float maxy = Math.Max(MaxY, rect.MaxY);
+            return (new CCRect(minx, miny, maxx - minx, maxy - miny));
+        }
+
         public CCRect Intersection(CCRect rect)
         {
             if (!IntersectsRect(rect))
