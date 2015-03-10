@@ -19,7 +19,6 @@
             <reference file="cocos2d-xna.dll"></reference>
             <reference file="ICSharpCode.SharpZipLib.dll"></reference>
             <reference file="MonoGame.Framework.dll"></reference>
-            <reference file="MonoGame.Framework.Net.dll"></reference>
     </references>
 
   </metadata>
@@ -29,7 +28,6 @@
     <file src="..\..\cocos2d\bin\Windows8\Release\cocos2d-xna.dll" target="lib\Windows8" />
     <file src="..\..\cocos2d\bin\Windows8\Release\ICSharpCode.SharpZipLib.dll" target="lib\Windows8" />
     <file src="..\..\MonoGame\MonoGame.Framework\bin\Windows8\AnyCPU\Release\MonoGame.Framework.dll" target="lib\Windows8" />
-    <file src="..\..\MonoGame\MonoGame.Framework\bin\Windows8\AnyCPU\Release\MonoGame.Framework.Net.dll" target="lib\Windows8" />
     <file src="..\..\MonoGame\ThirdParty\Dependencies\SharpDX\Windows 8 Metro\*.dll" target="lib\Windows8" />
 </files>
 
