@@ -2,8 +2,8 @@
 <package >
   <metadata>
     <id>Cocos2D-XNA.iOS</id>
-    <version>1.5.0.0</version>
-    <title>Cocos2D-XNA for iOS</title>
+    <version>1.6.0.0</version>
+    <title>Cocos2D-XNA for iOS (Unified)</title>
     <authors>Cocos2D-XNA, Totally Evil Entertainment, LLC.</authors>
     <owners>Cocos2D-XNA</owners>
     <licenseUrl>https://cocos2dxna.codeplex.com/license</licenseUrl>
