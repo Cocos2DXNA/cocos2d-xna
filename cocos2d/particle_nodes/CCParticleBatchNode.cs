@@ -108,6 +108,7 @@ namespace Cocos2D
                 return;
             }
 
+            UpdateGraphIndex();
             //kmGLPushMatrix();
             CCDrawManager.PushMatrix();
 

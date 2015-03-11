@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -185,10 +185,34 @@ namespace Cocos2D
             public CCPoint n;
         }
 
+        public void DrawCircleOutline(CCPoint center, float radius, float lineWidth, CCColor4B color)
+        {
+            DrawCircleOutline(center, radius, lineWidth, CCMacros.CCDegreesToRadians(360f), 360, color);
+        }
+
+        public void DrawCircleOutline(CCPoint center, float radius, float lineWidth, float angle, int segments, CCColor4B color)
+        {
+            float increment = MathHelper.Pi * 2.0f / segments;
+            double theta = 0.0;
+
+            CCPoint v1;
+            CCPoint v2 = CCPoint.Zero;
+            CCColor4F cf = new CCColor4F(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
+
+            for (int i = 0; i < segments; i++)
+            {
+                v1 = center + new CCPoint((float)Math.Cos(theta), (float)Math.Sin(theta)) * radius;
+                v2 = center + new CCPoint((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment)) * radius;
+                DrawSegment(v1, v2, lineWidth, cf);
+                theta += increment;
+            }
+        }
+
         public void DrawCircle(CCPoint center, float radius, CCColor4B color)
         {
             DrawCircle(center, radius, CCMacros.CCDegreesToRadians(360f), 360, color);
         }
+
 
         public void DrawCircle(CCPoint center, float radius, float angle, int segments, CCColor4B color)
         {
@@ -319,6 +343,8 @@ namespace Cocos2D
         public virtual void Clear()
         {
             m_pVertices.Clear();
+            m_bDirty = true;
+            _toDraw = null;
         }
 
         public bool FilterPrimitivesByAlpha

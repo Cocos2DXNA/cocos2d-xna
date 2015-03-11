@@ -1133,6 +1133,15 @@ namespace Cocos2D
             // Does nothing in the root node class.
         }
 
+        protected void UpdateGraphIndex()
+        {
+            m_MyGraphIndex = CCDirector.SharedDirector.GraphIndex++;
+            if (TouchEnabled && CCConfiguration.SharedConfiguration.UseGraphPriority)
+            {
+                CCDirector.SharedDirector.TouchDispatcher.UpdateGraphPriority(this);
+            }
+        }
+
         /// <summary>
         /// This is called with every call to the MainLoop on the CCDirector class. In XNA, this is the same as the Draw() call.
         /// </summary>
@@ -1143,13 +1152,7 @@ namespace Cocos2D
             {
                 return;
             }
-            
-            m_MyGraphIndex = CCDirector.SharedDirector.GraphIndex++;
-            if (TouchEnabled && CCConfiguration.SharedConfiguration.UseGraphPriority)
-            {
-                CCDirector.SharedDirector.TouchDispatcher.UpdateGraphPriority(this);
-            }
-            
+            UpdateGraphIndex();    
             CCDrawManager.PushMatrix();
 
             if (m_pGrid != null && m_pGrid.Active)

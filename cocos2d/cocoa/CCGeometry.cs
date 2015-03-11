@@ -166,7 +166,7 @@ namespace Cocos2D
         public float Normalize()
         {
             var mag = (float) Math.Sqrt(X * X + Y * Y);
-            if (mag < float.Epsilon)
+            if (mag < CCMacros.FLT_EPSILON)
             {
                 return (0f);
             }
@@ -247,7 +247,7 @@ namespace Cocos2D
             CCPoint b2 = Normalize(b);
             var angle = (float) Math.Atan2(a2.X * b2.Y - a2.Y * b2.X, DotProduct(a2, b2));
 
-            if (Math.Abs(angle) < float.Epsilon)
+            if (Math.Abs(angle) < CCMacros.FLT_EPSILON)
             {
                 return 0.0f;
             }
@@ -936,6 +936,15 @@ namespace Cocos2D
                 pt.Y = MinY;
                 return (pt);
             }
+        }
+
+        public CCRect Union(CCRect rect)
+        {
+            float minx = Math.Min(MinX, rect.MinX);
+            float miny = Math.Min(MinY, rect.MinY);
+            float maxx = Math.Max(MaxX, rect.MaxX);
+            float maxy = Math.Max(MaxY, rect.MaxY);
+            return (new CCRect(minx, miny, maxx - minx, maxy - miny));
         }
 
         public CCRect Intersection(CCRect rect)

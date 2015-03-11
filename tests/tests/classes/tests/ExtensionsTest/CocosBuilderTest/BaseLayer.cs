@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Cocos2D;
 using ValueType = Cocos2D.CCBValueType;

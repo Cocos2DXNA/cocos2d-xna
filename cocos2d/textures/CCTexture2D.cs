@@ -284,9 +284,28 @@ namespace Cocos2D
             m_Texture2D = null;
         }
 
+        public virtual int TotalBytes
+        {
+            get
+            {
+                int size = m_uPixelsHigh * m_uPixelsWide;
+                if (IsTextureDefined)
+                {
+#if !XNA
+                    size *= XNATexture.Format.GetSize();
+#else
+                    size *= (int)BytesPerPixelForFormat;
+#endif
+                }
+                return (size);
+            }
+        }
+
         public override string ToString()
         {
-            return String.Format("<CCTexture2D | Dimensions = {0} x {1})>", m_uPixelsWide, m_uPixelsHigh);
+            int size = TotalBytes;
+            size = size >> 10; // KB
+            return String.Format("[CCTexture2D | Dimensions = {0} x {1} | {2} | {3} | {4} KB)]", m_uPixelsWide, m_uPixelsHigh, m_bManaged ? "Managed" : "Native", IsTextureDefined ? "Valid" : "InValid", size);
         }
 
         public void SaveAsJpeg(Stream stream, int width, int height)
@@ -580,7 +599,15 @@ namespace Cocos2D
                     DefaultAlphaPixelFormat, RenderTargetUsage.DiscardContents
                     );
 
-                CCDrawManager.SetRenderTarget(renderTarget);
+                try
+                {
+                    CCDrawManager.SetRenderTarget(renderTarget);
+                }
+                catch (Exception)
+                {
+                    CCTextureCache.SharedTextureCache.RemoveUnusedTextures();
+                    CCDrawManager.SetRenderTarget(renderTarget);
+                }
                 CCDrawManager.Clear(Color.Transparent);
 
                 SpriteBatch sb = CCDrawManager.spriteBatch;
@@ -761,7 +788,8 @@ namespace Cocos2D
 
         public override void Reinit()
         {
-			CCLog.Log("reinit called on {1} '{0}' {2}", ToString(), m_CacheInfo.CacheType, 
+			CCLog.Log("reinit called on {1} '{0}' {2}", ToString(), 
+                m_CacheInfo.CacheType, 
 				(m_CacheInfo.CacheType == CCTextureCacheType.AssetFile || m_CacheInfo.CacheType == CCTextureCacheType.String) ? m_CacheInfo.Data : string.Empty);
 
             Texture2D textureToDispose = null;
@@ -774,49 +802,52 @@ namespace Cocos2D
             m_bManaged = false;
             m_Texture2D = null;
 
-            switch (m_CacheInfo.CacheType)
+            if (m_CacheInfo.CacheType != CCTextureCacheType.None)
             {
-                case CCTextureCacheType.None:
-                    return;
+                switch (m_CacheInfo.CacheType)
+                {
+                    case CCTextureCacheType.None:
+                        return;
 
-                case CCTextureCacheType.AssetFile:
-                    InitWithFile((string)m_CacheInfo.Data);
-                    break;
+                    case CCTextureCacheType.AssetFile:
+                        InitWithFile((string)m_CacheInfo.Data);
+                        break;
 
-                case CCTextureCacheType.Data:
-                    InitWithData((byte[])m_CacheInfo.Data, m_ePixelFormat, m_bHasMipmaps);
-                    break;
+                    case CCTextureCacheType.Data:
+                        InitWithData((byte[])m_CacheInfo.Data, m_ePixelFormat, m_bHasMipmaps);
+                        break;
 
-                case CCTextureCacheType.RawData:
+                    case CCTextureCacheType.RawData:
 #if NETFX_CORE
                     var methodInfo = typeof(CCTexture2D).GetType().GetTypeInfo().GetDeclaredMethod("InitWithRawData");
 #else
-                    var methodInfo = typeof(CCTexture2D).GetMethods(BindingFlags.Public | BindingFlags.Instance).First(m => m.Name == "InitWithRawData" && m.IsGenericMethod && m.GetParameters().Length == 7);
+                        var methodInfo = typeof(CCTexture2D).GetMethods(BindingFlags.Public | BindingFlags.Instance).First(m => m.Name == "InitWithRawData" && m.IsGenericMethod && m.GetParameters().Length == 7);
 #endif
-                    var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType().GetElementType());
-                    genericMethod.Invoke(this, new object[]
+                        var genericMethod = methodInfo.MakeGenericMethod(m_CacheInfo.Data.GetType().GetElementType());
+                        genericMethod.Invoke(this, new object[]
                         {
                             m_CacheInfo.Data,
                             m_ePixelFormat, m_uPixelsWide, m_uPixelsHigh, 
                             m_bHasPremultipliedAlpha, m_bHasMipmaps, m_tContentSize
                         });
 
-//                    InitWithRawData((byte[])m_CacheInfo.Data, m_ePixelFormat, m_uPixelsWide, m_uPixelsHigh,
-//                                    m_bHasPremultipliedAlpha, m_bHasMipmaps, m_tContentSize);
-                    break;
+                        //                    InitWithRawData((byte[])m_CacheInfo.Data, m_ePixelFormat, m_uPixelsWide, m_uPixelsHigh,
+                        //                                    m_bHasPremultipliedAlpha, m_bHasMipmaps, m_tContentSize);
+                        break;
 
-                case CCTextureCacheType.String:
-                    var si = (CCStringCache)m_CacheInfo.Data;
-                    InitWithString(si.Text, si.Dimensions, si.HAlignment, si.VAlignment, si.FontName, si.FontSize);
-                    if (m_bHasMipmaps)
-                    {
-                        m_bHasMipmaps = false;
-                        GenerateMipmap();
-                    }
-                    break;
+                    case CCTextureCacheType.String:
+                        var si = (CCStringCache)m_CacheInfo.Data;
+                        InitWithString(si.Text, si.Dimensions, si.HAlignment, si.VAlignment, si.FontName, si.FontSize);
+                        if (m_bHasMipmaps)
+                        {
+                            m_bHasMipmaps = false;
+                            GenerateMipmap();
+                        }
+                        break;
 
-                default:
-                    throw new ArgumentOutOfRangeException();
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             if (textureToDispose != null && !textureToDispose.IsDisposed)
             {

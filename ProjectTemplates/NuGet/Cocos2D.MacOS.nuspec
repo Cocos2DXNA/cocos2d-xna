@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-XNA.MacOS</id>
-    <version>1.5.0.0</version>
+    <version>1.6.0.0</version>
     <title>Cocos2D-XNA for MacOS</title>
     <authors>Cocos2D-XNA, Totally Evil Entertainment, LLC.</authors>
     <owners>Cocos2D-XNA</owners>
@@ -13,6 +13,15 @@
     <description>Cocos2D-XNA is a simple game engine typically used for 2D games, educational software and 2D visualizations.   This code allows games to be built with a write-once, run-anywhere approach.</description>
     <copyright>Copyright Cocos2D-XNA</copyright>
     <tags>cocos2d cocos2d-xna xna monogame 2D games visualization engine totallyevil macos apple</tags>
+    <references>
+            <reference file="box2d.dll"></reference>
+            <reference file="cocos2d-xna.dll"></reference>
+            <reference file="ICSharpCode.SharpZipLib.dll"></reference>
+            <reference file="MonoGame.Framework.dll"></reference>
+            <reference file="MonoGame.Framework.Net.dll"></reference>
+            <reference file="zlib.net.dll"></reference>
+            <reference file="Lidgren.Network.dll"></reference>
+        </references>
 
   </metadata>
 

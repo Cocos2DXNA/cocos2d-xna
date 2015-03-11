@@ -61,7 +61,7 @@
       <exec program="/usr/bin/mono">
         <arg value="${nuget.cmd.dir.path}"/>
         <arg value="push"/>
-	<arg value="${packages.dir.path}/Cocos2D-XNA.MacOS.1.5.0.0.nupkg"/>
+	<arg value="${packages.dir.path}/Cocos2D-XNA.MacOS.1.6.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
@@ -69,7 +69,7 @@
       <exec program="/usr/bin/mono">
         <arg value="${nuget.cmd.dir.path}"/>
         <arg value="push"/>
-	<arg value="${packages.dir.path}/Cocos2D-XNA.iOS.1.5.0.0.nupkg"/>
+	<arg value="${packages.dir.path}/Cocos2D-XNA.iOS.1.6.0.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Farseer Physics Engine based on Box2D.XNA port:
 * Copyright (c) 2010 Ian Qvist
 * 

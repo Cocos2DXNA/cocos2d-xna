@@ -1,4 +1,4 @@
-﻿using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;

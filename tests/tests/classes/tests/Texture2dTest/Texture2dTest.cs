@@ -30,7 +30,7 @@ namespace tests
     public class TextureTestScene : TestScene
     {
 
-        private static int TEST_CASE_COUNT = 6;
+        private static int TEST_CASE_COUNT = 7;
 
         private static int sceneIdx = -1;
 
@@ -57,6 +57,9 @@ namespace tests
                     break;
                 case 5:
                     pLayer = new TextureAsync();
+                    break;
+                case 6:
+                    pLayer = new RawTexture();
                     break;
 
                     //case 0:
@@ -1509,6 +1512,73 @@ namespace tests
         public override string subtitle()
         {
             return "Textures should load while an animation is being run";
+        }
+    }
+    internal class RawTexture : TextureDemo
+    {
+        private int m_nImageOffset;
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+            m_nImageOffset = 0;
+
+            CCSize size = CCDirector.SharedDirector.WinSize;
+
+            CCLabelTTF label = new CCLabelTTF("Loading...", "Marker Felt", 32);
+            label.Position = size.Center;
+            AddChild(label, 10);
+
+            CCScaleBy scale = new CCScaleBy(0.3f, 2);
+            CCScaleBy scale_back = (CCScaleBy)scale.Reverse();
+            CCSequence seq = new CCSequence(scale, scale_back);
+            label.RunAction(new CCRepeatForever(seq));
+
+            ScheduleOnce(LoadImages, 1.0f);
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+            CCTextureCache.SharedTextureCache.RemoveAllTextures();
+        }
+
+        private void LoadImages(float dt)
+        {
+            var szSpriteName = "Images/powered.png";
+            CCTextureCache.SharedTextureCache.AddImageAsync(szSpriteName, ImageLoaded);
+        }
+
+        private void ImageLoaded(CCTexture2D tex)
+        {
+            CCDirector director = CCDirector.SharedDirector;
+
+            //CCAssert( [NSThread currentThread] == [director runningThread], @"FAIL. Callback should be on cocos2d thread");
+
+            // IMPORTANT: The order on the callback is not guaranteed. Don't depend on the callback
+
+            // This test just creates a sprite based on the Texture
+
+            CCSprite sprite = new CCSprite(tex);
+            sprite.AnchorPoint = CCPoint.Zero;
+            AddChild(sprite, -1);
+
+            CCSize size = director.WinSize;
+            int i = m_nImageOffset * 32;
+            sprite.Position = new CCPoint(i % (int)size.Width, (i / (int)size.Width) * 32);
+
+            m_nImageOffset++;
+        }
+
+        public override string title()
+        {
+            return "Load From Raw Asset";
+        }
+
+        public override string subtitle()
+        {
+            return "Loading an asset from a raw image.";
         }
     }
 }

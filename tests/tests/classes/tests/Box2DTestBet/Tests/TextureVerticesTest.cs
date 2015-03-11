@@ -1,4 +1,4 @@
-﻿using FarseerPhysics.Common;
+using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
