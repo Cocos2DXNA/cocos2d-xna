@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Cocos2D-XNA.WindowsPhone8</id>
-    <version>1.5.0.0</version>
+    <version>1.6.0.0</version>
     <title>Cocos2D-XNA for Windows Phone 8</title>
     <authors>Cocos2D-XNA, Totally Evil Entertainment, LLC.</authors>
     <owners>Cocos2D-XNA</owners>
@@ -18,7 +18,6 @@
             <reference file="cocos2d-xna.dll"></reference>
             <reference file="ICSharpCode.SharpZipLib.dll"></reference>
             <reference file="MonoGame.Framework.dll"></reference>
-            <reference file="MonoGame.Framework.Net.dll"></reference>
         </references>
   </metadata>
 
@@ -26,10 +25,8 @@
     <file src="..\..\MonoGame\ThirdParty\Dependencies\SharpDX\Windows Phone\x86\*.dll" target="lib\WindowsPhone8\x86" />
     <file src="..\..\MonoGame\ThirdParty\Dependencies\SharpDX\Windows Phone\ARM\*.dll" target="lib\WindowsPhone8\ARM" />
     <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\x86\Release\MonoGame.Framework.dll" target="lib\WindowsPhone8\x86" />
-    <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\x86\Release\MonoGame.Framework.Net.dll" target="lib\WindowsPhone8\x86" />
     <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\x86\Release\*.winmd" target="lib\WindowsPhone8\x86" />
     <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\ARM\Release\MonoGame.Framework.dll" target="lib\WindowsPhone8\ARM" />
-    <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\ARM\Release\MonoGame.Framework.Net.dll" target="lib\WindowsPhone8\ARM" />
     <file src="..\..\MonoGame\MonoGame.Framework\bin\WindowsPhone\ARM\Release\*.winmd" target="lib\WindowsPhone8\ARM" />
     <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\box2d.dll" target="lib\WindowsPhone8\x86" />
     <file src="..\..\cocos2d\bin\WindowsPhone\x86\Release\cocos2d-xna.dll" target="lib\WindowsPhone8\x86" />
