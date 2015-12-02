@@ -11,7 +11,8 @@
     <AssemblyName>cocos2d-xna</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -441,7 +442,7 @@
       <Name>MonoGame.Framework.Android</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.Android.csproj">
-      <Project>{BD9CDABF-D5AC-A69B-9CAA-E4D0D6C9776F}</Project>
+      <Project>{713EE5CA-C850-42AD-AC67-B6546AC8BFFB}</Project>
       <Name>MonoGame.Framework.Net.Android</Name>
     </ProjectReference>
   </ItemGroup>

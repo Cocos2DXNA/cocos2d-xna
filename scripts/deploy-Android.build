@@ -60,14 +60,14 @@
       </exec> 
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.Android.1.6.0.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.Android.1.6.1.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.Ouya.1.6.0.0.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.Ouya.1.6.1.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>

@@ -92,6 +92,16 @@ namespace Cocos2D
         {
             return new Color(point.R, point.G, point.B);
         }
+
+        public CCColor4B AsColor4B(byte alpha = 255)
+        {
+            return (new CCColor4B(R, G, B, alpha));
+        }
+
+        public CCColor4F AsColor4F(float alpha = 1f)
+        {
+            return (new CCColor4F(R/255f, G/255f, B/255f, alpha));
+        }
     }
 
     /// <summary>
