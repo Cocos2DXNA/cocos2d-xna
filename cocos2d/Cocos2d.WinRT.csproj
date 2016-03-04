@@ -974,7 +974,7 @@
     <Compile Include=".\platform\Zlib\ZStreamException.cs">
       <LogicalName>platform\Zlib\ZStreamException</LogicalName>
     </Compile>
-    <Compile Include=".\predefine\CCMacros.cs">
+    <Compile Include=".\predefine\CocosMacros.cs">
       <LogicalName>predefine\ccMacros</LogicalName>
     </Compile>
     <Compile Include=".\predefine\CCProtocols.cs">
