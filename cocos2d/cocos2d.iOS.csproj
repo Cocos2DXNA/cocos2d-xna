@@ -457,7 +457,7 @@
     <Compile Include="denshion\CCMusicPlayer.cs" />
     <Compile Include="denshion\CCSimpleAudioEngine.cs" />
     <Compile Include="platform\CCReusedObject.cs" />
-    <Compile Include="predefine\CCMacros.cs" />
+    <Compile Include="predefine\CocosMacros.cs" />
     <Compile Include="Math\CCEaseMath.cs" />
     <Compile Include="Math\CCSplineMath.cs" />
     <Compile Include="platform\CCInputState.cs" />

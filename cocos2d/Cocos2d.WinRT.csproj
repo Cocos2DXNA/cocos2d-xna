@@ -14,9 +14,10 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <TargetFrameworkVersion>
+    </TargetFrameworkVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
-    <TargetFrameworkVersion />
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -973,7 +974,7 @@
     <Compile Include=".\platform\Zlib\ZStreamException.cs">
       <LogicalName>platform\Zlib\ZStreamException</LogicalName>
     </Compile>
-    <Compile Include=".\predefine\CCMacros.cs">
+    <Compile Include=".\predefine\CocosMacros.cs">
       <LogicalName>predefine\ccMacros</LogicalName>
     </Compile>
     <Compile Include=".\predefine\CCProtocols.cs">
