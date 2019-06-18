@@ -23,8 +23,6 @@
     <XnaWindowsPhoneManifestTemplate>Properties\WMAppManifest.xml</XnaWindowsPhoneManifestTemplate>
     <TileImage>Background.png</TileImage>
     <TileTitle>tests</TileTitle>
-    <SupportedCultures>
-    </SupportedCultures>
     <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>PhoneGameThumb.png</Thumbnail>
     <GameStartupType>
@@ -654,6 +652,7 @@
     <Compile Include="classes\tests\MotionStreakTest\Issue1358.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="classes\tests\MotionStreakTest\LightningStreakTest.cs" />
     <Compile Include="classes\tests\MotionStreakTest\MotionStreakTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -691,6 +690,7 @@
     <Compile Include="classes\tests\ParallaxTest\ParallaxDemo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="classes\tests\ParallaxTest\ParallaxScrollTest.cs" />
     <Compile Include="classes\tests\ParallaxTest\ParallaxTestScene.cs">
       <SubType>Code</SubType>
     </Compile>

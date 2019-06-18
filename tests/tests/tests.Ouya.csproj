@@ -52,7 +52,7 @@
     <Reference Include="OpenTK" />
     <Reference Include="mscorlib" />
     <Reference Include="Ouya.Console.Api">
-      <HintPath>..\..\MonoGame\ThirdParty\Libs\OUYA\Ouya.Console.Api.dll</HintPath>
+      <HintPath>..\..\MonoGame\ThirdParty\Dependencies\OUYA\Ouya.Console.Api.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -387,7 +387,8 @@
     <Compile Include="Classes\tests\MotionStreakTest\MotionStreakTestScene.cs" />
     <Compile Include="Classes\tests\ParallaxTest\Parallax1.cs" />
     <Compile Include="Classes\tests\ParallaxTest\Parallax2.cs" />
-    <Compile Include="Classes\tests\ParallaxTest\ParallaxDemo.cs" />
+    <Compile Include="classes\tests\ParallaxTest\ParallaxDemo.cs" />
+    <Compile Include="classes\tests\ParallaxTest\ParallaxScrollTest.cs" />
     <Compile Include="Classes\tests\ParallaxTest\ParallaxTestScene.cs" />
     <Compile Include="Classes\tests\ParticleTest\ParticleTest.cs" />
     <Compile Include="Classes\tests\PerformanceTest\PerformanceMainLayer.cs" />

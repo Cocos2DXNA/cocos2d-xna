@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2008-2009 Jason Booth
 Copyright (c) 2011-2012 openxlive.com
@@ -30,6 +30,55 @@ using Cocos2D;
 
 namespace tests
 {
+    // From issue #433
+    public class CocosExtensions
+    {
+        public static CCMenuItem CreateScaledMenuItemLabel(CCSize buttonSize, int labelPadding, float strokeSize, CCColor3B textColor, CCColor3B strokeColor, CCColor3B backColor, string labelText, Action action)
+        {
+            var menuItem = action != null ? new CCMenuItem(o => action()) : new CCMenuItem();
+
+            var labelSize = new CCSize(buttonSize.Width - labelPadding, buttonSize.Height - labelPadding);
+
+            // Add background
+            var blockSprite = new CCSprite("images/Block_Back");
+            blockSprite.ScaleTo(buttonSize);
+            blockSprite.Color = backColor;
+
+            menuItem.AddChild(blockSprite);
+            menuItem.ContentSize = buttonSize;
+
+            // Add label
+            var labelTtf = new CCLabelTTF(labelText, "arial-24", 10);
+            labelTtf.Color = textColor;
+
+            // Add Stroke to label
+            // if (strokeSize > 0) labelTtf.AddStroke(strokeSize, strokeColor);
+
+            if (labelTtf.ContentSize.Width > labelSize.Width)
+            {
+                labelTtf.ScaleTo(labelSize);
+            }
+
+            menuItem.AddChild(labelTtf);
+
+            return menuItem;
+        }
+
+        public static void AddJiggle(CCNode targetSprite)
+        {
+            var swingTime = CCRandom.Next(10, 31) / 100f;
+
+            var rotateLeftAction = new CCRotateBy(swingTime, 1);
+            var rotateRightAction = new CCRotateBy(swingTime * 2, -2);
+            var rotateBackAction = new CCRotateBy(swingTime, 1);
+
+            var rotateSequence = new CCSequence(rotateLeftAction, rotateRightAction, rotateBackAction);
+            var repeatAction = new CCRepeatForever(rotateSequence);
+
+            targetSprite.RunAction(repeatAction);
+        }
+    }
+
     public class MenuTestScene : TestScene
     {
         public override void runThisTest()
@@ -39,9 +88,9 @@ namespace tests
             CCLayer pLayer3 = new MenuLayer3();
             CCLayer pLayer4 = new MenuLayer4();
             CCLayer pLayer5 = new MenuLayerPriorityTest();
+            CCLayer pLayer6 = new MenuLayer5();
 
-
-            CCLayerMultiplex layer = new CCLayerMultiplex(pLayer1, pLayer2, pLayer3, pLayer4, pLayer5);
+            CCLayerMultiplex layer = new CCLayerMultiplex(pLayer1, pLayer2, pLayer3, pLayer4, pLayer5, pLayer6);
             AddChild(layer, 0);
 
             CCDirector.SharedDirector.ReplaceScene(this);

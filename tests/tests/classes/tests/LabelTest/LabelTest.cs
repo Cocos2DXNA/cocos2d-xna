@@ -696,7 +696,51 @@ namespace Cocos2D
 
     }
 
+    public class ScrollViewLabelTest : AtlasDemo
+    {
+        public ScrollViewLabelTest()
+        {
+            string Font = "fonts/futura-48.fnt";
+            float w = CCDirector.SharedDirector.WinSize.Width;
+            float h = CCDirector.SharedDirector.WinSize.Height / 2f;
+            CCScrollView scrollView = new CCScrollView(new CCSize(w, h));
+            scrollView.Direction = CCScrollViewDirection.Vertical;
+            CCLabelBMFont testLabel = new CCLabelBMFont("Remeber we are the original XNA port of Cocos2d-X", Font);
+            float scale = w / testLabel.ContentSize.Width;
+            //Note, the scrollview requires the exact location. That's why first I need to set the scale, then SetString, so the label takes the correct size immediately.
+            string text = "Thank you for visiting the cocos2d-xna tests\nPlease help us by donating to our project\nYou can find us at www.cocos2dxna.com\nRemeber we are the original XNA port of Cocos2d-X\n\n\nYou can also email us at team@cocos2dxna.com\n\nThank you!\n\nDon't forget to contribute to cocos2d-x\nWithout them this project would not exist.";
+            //
+            // The following hack is required to make the label properly show in the view.
+            //
+            // text = text.Replace(Environment.NewLine, "\n").Replace("\r\n", "\n").Replace("\n", " \n "); // @@ hack
+            CCLabelBMFont descLabel = new CCLabelBMFont(text, Font, w);
+            descLabel.LineBreakWithoutSpace = true;
+            descLabel.Scale = scale;
+            descLabel.SetString(text, true);
+            descLabel.AnchorPoint = new CCPoint(0, 0);
+            descLabel.Color = new CCColor3B(255, 255, 210);
+            scrollView.Bounceable = false;
+            scrollView.ClippingToBounds = true;
+            scrollView.MinScale = scrollView.MaxScale = scrollView.ZoomScale = 1;
+            scrollView.AddChild(descLabel, 0, 0);
 
+            scrollView.AnchorPoint = new CCPoint(0, 0);
+            scrollView.Position = new CCPoint(0f, 45f);
+            scrollView.ContentSize = new CCSize(w, Math.Max(h, descLabel.ContentSize.Height));
+            scrollView.SetContentOffset(new CCPoint(0, Math.Min(0, scrollView.BoundingBox.Size.Height - scrollView.Container.ContentSize.Height)), false);
+            AddChild(scrollView);
+        }
+
+        public override string title()
+        {
+            return "Testing Label In Scroll View";
+        }
+
+        public override string subtitle()
+        {
+            return "This long label should be in a scrolling view.";
+        }
+    }
 
     //    public class LabelTTFTest : AtlasDemo
     //    {

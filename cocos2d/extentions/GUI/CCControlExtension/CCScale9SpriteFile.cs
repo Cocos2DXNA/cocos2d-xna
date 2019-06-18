@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +17,7 @@ namespace Cocos2D
         }
         public CCScale9SpriteFile(CCRect capInsets, string file)
         {
-            InitWithFile(file, capInsets);
+            InitWithFile(capInsets, file);
         }
         public CCScale9SpriteFile(string file)
         {

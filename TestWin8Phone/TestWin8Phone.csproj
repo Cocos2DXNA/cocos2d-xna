@@ -1202,6 +1202,9 @@
     <Compile Include="..\tests\tests\classes\tests\MotionStreakTest\Issue1358.cs">
       <Link>classes\tests\MotionStreakTest\Issue1358</Link>
     </Compile>
+    <Compile Include="..\tests\tests\classes\tests\MotionStreakTest\LightningStreakTest.cs">
+      <Link>classes\tests\MotionStreakTest\LightningStreakTest.cs</Link>
+    </Compile>
     <Compile Include="..\tests\tests\classes\tests\MotionStreakTest\MotionStreakTest.cs">
       <Link>classes\tests\MotionStreakTest\MotionStreakTest</Link>
     </Compile>
@@ -1270,6 +1273,9 @@
     </Compile>
     <Compile Include="..\tests\tests\classes\tests\ParallaxTest\ParallaxDemo.cs">
       <Link>classes\tests\ParallaxTest\ParallaxDemo</Link>
+    </Compile>
+    <Compile Include="..\tests\tests\classes\tests\ParallaxTest\ParallaxScrollTest.cs">
+      <Link>classes\tests\ParallaxTest\ParallaxScrollTest</Link>
     </Compile>
     <Compile Include="..\tests\tests\classes\tests\ParallaxTest\ParallaxTestScene.cs">
       <Link>classes\tests\ParallaxTest\ParallaxTestScene</Link>

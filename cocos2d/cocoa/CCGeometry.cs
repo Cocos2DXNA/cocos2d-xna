@@ -166,7 +166,7 @@ namespace Cocos2D
         public float Normalize()
         {
             var mag = (float) Math.Sqrt(X * X + Y * Y);
-            if (mag < float.Epsilon)
+            if (mag < CCMacros.FLT_EPSILON)
             {
                 return (0f);
             }
@@ -247,7 +247,7 @@ namespace Cocos2D
             CCPoint b2 = Normalize(b);
             var angle = (float) Math.Atan2(a2.X * b2.Y - a2.Y * b2.X, DotProduct(a2, b2));
 
-            if (Math.Abs(angle) < float.Epsilon)
+            if (Math.Abs(angle) < CCMacros.FLT_EPSILON)
             {
                 return 0.0f;
             }
@@ -592,6 +592,13 @@ namespace Cocos2D
             return p1.X != p2.X || p1.Y != p2.Y;
         }
 
+		public static CCPoint operator -(CCPoint p1, CCSize p2)
+		{
+			CCPoint pt;
+			pt.X = p1.X - p2.Width;
+			pt.Y = p1.Y - p2.Height;
+			return pt;
+		}
         public static CCPoint operator -(CCPoint p1, CCPoint p2)
         {
             CCPoint pt;
@@ -607,12 +614,26 @@ namespace Cocos2D
             pt.Y = -p1.Y;
             return pt;
         }
+		public static CCPoint operator +(CCPoint p1, CCSize p2)
+		{
+			CCPoint pt;
+			pt.X = p1.X + p2.Width;
+			pt.Y = p1.Y + p2.Height;
+			return pt;
+		}
 
         public static CCPoint operator +(CCPoint p1, CCPoint p2)
         {
             CCPoint pt;
             pt.X = p1.X + p2.X;
             pt.Y = p1.Y + p2.Y;
+            return pt;
+        }
+        public static CCPoint operator *(CCPoint p1, CCPoint p2)
+        {
+            CCPoint pt;
+            pt.X = p1.X * p2.X;
+            pt.Y = p1.Y * p2.Y;
             return pt;
         }
 
@@ -683,6 +704,25 @@ namespace Cocos2D
             Height = height;
         }
 
+        public CCSize Clamp(CCSize max)
+        {
+            float w = (Width > max.Width) ? max.Width : Width;
+            float h = (Height > max.Height) ? max.Height : Height;
+            return (new CCSize(w, h));
+        }
+
+        /// <summary>
+        /// Computes the diagonal length of this size. This method will always compute
+        /// the length using Sqrt()
+        /// </summary>
+        public float Diagonal
+        {
+            get
+            {
+                return ((float)Math.Sqrt(Width * Width + Height * Height));
+            }
+        }
+
         /// <summary>
         ///     Returns the inversion of this size, which is the height and width swapped.
         /// </summary>
@@ -746,6 +786,11 @@ namespace Cocos2D
             return (new CCSize(p.Width + f, p.Height + f));
         }
 
+        public static CCSize operator +(CCSize p, CCSize q)
+        {
+            return (new CCSize(p.Width + q.Width, p.Height + q.Height));
+        }
+
         public static CCSize operator -(CCSize p, float f)
         {
             return (new CCSize(p.Width - f, p.Height - f));
@@ -771,6 +816,14 @@ namespace Cocos2D
             size.Height = point.Y;
             return size;
         }
+
+        public CCRect AsRect
+        {
+            get
+            {
+                return (new CCRect(0, 0, Width, Height));
+            }
+        }
     }
 
 #if !WINDOWS_PHONE && !XBOX && !NETFX_CORE
@@ -782,6 +835,12 @@ namespace Cocos2D
 
         public CCPoint Origin;
         public CCSize Size;
+
+        public CCRect(CCSize sz)
+        {
+            Origin = CCPoint.Zero;
+            Size = sz;
+        }
 
         /// <summary>
         ///     Creates the rectangle at (x,y) -> (width,height)
@@ -877,6 +936,15 @@ namespace Cocos2D
                 pt.Y = MinY;
                 return (pt);
             }
+        }
+
+        public CCRect Union(CCRect rect)
+        {
+            float minx = Math.Min(MinX, rect.MinX);
+            float miny = Math.Min(MinY, rect.MinY);
+            float maxx = Math.Max(MaxX, rect.MaxX);
+            float maxy = Math.Max(MaxY, rect.MaxY);
+            return (new CCRect(minx, miny, maxx - minx, maxy - miny));
         }
 
         public CCRect Intersection(CCRect rect)

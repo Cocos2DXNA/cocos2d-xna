@@ -1,4 +1,4 @@
-﻿namespace Cocos2D
+namespace Cocos2D
 {
     public class CCFlipX : CCActionInstant
     {
@@ -8,6 +8,10 @@
         {
         }
 
+        /// <summary>
+        /// Sets the FlipX property of the target sprite to the given value.
+        /// </summary>
+        /// <param name="x"></param>
         public CCFlipX(bool x)
         {
             InitWithFlipX(x);

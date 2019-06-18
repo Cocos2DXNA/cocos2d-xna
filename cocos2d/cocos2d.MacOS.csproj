@@ -3,16 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A83510D8-7AED-411E-9616-DCFEA180969E}</ProjectGuid>
-    <ProjectTypeGuids>{948B3504-5B70-4649-8FE4-BDE1FB46EC69};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{42C0BBD9-55CE-4FC1-8D90-A7348ABAFB23};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <Description>cocos2d for MonoMac</Description>
     <RootNamespace>Cocos2D</RootNamespace>
-    <SuppressXamMacUpsell>True</SuppressXamMacUpsell>
     <AssemblyName>cocos2d-xna</AssemblyName>
-	<UseMSBuildEngine>False</UseMSBuildEngine>
+    <UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -29,7 +28,6 @@
     <EnablePackageSigning>False</EnablePackageSigning>
     <IncludeMonoRuntime>False</IncludeMonoRuntime>
     <UseSGen>False</UseSGen>
-	<UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -45,7 +43,6 @@
     <EnablePackageSigning>False</EnablePackageSigning>
     <IncludeMonoRuntime>False</IncludeMonoRuntime>
     <UseSGen>False</UseSGen>
-	<UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -59,7 +56,6 @@
     <EnablePackageSigning>False</EnablePackageSigning>
     <IncludeMonoRuntime>False</IncludeMonoRuntime>
     <UseSGen>False</UseSGen>
-	<UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -73,9 +69,7 @@
     <Reference Include="zlib.net">
       <HintPath>external lib\zlib.net.dll</HintPath>
     </Reference>
-    <Reference Include="MonoMac, Version=0.0.0.0, Culture=neutral">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="XamMac" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Mono\MonoMac\v0.0\Mono.MonoMac.targets" />
@@ -136,6 +130,7 @@
     <Compile Include="Actions\action_instants\CCHide.cs" />
     <Compile Include="Actions\action_instants\CCPlace.cs" />
     <Compile Include="actions\action_instants\CCRemoveSelf.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="Actions\action_instants\CCReuseGrid.cs" />
     <Compile Include="Actions\action_instants\CCShow.cs" />
     <Compile Include="Actions\action_instants\CCStopGrid.cs" />
@@ -308,6 +303,8 @@
     <Compile Include="misc_nodes\CCRenderTexture.cs" />
     <Compile Include="misc_nodes\CCClippingNode.cs" />
     <Compile Include="misc_nodes\CCDrawNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="particle_nodes\CCParticleBatchNode.cs" />
     <Compile Include="particle_nodes\CCParticleExamples.cs" />
     <Compile Include="particle_nodes\CCParticleSystem.cs" />
@@ -358,7 +355,7 @@
     <Compile Include="Platform\Zlib\ZOutputStream.cs" />
     <Compile Include="Platform\Zlib\ZStream.cs" />
     <Compile Include="Platform\Zlib\ZStreamException.cs" />
-    <Compile Include="predefine\CCMacros.cs" />
+    <Compile Include="predefine\CocosMacros.cs" />
     <Compile Include="predefine\CCProtocols.cs" />
     <Compile Include="predefine\CCTouch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -444,6 +441,8 @@
     <Compile Include="label_nodes\CCLabel-CoreGraphics.cs" />
     <Compile Include="keyboard_dispatcher\CCKeyboardDispatcher.cs" />
     <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
+    <Compile Include="Math\CCLightningTrack.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\box2d\box2d.MacOS.csproj">
@@ -451,12 +450,16 @@
       <Name>box2d.MacOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.MacOS.csproj">
-      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
+      <Project>{5C3DC4FF-FE5A-4B94-B4A6-6F79E63F3130}</Project>
       <Name>Lidgren.Network.MacOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.MacOS.csproj">
       <Project>{36C538E6-C32A-4A8D-A39C-566173D7118E}</Project>
       <Name>MonoGame.Framework.MacOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.MacOS.csproj">
+      <Project>{BD9CDABF-D5AC-B29B-8FA9-C1B46D65776F}</Project>
+      <Name>MonoGame.Framework.Net.MacOS</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

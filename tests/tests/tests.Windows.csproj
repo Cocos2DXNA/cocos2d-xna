@@ -445,6 +445,7 @@
     <Compile Include="classes\tests\MenuTest\MenuLayerPriorityTest.cs" />
     <Compile Include="classes\tests\MenuTest\MenuTestScene.cs" />
     <Compile Include="classes\tests\MotionStreakTest\Issue1358.cs" />
+    <Compile Include="classes\tests\MotionStreakTest\LightningStreakTest.cs" />
     <Compile Include="classes\tests\MotionStreakTest\MotionStreakTest.cs" />
     <Compile Include="classes\tests\MotionStreakTest\MotionStreakTest1.cs" />
     <Compile Include="classes\tests\MotionStreakTest\MotionStreakTest2.cs" />
@@ -468,6 +469,7 @@
     <Compile Include="classes\tests\ParallaxTest\Parallax1.cs" />
     <Compile Include="classes\tests\ParallaxTest\Parallax2.cs" />
     <Compile Include="classes\tests\ParallaxTest\ParallaxDemo.cs" />
+    <Compile Include="classes\tests\ParallaxTest\ParallaxScrollTest.cs" />
     <Compile Include="classes\tests\ParallaxTest\ParallaxTestScene.cs" />
     <Compile Include="classes\tests\ActionManagerTest\PauseTest.cs" />
     <Compile Include="classes\tests\ActionManagerTest\RemoveTest.cs" />

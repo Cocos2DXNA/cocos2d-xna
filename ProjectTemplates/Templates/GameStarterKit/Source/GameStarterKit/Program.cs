@@ -121,11 +121,10 @@ namespace GameStarterKit
             Ouya.Console.Api.OuyaFacade.Instance.Init(this, "XXXXXXXXXXXXXX"); // Our UUID dev ID
 #endif
 
-            Game1.Activity = this;
             var game = new Game1();
 
-            var frameLayout = new FrameLayout(this);
-            frameLayout.AddView(game.Window);
+			var frameLayout = new FrameLayout(this);
+            frameLayout.AddView((View)game.Services.GetService(typeof(View)));
             this.SetContentView(frameLayout);
 
             //SetContentView(game.Window);

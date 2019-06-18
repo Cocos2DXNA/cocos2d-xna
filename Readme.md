@@ -7,8 +7,7 @@ Cocos2D-XNA : Reach To Infinity!
 License
 -------
 
-This project is open source, freely available, and free of royalties or encumberance. The software is released under the highly permissive MIT License.
-
+This work is copyrighted by the Cocos2D-XNA group. This copyright is non-transferrable and resides solely with the authors of this intellectual work product. Any use of this work, in whole or in part, is subject to the License found in the LicenseAndCredit.txt file found in this repository. Jurisdiction for any and all copyright claims, and rights therein, shall reside in the United States of America, and the State of California.
 
 Download and Run
 ----------------
@@ -73,9 +72,9 @@ MonoGame has it's own external dependencies so we will also need to obtain those
 
 > $ git submodule init
 
-> $ git submodule update ThirdParty/Libs
+> $ git submodule update ThirdParty/Dependencies
 
-Notice above that we only need the ThirdParty/Libs to actually build Cocos2D-XNA.
+Notice above that we only need the ThirdParty/Dependencies to actually build Cocos2D-XNA. Also make sure that you are on the develop branch of MonoGame and the master branch of Dependencies.
 
 You now have everything you need to start start developing with Cocos2D-XNA
 

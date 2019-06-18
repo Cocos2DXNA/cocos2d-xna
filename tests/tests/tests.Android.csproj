@@ -20,6 +20,8 @@
     <AndroidLinkSkip />
     <AndroidLinkMode>None</AndroidLinkMode>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
     <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -263,6 +266,7 @@
     <Compile Include="Classes\tests\CocosDenshionTest\CocosDenshionTest.cs" />
     <Compile Include="Classes\tests\FontTest\SystemFontTest.cs" />
     <Compile Include="Classes\tests\LabelTest\GitHubIssue5.cs" />
+    <Compile Include="Classes\tests\MotionStreakTest\LightningStreakTest.cs" />
     <Compile Include="classes\tests\MultiTouchTest\MultiTouchTest.cs" />
     <Compile Include="Classes\tests\NodeTest\CameraCenterTest.cs" />
     <Compile Include="Classes\tests\NodeTest\CameraOrbitTest.cs" />
@@ -382,7 +386,8 @@
     <Compile Include="Classes\tests\MotionStreakTest\MotionStreakTestScene.cs" />
     <Compile Include="Classes\tests\ParallaxTest\Parallax1.cs" />
     <Compile Include="Classes\tests\ParallaxTest\Parallax2.cs" />
-    <Compile Include="Classes\tests\ParallaxTest\ParallaxDemo.cs" />
+    <Compile Include="classes\tests\ParallaxTest\ParallaxDemo.cs" />
+    <Compile Include="classes\tests\ParallaxTest\ParallaxScrollTest.cs" />
     <Compile Include="Classes\tests\ParallaxTest\ParallaxTestScene.cs" />
     <Compile Include="Classes\tests\ParticleTest\ParticleTest.cs" />
     <Compile Include="Classes\tests\PerformanceTest\PerformanceMainLayer.cs" />
@@ -2085,24 +2090,6 @@
     <AndroidResource Include="Resources\Drawable\Icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\box2d\box2d.Android.csproj">
-      <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
-      <Name>box2d.Android</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\cocos2d\cocos2d.Android.csproj">
-      <Project>{64725C5B-A1BC-4974-8538-A1158BABF572}</Project>
-      <Name>cocos2d.Android</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Android.csproj">
-      <Project>{BA9476CF-99BA-4D03-92F2-73D2C5E58883}</Project>
-      <Name>MonoGame.Framework.Android</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Android.csproj">
-      <Project>{565129E0-4EE5-4F6F-B403-C3484C9740BE}</Project>
-      <Name>Lidgren.Network.Android</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\Content\Sounds\background.wma">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AndroidAsset>
@@ -2124,5 +2111,22 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\box2d\box2d.Android.csproj">
+      <Project>{b81b6701-7a78-4846-bf6f-04e0591f0f38}</Project>
+      <Name>box2d.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\cocos2d\cocos2d.Android.csproj">
+      <Project>{64725c5b-a1bc-4974-8538-a1158babf572}</Project>
+      <Name>cocos2d.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.Android.csproj">
+      <Project>{ba9476cf-99ba-4d03-92f2-73d2c5e58883}</Project>
+      <Name>MonoGame.Framework.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.Android.csproj">
+      <Project>{713ee5ca-c850-42ad-ac67-b6546ac8bffb}</Project>
+      <Name>MonoGame.Framework.Net.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

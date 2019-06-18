@@ -9,6 +9,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -23,6 +24,105 @@ namespace Cocos2D
         Right,
         Left,
         None
+    }
+
+    public struct CCGesture
+    {
+        // attributes
+        private GestureType _gestureType;
+        private TimeSpan _timestamp;
+        private CCPoint _position;
+        private CCPoint _position2;
+        private CCPoint _delta;
+        private CCPoint _delta2;
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the type of the gesture.
+        /// </summary>
+        public GestureType GestureType
+        {
+            get
+            {
+                return this._gestureType;
+            }
+        }
+
+        /// <summary>
+        /// Gets the starting time for this multi-touch gesture sample.
+        /// </summary>
+        public TimeSpan Timestamp
+        {
+            get
+            {
+                return this._timestamp;
+            }
+        }
+
+        /// <summary>
+        /// Gets the position of the first touch-point in the gesture sample.
+        /// </summary>
+        public CCPoint Position
+        {
+            get
+            {
+                return this._position;
+            }
+        }
+
+        /// <summary>
+        /// Gets the position of the second touch-point in the gesture sample.
+        /// </summary>
+        public CCPoint Position2
+        {
+            get
+            {
+                return this._position2;
+            }
+        }
+
+        /// <summary>
+        /// Gets the delta information for the first touch-point in the gesture sample.
+        /// </summary>
+        public CCPoint Delta
+        {
+            get
+            {
+                return this._delta;
+            }
+        }
+
+        /// <summary>
+        /// Gets the delta information for the second touch-point in the gesture sample.
+        /// </summary>
+        public CCPoint Delta2
+        {
+            get
+            {
+                return this._delta2;
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Initializes a new <see cref="GestureSample"/>.
+        /// </summary>
+        /// <param name="gestureType"><see cref="GestureType"/></param>
+        /// <param name="timestamp"></param>
+        /// <param name="position"></param>
+        /// <param name="position2"></param>
+        /// <param name="delta"></param>
+        /// <param name="delta2"></param>
+        public CCGesture(GestureType gestureType, TimeSpan timestamp, CCPoint position, CCPoint position2, CCPoint delta, CCPoint delta2)
+        {
+            this._gestureType = gestureType;
+            this._timestamp = timestamp;
+            this._position = position;
+            this._position2 = position2;
+            this._delta = delta;
+            this._delta2 = delta2;
+        }
     }
 
     public static class CCExtensionMethods
@@ -80,8 +180,10 @@ namespace Cocos2D
 
         public readonly bool[] GamePadWasConnected = new bool[MaxInputs];
 
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
         public MouseState CurrentMouseState;
         public MouseState LastMouseState;
+#endif
 
         public TouchCollection TouchState;
 
@@ -92,43 +194,60 @@ namespace Cocos2D
         /// </summary>
         private CCInputState()
         {
-            TouchPanel.EnabledGestures = GestureType.None;
+            ConsumeGamePadState = true;
         }
 
         #region Update
+
+        public bool ConsumeGamePadState { get; set; }
 
         /// <summary>
         /// Reads the latest state user input.
         /// </summary>
         public void Update(float deltaTime)
         {
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
             LastMouseState = CurrentMouseState;
             CurrentMouseState = Microsoft.Xna.Framework.Input.Mouse.GetState();
+#endif
 
-            for (int i = 0; i < MaxInputs; i++)
+            if (CCDirector.SharedDirector.GamePadEnabled && ConsumeGamePadState)
             {
-                LastKeyboardStates[i] = CurrentKeyboardStates[i];
-                LastGamePadStates[i] = CurrentGamePadStates[i];
-
-                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex) i);
-                CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex) i);
-
-                // Keep track of whether a gamepad has ever been
-                // connected, so we can detect if it is unplugged.
-                if (CurrentGamePadStates[i].IsConnected)
+                try
                 {
-                    GamePadWasConnected[i] = true;
+                    for (int i = 0; i < MaxInputs; i++)
+                    {
+                        LastKeyboardStates[i] = CurrentKeyboardStates[i];
+                        LastGamePadStates[i] = CurrentGamePadStates[i];
+
+                        CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i);
+                        CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex)i);
+
+                        // Keep track of whether a gamepad has ever been
+                        // connected, so we can detect if it is unplugged.
+                        if (CurrentGamePadStates[i].IsConnected)
+                        {
+                            GamePadWasConnected[i] = true;
+                        }
+                    }
+                }
+                catch (DllNotFoundException)
+                {
+                    // No gamepad support, so disable it.
+                    ConsumeGamePadState = false;
                 }
             }
-
             // Get the raw touch state from the TouchPanel
             TouchState = TouchPanel.GetState();
 
-            // Read in any detected gestures into our list for the screens to later process
-            Gestures.Clear();
-            while (TouchPanel.IsGestureAvailable)
+            if (TouchPanel.EnabledGestures != GestureType.None)
             {
-                Gestures.Add(TouchPanel.ReadGesture());
+                // Read in any detected gestures into our list for the screens to later process
+                Gestures.Clear();
+                while (TouchPanel.IsGestureAvailable)
+                {
+                    Gestures.Add(TouchPanel.ReadGesture());
+                }
             }
         }
 
@@ -239,7 +358,7 @@ namespace Cocos2D
 
         #region Mouse
 
-#if (!XBOX)
+#if (WINDOWS && !WINRT) || WINDOWSGL || MACOS || ENABLE_MOUSE
 
         public MouseState Mouse
         {

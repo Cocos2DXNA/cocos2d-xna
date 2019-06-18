@@ -12,7 +12,7 @@ namespace Cocos2D
         private readonly Dictionary<string, CCSpriteFrame> _spriteFrames = new Dictionary<string, CCSpriteFrame>();
         private readonly Dictionary<string, string> _spriteFramesAliases = new Dictionary<string, string>();
 
-		private PlistType plistType;
+		private PlistType plistType = PlistType.Cocos2D;
 
 		// We need to read the sprite sheet textures relative to the plist file path.
 		// When we have the sprite sheet split between multiple image files 
@@ -91,6 +91,7 @@ namespace Cocos2D
 
 		}
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithFile(string fileName)
         {
             PlistDocument document = CCContentManager.SharedContentManager.Load<PlistDocument>(fileName);
@@ -156,6 +157,7 @@ namespace Cocos2D
             }
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithFile(string fileName, string textureFileName)
         {
             Debug.Assert(textureFileName != null);
@@ -172,6 +174,7 @@ namespace Cocos2D
             }
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithFile(string fileName, CCTexture2D texture)
         {
             PlistDocument document = CCContentManager.SharedContentManager.Load<PlistDocument>(fileName);
@@ -181,6 +184,7 @@ namespace Cocos2D
             InitWithDictionary(dict, texture);
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithStream(Stream stream, string textureFileName)
         {
             CCTexture2D texture = CCTextureCache.SharedTextureCache.AddImage(textureFileName);
@@ -195,12 +199,14 @@ namespace Cocos2D
             }
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithStream(Stream stream, CCTexture2D texture)
         {
             var document = new PlistDocument();
             try
             {
                 document.LoadFromXmlFile(stream);
+                plistType = GetPlistType(document.Root.AsDictionary);
             }
             catch (Exception)
             {
@@ -212,6 +218,7 @@ namespace Cocos2D
             InitWithDictionary(dict, texture);
         }
 
+        [Obsolete("Use the ctor. These methods will become private soon.")]
         public void InitWithDictionary(PlistDictionary dict, CCTexture2D texture)
         {
             _spriteFrames.Clear();

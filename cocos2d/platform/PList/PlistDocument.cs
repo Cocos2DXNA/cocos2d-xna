@@ -39,7 +39,7 @@ using System.Text;
 namespace Cocos2D
 {
 #if IOS
-    [MonoTouch.Foundation.Preserve (AllMembers = true)]
+    [Foundation.Preserve (AllMembers = true)]
 #endif
     public class PlistDocument : PlistObjectBase
     {
@@ -73,7 +73,7 @@ namespace Cocos2D
 
         public void LoadFromXmlFile(Stream data)
         {
-
+            data = SeekableStream(data);
 			byte[] magicHeader = new byte[8];
 			data.Read(magicHeader, 0, 8);
 			data.Seek(0, SeekOrigin.Begin);
@@ -143,6 +143,37 @@ namespace Cocos2D
             while (reader.Read() && reader.NodeType != XmlNodeType.Element) ;
             if (!reader.EOF)
                 root = LoadFromNode(reader);
+        }
+
+        private Stream SeekableStream(Stream data)
+        {
+            if (data.CanSeek)
+                return data;
+
+            // Read the asset into memory in one go. This results in a ~50% reduction
+            // in load times on Android due to slow Android asset streams.
+            MemoryStream memStream = new MemoryStream();
+#if XBOX360
+            byte[] buf = new byte[4096];
+            while (data.CanRead)
+            {
+                int amt = data.Read(buf, 0, buf.Length);
+                if (amt == -1)
+                {
+                    break;
+                }
+                if (amt > 0)
+                {
+                    memStream.Write(buf, 0, amt);
+                }
+            }
+#else
+            data.CopyTo(memStream);
+#endif
+            memStream.Seek(0, SeekOrigin.Begin);
+            data.Close();
+
+            return memStream;
         }
 
         private PlistObjectBase LoadFromNode(XmlReader reader)
@@ -526,7 +557,14 @@ namespace Cocos2D
 			byte[] buffer = objectTable.GetRange(headerPosition + 1, byteCount).ToArray();
 			Array.Reverse(buffer);
 
-			return new PlistReal(BitConverter.ToSingle(RegulateNullBytes(buffer, 8), 0));
+            if (byteCount > 4)
+            {
+                return new PlistReal((float)BitConverter.ToDouble(RegulateNullBytes(buffer, 8), 0));
+            }
+            else
+            {
+                return new PlistReal(BitConverter.ToSingle(RegulateNullBytes(buffer, 4), 0));
+            }
 		}
 		private PlistString parseBinaryAsciiString(int headerPosition)
 		{

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using Cocos2D;
+using Microsoft.Xna.Framework.Audio;
 
 namespace CocosDenshion
 {
@@ -10,6 +11,12 @@ namespace CocosDenshion
         /// The list of sounds that are configured for looping. These need to be stopped when the game pauses.
         /// </summary>
         private Dictionary<int, int> _LoopedSounds = new Dictionary<int, int>();
+
+        private static Dictionary<int, CCEffectPlayer> s_List = new Dictionary<int, CCEffectPlayer>();
+        private static CCMusicPlayer s_Music = new CCMusicPlayer();
+        private static CCSimpleAudioEngine _Instance = new CCSimpleAudioEngine();
+        private static bool _NoAudioHardware = false;
+
 
         /// <summary>
         /// The shared sound effect list. The key is the hashcode of the file path.
@@ -115,6 +122,7 @@ namespace CocosDenshion
 
         public void PreloadBackgroundMusic(string pszFilePath)
         {
+            if (_NoAudioHardware) return;
             SharedMusic.Open(FullPath(pszFilePath), pszFilePath.GetHashCode());
         }
 
@@ -130,7 +138,10 @@ namespace CocosDenshion
             {
                 return;
             }
-
+            if (_NoAudioHardware)
+            {
+                return;
+            }
             SharedMusic.Open(FullPath(pszFilePath), pszFilePath.GetHashCode());
             SharedMusic.Play(bLoop);
         }
@@ -142,6 +153,7 @@ namespace CocosDenshion
 
         public void PlayBackgroundMusic(string pszFilePath)
         {
+            if (_NoAudioHardware) return;
             PlayBackgroundMusic(pszFilePath, false);
         }
 
@@ -152,6 +164,7 @@ namespace CocosDenshion
 
         public void StopBackgroundMusic(bool bReleaseData)
         {
+            if (_NoAudioHardware) return;
             if (bReleaseData)
             {
                 SharedMusic.Close();
@@ -168,6 +181,7 @@ namespace CocosDenshion
 
         public void StopBackgroundMusic()
         {
+            if (_NoAudioHardware) return;
             StopBackgroundMusic(false);
         }
 
@@ -177,6 +191,7 @@ namespace CocosDenshion
 
         public void PauseBackgroundMusic()
         {
+            if (_NoAudioHardware) return;
             SharedMusic.Pause();
         }
 
@@ -186,6 +201,7 @@ namespace CocosDenshion
 
         public void ResumeBackgroundMusic()
         {
+            if (_NoAudioHardware) return;
             SharedMusic.Resume();
         }
 
@@ -195,6 +211,7 @@ namespace CocosDenshion
 
         public void RewindBackgroundMusic()
         {
+            if (_NoAudioHardware) return;
             SharedMusic.Rewind();
         }
 
@@ -210,17 +227,25 @@ namespace CocosDenshion
 
         public bool IsBackgroundMusicPlaying()
         {
+            if (_NoAudioHardware) return (false);
             return SharedMusic.IsPlaying();
         }
 
         public void PauseEffect(int fxid) 
         {
+            if (_NoAudioHardware) return;
             try
             {
                 if (SharedList.ContainsKey(fxid))
                 {
                     SharedList[fxid].Pause();
                 }
+            }
+            catch (NoAudioHardwareException ex)
+            {
+                CCLog.Log("NoAudioHardware! while playing a SoundEffect: {0}", fxid);
+                CCLog.Log(ex.ToString());
+                _NoAudioHardware = true;
             }
             catch (Exception ex)
             {
@@ -231,6 +256,7 @@ namespace CocosDenshion
 
         public void StopAllEffects()
         {
+            if (_NoAudioHardware) return;
             List<CCEffectPlayer> l = new List<CCEffectPlayer>();
 
             lock (SharedList)
@@ -255,12 +281,14 @@ namespace CocosDenshion
 
         public int PlayEffect(int fxid)
         {
+            if (_NoAudioHardware) return(-1);
             PlayEffect(fxid, false);
             return (fxid);
         }
 
         public int PlayEffect(int fxid, bool bLoop)
         {
+            if (_NoAudioHardware) return(-1);
             lock (SharedList)
             {
                 try
@@ -292,7 +320,8 @@ namespace CocosDenshion
         /// <returns></returns>
         public int PlayEffect (string pszFilePath, bool bLoop)
         {
-            int nId = pszFilePath.GetHashCode ();
+            if (_NoAudioHardware) return(-1);
+            int nId = pszFilePath.GetHashCode();
 
             PreloadEffect (pszFilePath);
 
@@ -326,6 +355,7 @@ namespace CocosDenshion
         /// <returns></returns>
         public int PlayEffect(string pszFilePath)
         {
+            if (_NoAudioHardware) return(-1);
             return PlayEffect(pszFilePath, false);
         }
 
@@ -335,6 +365,7 @@ namespace CocosDenshion
         /// <param name="nSoundId"></param>
         public void StopEffect(int nSoundId)
         {
+            if (_NoAudioHardware) return;
             lock (SharedList)
             {
                 if (SharedList.ContainsKey(nSoundId))
@@ -356,6 +387,7 @@ namespace CocosDenshion
         /// </summary>
         public void StopAllLoopingEffects()
         {
+            if (_NoAudioHardware) return;
             lock (SharedList)
             {
                 if (_LoopedSounds.Count > 0)
@@ -383,6 +415,7 @@ namespace CocosDenshion
         /// </summary>
         public void PreloadEffect(string pszFilePath)
         {
+            if (_NoAudioHardware) return;
             if (string.IsNullOrEmpty(pszFilePath))
             {
                 return;
@@ -396,9 +429,17 @@ namespace CocosDenshion
                     return;
                 }
             }
-            CCEffectPlayer eff = new CCEffectPlayer();
-            eff.Open(FullPath(pszFilePath), nId);
-            SharedList[nId] = eff;
+            try
+            {
+                CCEffectPlayer eff = new CCEffectPlayer();
+                eff.Open(FullPath(pszFilePath), nId);
+                SharedList[nId] = eff;
+            }
+            catch (NoAudioHardwareException ex)
+            {
+                _NoAudioHardware = true;
+                CCLog.Log(ex.ToString());
+            }
         }
 
         /**
@@ -408,7 +449,8 @@ namespace CocosDenshion
 
         public void UnloadEffect (string pszFilePath)
         {
-            int nId = pszFilePath.GetHashCode ();
+            if (_NoAudioHardware) return;
+            int nId = pszFilePath.GetHashCode();
             lock (SharedList) {
                 if (SharedList.ContainsKey(nId))
                 {
@@ -424,8 +466,5 @@ namespace CocosDenshion
             }
         }
 
-        private static Dictionary<int, CCEffectPlayer> s_List = new Dictionary<int,CCEffectPlayer>();
-        private static CCMusicPlayer s_Music = new CCMusicPlayer();
-        private static CCSimpleAudioEngine _Instance = new CCSimpleAudioEngine();
     }
 }

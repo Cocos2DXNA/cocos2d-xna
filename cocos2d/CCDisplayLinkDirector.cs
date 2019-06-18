@@ -34,10 +34,10 @@ namespace Cocos2D
 
         public override void MainLoop(GameTime gameTime)
         {
-            if (m_bPurgeDirecotorInNextLoop)
+            if (m_bPurgeDirectorInNextLoop)
             {
                 PurgeDirector();
-                m_bPurgeDirecotorInNextLoop = false;
+                m_bPurgeDirectorInNextLoop = false;
             }
             else if (!m_bInvalid)
             {

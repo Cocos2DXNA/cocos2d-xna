@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +14,10 @@ namespace tests
             CCColor3B.Blue,
             CCColor3B.Green,
             CCColor3B.Red,
-            CCColor3B.Magenta
+            CCColor3B.Magenta,
+            CCColor3B.Gray,
+            CCColor3B.Orange,
+            CCColor3B.White
         };
 
         private static Dictionary<int, TouchPoint> s_dic = new Dictionary<int, TouchPoint>();
@@ -44,7 +47,7 @@ namespace tests
                 CCPoint location = touch.Location;
 
                 touchPoint.SetTouchPos(location);
-                touchPoint.SetTouchColor(s_TouchColors[touch.Id % 5]);
+                touchPoint.SetTouchColor(s_TouchColors[touch.Id % s_TouchColors.Length]);
 
                 AddChild(touchPoint);
                 s_dic.Add( touch.Id, touchPoint);
@@ -56,9 +59,12 @@ namespace tests
             foreach(var item in touches)
             {
                 CCTouch touch = item;
-                TouchPoint pTP = s_dic[touch.Id];
-                CCPoint location = touch.Location;
-                pTP.SetTouchPos(location);
+                if (s_dic.ContainsKey(touch.Id))
+                {
+                    TouchPoint pTP = s_dic[touch.Id];
+                    CCPoint location = touch.Location;
+                    pTP.SetTouchPos(location);
+                }
             }
         }
 
@@ -67,9 +73,12 @@ namespace tests
             foreach (var item in touches )
             {
                 CCTouch touch = item;
-                TouchPoint pTP = s_dic[touch.Id];
-                RemoveChild(pTP, true);
-                s_dic.Remove(touch.Id);
+                if (s_dic.ContainsKey(touch.Id))
+                {
+                    TouchPoint pTP = s_dic[touch.Id];
+                    RemoveChild(pTP, true);
+                    s_dic.Remove(touch.Id);
+                }
             }
         }
 

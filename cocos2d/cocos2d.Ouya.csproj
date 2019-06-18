@@ -13,7 +13,8 @@
     <AssemblyName>cocos2d-xna</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <TargetFrameworkVersion>v4.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <AndroidUseLatestPlatformSdk />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,6 +44,9 @@
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="OpenTK" />
+    <Reference Include="Ouya.Console.Api">
+      <HintPath>..\MonoGame\ThirdParty\Dependencies\OUYA\Ouya.Console.Api.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -126,6 +130,7 @@
     <Compile Include="Actions\action_intervals\CCJumpTo.cs" />
     <Compile Include="Actions\action_intervals\CCMoveBy.cs" />
     <Compile Include="Actions\action_intervals\CCMoveTo.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="Actions\action_intervals\CCRepeat.cs" />
     <Compile Include="Actions\action_intervals\CCRepeatForever.cs" />
     <Compile Include="Actions\action_intervals\CCReverseTime.cs" />
@@ -288,6 +293,8 @@
     <Compile Include="misc_nodes\CCRenderTexture.cs" />
     <Compile Include="misc_nodes\CCClippingNode.cs" />
     <Compile Include="misc_nodes\CCDrawNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="particle_nodes\CCParticleBatchNode.cs" />
     <Compile Include="particle_nodes\CCParticleExamples.cs" />
     <Compile Include="particle_nodes\CCParticleSystem.cs" />
@@ -341,7 +348,7 @@
     <Compile Include="Platform\Zlib\ZOutputStream.cs" />
     <Compile Include="Platform\Zlib\ZStream.cs" />
     <Compile Include="Platform\Zlib\ZStreamException.cs" />
-    <Compile Include="predefine\CCMacros.cs" />
+    <Compile Include="predefine\CocosMacros.cs" />
     <Compile Include="predefine\CCProtocols.cs" />
     <Compile Include="predefine\CCTouch.cs" />
     <Compile Include="predefine\ccTypes.cs" />
@@ -418,8 +425,12 @@
       <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
       <Name>box2d.Android</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.Ouya.csproj">
+      <Project>{f200645b-20e1-4d6f-8c70-38656f633cfa}</Project>
+      <Name>MonoGame.Framework.Net.Ouya</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Ouya.csproj">
-      <Project>{8BEA875D-66D2-4A5F-B137-83D262A3851D}</Project>
+      <Project>{8bea875d-66d2-4a5f-b137-83d262a3851d}</Project>
       <Name>MonoGame.Framework.Ouya</Name>
     </ProjectReference>
   </ItemGroup>
@@ -431,7 +442,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="keyboard_dispatcher\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

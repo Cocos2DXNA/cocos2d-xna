@@ -32,6 +32,7 @@
 
 
   <target name="buildnugets" description="Build NuGet Packages">
+    <echo message="Detected : ${os}"/>
     <if test="${os == 'Win32NT'}">
       <property name="nuget.cmd.dir.path" value="${project::get-base-directory()}\tools\nuget.exe" overwrite="true" /> 	
       <property name="nuspec.file.dir.path" value="${project::get-base-directory()}\ProjectTemplates\NuGet\" overwrite="true" />
@@ -60,14 +61,14 @@
       </exec> 
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.Windows.1.3.0.2.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.Windows.1.6.1.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>
       </exec>
       <exec program="${nuget.cmd.dir.path}">
         <arg value="push"/>
-	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsPhone7.1.3.0.2.nupkg"/>
+	<arg value="${packages.dir.path}\Cocos2D-XNA.WindowsPhone7.1.6.1.0.nupkg"/>
 	<arg value="-s"/>
 	<arg value="http://nuget.cocos2dxna.com/"/>
 	<arg value="${apikey}"/>

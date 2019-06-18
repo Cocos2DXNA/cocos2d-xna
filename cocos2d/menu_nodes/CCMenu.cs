@@ -21,6 +21,7 @@ namespace Cocos2D
     {
         public const float kDefaultPadding = 5;
         public const int kCCMenuHandlerPriority = -128;
+        public const int kMaxGraphPriority = 9;
 
         protected bool m_bEnabled;
         protected CCMenuState m_eState;
@@ -156,7 +157,14 @@ namespace Cocos2D
             }
             if (base.Init())
             {
-                TouchPriority = kCCMenuHandlerPriority;
+                if (CCConfiguration.SharedConfiguration.UseGraphPriority)
+                {
+                    TouchPriority = kMaxGraphPriority;
+                }
+                else
+                {
+                    TouchPriority = kCCMenuHandlerPriority;
+                }
                 TouchMode = CCTouchMode.OneByOne;
                 TouchEnabled = true;
 
@@ -266,12 +274,6 @@ namespace Cocos2D
             pDispatcher.SetPriority(newPriority, this);
         }
 
-        public override void RegisterWithTouchDispatcher()
-        {
-            CCDirector pDirector = CCDirector.SharedDirector;
-            pDirector.TouchDispatcher.AddTargetedDelegate(this, kCCMenuHandlerPriority, true);
-        }
-
         public override bool TouchBegan(CCTouch touch)
         {
             if (m_eState != CCMenuState.Waiting || !m_bVisible || !m_bEnabled)
@@ -350,36 +352,34 @@ namespace Cocos2D
         public void AlignItemsVerticallyWithPadding(float padding)
         {
             float width = 0f;
-            float height = -padding;
+            float height = 0f; 
 
             if (m_pChildren != null && m_pChildren.count > 0)
             {
+                height = -padding;
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
-                    height += pChild.ContentSize.Height * pChild.ScaleY + padding;
-                    width = Math.Max(width, pChild.ContentSize.Width);
+                    height += pChild.ContentSizeInPixels.Height  + padding;
+                    width = Math.Max(width, pChild.ContentSizeInPixels.Width );
                 }
-            }
 
-            float y = height / 2.0f;
+                float y = height / 2.0f;
 
-            if (m_pChildren != null && m_pChildren.count > 0)
-            {
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
-                    pChild.Position = new CCPoint(0, y - pChild.ContentSize.Height * pChild.ScaleY / 2.0f);
-                    y -= pChild.ContentSize.Height * pChild.ScaleY + padding;
-                    width = Math.Max(width, pChild.ContentSize.Width);
+                    pChild.Position = new CCPoint(0, y - pChild.ContentSizeInPixels.Height  / 2.0f);
+                    y -= pChild.ContentSizeInPixels.Height  + padding;
+                    width = Math.Max(width, pChild.ContentSizeInPixels.Width );
                 }
             }
             ContentSize = new CCSize(width, height);
@@ -393,32 +393,30 @@ namespace Cocos2D
         public void AlignItemsHorizontallyWithPadding(float padding)
         {
             float height = 0f;
-            float width = -padding;
+            float width = 0f;
             if (m_pChildren != null && m_pChildren.count > 0)
             {
+                width = -padding;
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
-                    if (pChild.Visible)
+                    if (pChild.VisibleInParent)
                     {
-                        width += pChild.ContentSize.Width * pChild.ScaleX + padding;
-                        height = Math.Max(height, pChild.ContentSize.Height);
+                        width += pChild.ContentSizeInPixels.Width + padding;
+                        height = Math.Max(height, pChild.ContentSizeInPixels.Height);
                     }
                 }
-            }
 
-            float x = -width / 2.0f;
+                float x = -width / 2.0f;
 
-            if (m_pChildren != null && m_pChildren.count > 0)
-            {
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren[i];
-                    if (pChild.Visible)
+                    if (pChild.VisibleInParent)
                     {
-                        pChild.Position = new CCPoint(x + pChild.ContentSize.Width * pChild.ScaleX / 2.0f, 0);
-                        x += pChild.ContentSize.Width * pChild.ScaleX + padding;
-                        height = Math.Max(height, pChild.ContentSize.Height);
+                        pChild.Position = new CCPoint(x + pChild.ContentSizeInPixels.Width  / 2.0f, 0);
+                        x += pChild.ContentSizeInPixels.Width  + padding;
+                        height = Math.Max(height, pChild.ContentSizeInPixels.Height * pChild.ScaleY);
                     }
                 }
             }
@@ -440,7 +438,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren.Elements[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -450,7 +448,7 @@ namespace Cocos2D
                     // can not have zero columns on a row
                     Debug.Assert(rowColumns > 0, "");
 
-                    float tmp = pChild.ContentSize.Height;
+                    float tmp = pChild.ContentSizeInPixels.Height;
                     rowHeight = (int) ((rowHeight >= tmp || float.IsNaN(tmp)) ? rowHeight : tmp);
 
                     ++columnsOccupied;
@@ -482,7 +480,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren.Elements[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -497,11 +495,11 @@ namespace Cocos2D
                             x = w/2f; // center of column
                     }
 
-                        float tmp = pChild.ContentSize.Height*pChild.ScaleY;
+                        float tmp = pChild.ContentSizeInPixels.Height*pChild.ScaleY;
                     rowHeight = (int) ((rowHeight >= tmp || float.IsNaN(tmp)) ? rowHeight : tmp);
 
                         pChild.Position = new CCPoint(kDefaultPadding + x - (winSize.Width - 2*kDefaultPadding) / 2,
-                                               y - pChild.ContentSize.Height*pChild.ScaleY / 2);
+                                               y - pChild.ContentSizeInPixels.Height*pChild.ScaleY / 2);
 
                     x += w;
                     ++columnsOccupied;
@@ -541,7 +539,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren.Elements[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -554,11 +552,11 @@ namespace Cocos2D
                     Debug.Assert(columnRows > 0, "");
 
                     // columnWidth = fmaxf(columnWidth, [item contentSize].width);
-                    float tmp = pChild.ContentSize.Width * pChild.ScaleX;
+                    float tmp = pChild.ContentSizeInPixels.Width ;
                     columnWidth = (int)((columnWidth >= tmp || float.IsNaN(tmp)) ? columnWidth : tmp);
 
 
-                    columnHeight += (int)(pChild.ContentSize.Height * pChild.ScaleY + 5);
+                    columnHeight += (int)(pChild.ContentSizeInPixels.Height  + 5);
                     ++rowsOccupied;
 
                     if (rowsOccupied >= columnRows)
@@ -591,7 +589,7 @@ namespace Cocos2D
                 for (int i = 0, count = m_pChildren.count; i < count; i++)
                 {
                     CCNode pChild = m_pChildren.Elements[i];
-                    if (!pChild.Visible)
+                    if (!pChild.VisibleInParent)
                     {
                         continue;
                     }
@@ -603,12 +601,12 @@ namespace Cocos2D
                     }
 
                     // columnWidth = fmaxf(columnWidth, [item contentSize].width);
-                    float tmp = pChild.ContentSize.Width * pChild.ScaleX;
+                    float tmp = pChild.ContentSizeInPixels.Width ;
                     columnWidth = (int)((columnWidth >= tmp || float.IsNaN(tmp)) ? columnWidth : tmp);
 
                     pChild.Position = new CCPoint(x + columnWidths[column] / 2,
                                                   y - winSize.Height / 2);
-                    y -= pChild.ContentSize.Height * pChild.ScaleY + 10;
+                    y -= pChild.ContentSizeInPixels.Height  + 10;
                     ++rowsOccupied;
 
                     if (rowsOccupied >= columnRows)
@@ -634,7 +632,7 @@ namespace Cocos2D
                 for (int i = m_pChildren.count-1; i >= 0; i--)
                 {
                     var pChild = m_pChildren.Elements[i] as CCMenuItem;
-                    if (pChild != null && pChild.Visible && pChild.Enabled)
+                    if (pChild != null && pChild.VisibleInParent && pChild.Enabled)
                     {
                         CCPoint local = pChild.ConvertToNodeSpace(touchLocation);
                         CCRect r = pChild.Rectangle;

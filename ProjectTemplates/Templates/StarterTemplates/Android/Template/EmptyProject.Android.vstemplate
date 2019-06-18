@@ -53,7 +53,7 @@
 	<WizardData>
 		<packages repository="extension"
 			  repositoryId="EmptyProject.88879316-5009-4A2F-B9B3-6387A4C46759">
-			<package id="Cocos2D-XNA.Android" version="1.3.0.2" />
+			<package id="Cocos2D-XNA.Android" version="1.6.0.0" />
 		</packages>
 	</WizardData>
 </VSTemplate>

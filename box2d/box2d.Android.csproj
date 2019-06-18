@@ -11,9 +11,7 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <RootNamespace>Box2D</RootNamespace>
     <AssemblyName>box2d</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <ProductVersion>10.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,12 +23,10 @@
     <WarningLevel>4</WarningLevel>
     <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <XnaCompressContent>false</XnaCompressContent>
     <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Android\Release</OutputPath>
     <DefineConstants>TRACE;ANDROID</DefineConstants>
@@ -38,7 +34,6 @@
     <WarningLevel>4</WarningLevel>
     <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <XnaCompressContent>true</XnaCompressContent>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>

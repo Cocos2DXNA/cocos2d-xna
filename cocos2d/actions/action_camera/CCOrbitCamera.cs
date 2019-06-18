@@ -76,7 +76,7 @@ namespace Cocos2D
             r = (float) Math.Sqrt(x * x + y * y + z * z);
             s = (float) Math.Sqrt(x * x + y * y);
             if (s == 0.0f)
-                s = float.Epsilon;
+                s = CCMacros.FLT_EPSILON;
             if (r == 0.0f)
                 r = float.Epsilon;
 

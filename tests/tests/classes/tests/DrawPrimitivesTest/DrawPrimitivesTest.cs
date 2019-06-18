@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Cocos2D;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace tests
 {
@@ -78,6 +80,53 @@ namespace tests
         }
     }
 
+    #region Lightning Test
+    public class DrawPrimtivesLightningTest : BaseDrawNodeTest
+    {
+        public override string subtitle()
+        {
+            return "Lightning - Basic Bolt - Touch To Strike";
+        }
+        public DrawPrimtivesLightningTest() 
+        {
+            CCSize s = CCDirector.SharedDirector.WinSize;
+            CCLightning lightning = new CCLightning();
+            AddChild(lightning, 10, 55);
+            TouchMode = CCTouchMode.OneByOne;
+            TouchEnabled = true;
+        }
+
+        public override void TouchEnded(CCTouch touch)
+        {
+            base.TouchEnded(touch);
+            CCLightning node = (CCLightning)GetChildByTag(55);
+            node.AddBolt(new CCLightningBolt()
+            {
+                BoltColor = CCLightning.LightningBlue,
+                BoltGlowColor = CCLightning.LightningBlue,
+                Start = CCDirector.SharedDirector.WinSize.Center,
+                End = ConvertToNodeSpace(touch.Location),
+                StrikeTime = (2f * CCMacros.CCRandomBetween0And1()),
+                FadeTime = 0.15f,
+                Width = .5f
+            });
+        }
+        public override bool TouchBegan(CCTouch touch)
+        {
+            CCPoint pt = ConvertToNodeSpace(touch.Location);
+            if (pt.X > 0f && pt.X < CCDirector.SharedDirector.WinSize.Width)
+            {
+                if (pt.Y > 0f && pt.Y < CCDirector.SharedDirector.WinSize.Height)
+                {
+                    return (true);
+                }
+            }
+            return (false);
+        }
+    }
+    #endregion
+
+    #region Render Target Test
     public class DrawPrimitivesWithRenderTextureTest : BaseDrawNodeTest
     {
         public DrawPrimitivesWithRenderTextureTest()
@@ -100,7 +149,9 @@ namespace tests
             AddChild(text, 24);
         }
     }
+    #endregion
 
+    #region Draw Primitives
     public class DrawPrimitivesTest : BaseDrawNodeTest
     {
         public override void Draw()
@@ -197,7 +248,9 @@ namespace tests
 
         }
     }
+    #endregion
 
+    #region Draw Node
     public class DrawNodeTest : BaseDrawNodeTest
     {
         public override bool Init()
@@ -267,4 +320,274 @@ namespace tests
             return true;
         }
     }
+    #endregion
+
+#region RoundRectPrimitive
+
+    public class RoundRectPrimitive : CCNodeRGBA
+    {
+        // This comes from https://cocos2dxna.codeplex.com/discussions/568573#post1309173
+        // This class does not work with the transform.
+
+        private const float kappa = 0.552228474f;
+        protected int _radius;
+        private int _cornerSegments;
+        private CCPoint[] _vertices;
+        private CCPoint[] _polyVertices;
+
+        public RoundRectPrimitive(CCSize size, int radius)
+        {
+            _radius = radius;
+            _cornerSegments = 4;
+            ContentSize = size;
+        }
+        public RoundRectPrimitive(CCSize size, int radius, int cornerSegments)
+        {
+            _radius = radius;
+            _cornerSegments = cornerSegments;
+            ContentSize = size;
+        }
+
+        public override CCSize ContentSize
+        {
+            set
+            {
+                base.ContentSize = value;
+                InitVertices();
+            }
+        }
+        private void AppendCubicBezier(int startPoint, CCPoint[] vertices, CCPoint origin, CCPoint control1, CCPoint control2, CCPoint destination, int segments)
+        {
+            float t = 0;
+            for (int i = 0; i < segments; i++)
+            {
+                float x = (float)Math.Pow(1 - t, 3) * origin.X + 3.0f * (float)Math.Pow(1 - t, 2) * t * control1.X + 3.0f * (1 - t) * t * t * control2.X + t * t * t * destination.X;
+                float y = (float)Math.Pow(1 - t, 3) * origin.Y + 3.0f * (float)Math.Pow(1 - t, 2) * t * control1.Y + 3.0f * (1 - t) * t * t * control2.Y + t * t * t * destination.Y;
+                vertices[startPoint + i] = new CCPoint(x * Scale, y * Scale);
+                t += 1.0f / segments;
+            }
+        }
+        public void InitVertices()
+        {
+            // Creates the vertices all relative to 0,0
+            _vertices = new CCPoint[16];
+
+            // Bottom left
+            _vertices[0] = new CCPoint(1, 1 + _radius);
+            _vertices[1] = new CCPoint(1, 1 + _radius * (1 - kappa));
+            _vertices[2] = new CCPoint(1 + _radius * (1 - kappa), 1);
+            _vertices[3] = new CCPoint(1 + _radius, 1);
+
+            // Bottom right
+            _vertices[4] = new CCPoint(ContentSize.Width - _radius - 1, 1);
+            _vertices[5] = new CCPoint(ContentSize.Width - _radius * (1 - kappa) - 1, 1);
+            _vertices[6] = new CCPoint(ContentSize.Width - 1, 1 + _radius * (1 - kappa));
+            _vertices[7] = new CCPoint(ContentSize.Width - 1, 1 + _radius);
+
+            // Top right
+            _vertices[8] = new CCPoint(ContentSize.Width - 1, 1 + ContentSize.Height - _radius);
+            _vertices[9] = new CCPoint(ContentSize.Width - 1, 1 + ContentSize.Height - _radius * (1 - kappa));
+            _vertices[10] = new CCPoint(ContentSize.Width - _radius * (1 - kappa) - 1, ContentSize.Height - 1);
+            _vertices[11] = new CCPoint(ContentSize.Width - _radius - 1, ContentSize.Height - 1);
+
+            // Top left
+            _vertices[12] = new CCPoint(1 + _radius, ContentSize.Height - 1);
+            _vertices[13] = new CCPoint(1 + _radius * (1 - kappa), ContentSize.Height - 1);
+            _vertices[14] = new CCPoint(1, ContentSize.Height - _radius * (1 - kappa) - 1);
+            _vertices[15] = new CCPoint(1, ContentSize.Height - _radius - 1);
+
+            _polyVertices = new CCPoint[4 * _cornerSegments + 1];
+            AppendCubicBezier(0 * _cornerSegments, _polyVertices, _vertices[0], _vertices[1], _vertices[2], _vertices[3], _cornerSegments);
+            AppendCubicBezier(1 * _cornerSegments, _polyVertices, _vertices[4], _vertices[5], _vertices[6], _vertices[7], _cornerSegments);
+            AppendCubicBezier(2 * _cornerSegments, _polyVertices, _vertices[8], _vertices[9], _vertices[10], _vertices[11], _cornerSegments);
+            AppendCubicBezier(3 * _cornerSegments, _polyVertices, _vertices[12], _vertices[13], _vertices[14], _vertices[15], _cornerSegments);
+            _polyVertices[4 * _cornerSegments] = _vertices[0];
+        }
+        public override void Visit()
+        {
+            base.Visit();
+
+            float dx = Position.X - AnchorPoint.X * ContentSize.Width;
+            float dy = Position.Y - AnchorPoint.Y * ContentSize.Height;
+            CCPoint offset = new CCPoint(dx, dy);
+            CCPoint[] pv = new CCPoint[_polyVertices.Length];
+            for (int i = 0; i < _polyVertices.Length; i++)
+            {
+                pv[i] = _polyVertices[i] + offset;
+            }
+            CCDrawingPrimitives.Begin();
+            CCDrawingPrimitives.DrawSolidPoly(pv, 4 * _cornerSegments + 1, Color);
+            CCDrawingPrimitives.DrawCubicBezier(_vertices[0] + offset, _vertices[1] + offset, _vertices[2] + offset, _vertices[3] + offset, _cornerSegments, Color);
+            CCDrawingPrimitives.DrawCubicBezier(_vertices[4] + offset, _vertices[5] + offset, _vertices[6] + offset, _vertices[7] + offset, _cornerSegments, Color);
+            CCDrawingPrimitives.DrawCubicBezier(_vertices[8] + offset, _vertices[9] + offset, _vertices[10] + offset, _vertices[11] + offset, _cornerSegments, Color);
+            CCDrawingPrimitives.DrawCubicBezier(_vertices[12] + offset, _vertices[13] + offset, _vertices[14] + offset, _vertices[15] + offset, _cornerSegments, Color);
+
+            CCDrawingPrimitives.End();
+
+            CCDrawingPrimitives.Begin();
+            CCDrawingPrimitives.DrawLine(_vertices[3] + offset, _vertices[4] + offset, Color);
+            CCDrawingPrimitives.DrawLine(_vertices[7] + offset, _vertices[8] + offset, Color);
+            CCDrawingPrimitives.DrawLine(_vertices[11] + offset, _vertices[12] + offset, Color);
+            CCDrawingPrimitives.DrawLine(_vertices[15] + offset, _vertices[0] + offset, Color);
+
+            CCDrawingPrimitives.End();
+        }
+    }
+
+    public class DrawPrimitivesRoundRectTest : BaseDrawNodeTest
+    {
+        private const int kTagRoundRect = 5606;
+
+        public DrawPrimitivesRoundRectTest()
+        {
+            TouchMode = CCTouchMode.OneByOne;
+            TouchEnabled = true;
+            RoundRectPrimitive r = new RoundRectPrimitive(new CCSize(180f, 180f), 5);
+            r.Color = CCColor3B.Yellow;
+            r.Position = CCDirector.SharedDirector.WinSize.Center;
+            r.AnchorPoint = CCPoint.AnchorMiddle;
+            AddChild(r, 0, kTagRoundRect);
+        }
+        public override string subtitle()
+        {
+            return "Rounded Rectangle Test - Drag To Resize";
+        }
+        public void updateSize(CCPoint touchLocation)
+        {
+            CCNode l = GetChildByTag(kTagRoundRect);
+            CCPoint s = l.Position;
+            CCSize newSize = new CCSize(Math.Abs(touchLocation.X - s.X) * 2, Math.Abs(touchLocation.Y - s.Y) * 2);
+            l.ContentSize = newSize;
+        }
+
+        public override bool TouchBegan(CCTouch touche)
+        {
+            updateSize(touche.Location);
+            return true;
+        }
+
+        public override void TouchMoved(CCTouch touche)
+        {
+            updateSize(touche.Location);
+        }
+
+        public override void TouchEnded(CCTouch touche)
+        {
+            updateSize(touche.Location);
+        }
+    }
+#endregion
+
+    #region RoundRectPrimitive
+
+    public class RoundRectSprite : CCSprite
+    {
+        // This comes from https://cocos2dxna.codeplex.com/discussions/568573#post1309173
+        // This class does not work with the transform.
+
+        private RoundRectPrimitive _Rect;
+        private CCTexture2D _Texture;
+
+        public RoundRectSprite(CCSize size, int radius)
+        {
+            _Rect = new RoundRectPrimitive(size, radius);
+        }
+        public RoundRectSprite(CCSize size, int radius, int cornerSegments)
+        {
+            _Rect = new RoundRectPrimitive(size, radius, cornerSegments);
+        }
+
+        private CCRenderTexture _Render;
+
+        public override CCSize ContentSize
+        {
+            set
+            {
+                base.ContentSize = value;
+                _Texture = null;
+                if (_Rect != null)
+                {
+                    _Rect.ContentSize = value;
+                }
+                int iw = (int)value.Width;
+                int ih = (int)value.Height;
+                if (iw > 0f && ih > 0f)
+                {
+                    _Rect.RemoveFromParent();
+                    _Render = new CCRenderTexture((int)value.Width, (int)value.Height, SurfaceFormat.Color, DepthFormat.None, RenderTargetUsage.PreserveContents);
+                    _Render.AddChild(_Rect, 0);
+                }
+            }
+        }
+
+        public override CCPoint Position
+        {
+            set
+            {
+                base.Position = value;
+                _Texture = null;
+            }
+        }
+        public override void Visit()
+        {
+            if((_Texture == null || _Texture.IsDisposed || _Texture.XNATexture == null) && _Rect != null && _Render != null) {
+                CCSize s = ContentSize;
+                if (s.Width >= 1f && s.Height >= 1f)
+                {
+                    _Render.Clear(0, 0, 0, 255);
+                    _Render.Begin();
+                    _Rect.Visit();
+                    _Render.End();
+                    _Texture = _Render.Sprite.Texture;
+                    InitWithTexture(_Texture);
+                }
+            }
+            base.Visit();
+        }
+    }
+
+    public class DrawPrimitivesRoundRectSpriteTest : BaseDrawNodeTest
+    {
+        private const int kTagRoundRect = 5606;
+
+        public DrawPrimitivesRoundRectSpriteTest()
+        {
+            TouchMode = CCTouchMode.OneByOne;
+            TouchEnabled = true;
+            RoundRectSprite r = new RoundRectSprite(new CCSize(180f, 180f), 5);
+            r.Color = CCColor3B.Yellow;
+            r.Position = CCDirector.SharedDirector.WinSize.Center;
+            r.AnchorPoint = CCPoint.AnchorMiddle;
+            AddChild(r, 0, kTagRoundRect);
+        }
+        public override string subtitle()
+        {
+            return "Rounded Rect Sprite Test - Drag To Resize";
+        }
+        public void updateSize(CCPoint touchLocation)
+        {
+            CCNode l = GetChildByTag(kTagRoundRect);
+            CCPoint s = l.Position;
+            CCSize newSize = new CCSize(Math.Abs(touchLocation.X - s.X) * 2, Math.Abs(touchLocation.Y - s.Y) * 2);
+            newSize = newSize.Clamp(CCDirector.SharedDirector.WinSize);
+            l.ContentSize = newSize;
+        }
+
+        public override bool TouchBegan(CCTouch touche)
+        {
+            updateSize(touche.Location);
+            return true;
+        }
+
+        public override void TouchMoved(CCTouch touche)
+        {
+            updateSize(touche.Location);
+        }
+
+        public override void TouchEnded(CCTouch touche)
+        {
+            updateSize(touche.Location);
+        }
+    }
+    #endregion
 }

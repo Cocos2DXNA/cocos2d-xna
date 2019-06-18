@@ -57,11 +57,17 @@ namespace Cocos2D
             get { return m_prevPoint; }
         }
 
+        /// <summary>
+        /// Returns the location of the touch point in GL coordinates using ConvertToGl in CCDirector.
+        /// </summary>
         public CCPoint Location
         {
             get { return CCDirector.SharedDirector.ConvertToGl(m_point); }
         }
 
+        /// <summary>
+        /// Returns the previous location of the touch point in GL coordinates using ConvertToGl in CCDirector.
+        /// </summary>
         public CCPoint PreviousLocation
         {
             get { return CCDirector.SharedDirector.ConvertToGl(m_prevPoint); }
@@ -73,9 +79,22 @@ namespace Cocos2D
             get { return m_nId; }
         }
 
+        /// <summary>
+        /// Returns the difference, in GL coordinate space, of the last location and this current location.
+        /// </summary>
         public CCPoint Delta
         {
             get { return Location - PreviousLocation; }
+        }
+
+        /// <summary>
+        /// The touch delegate that consumed this touch. This is designed only for the one-at-a-time handler
+        /// of touches.
+        /// </summary>
+        internal CCTargetedTouchHandler Consumer
+        {
+            get;
+            set;
         }
 
         public void SetTouchInfo(int id, float x, float y)

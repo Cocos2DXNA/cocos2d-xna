@@ -61,7 +61,7 @@ namespace Cocos2D
             m_fDelay = delay;
             m_bUseDelay = delay > 0f;
             m_uRepeat = repeat;
-            m_bRunForever = m_uRepeat == uint.MaxValue;
+            m_bRunForever = (m_uRepeat == CCScheduler.kCCRepeatForever);
         }
 
         /*
@@ -102,6 +102,11 @@ namespace Cocos2D
                         }
                         */
                         Interval = OriginalInterval - (m_fElapsed - Interval);
+                        m_fElapsed = 0f;
+                        if (Interval < 0f)
+                        {
+                            Interval = OriginalInterval;
+                        }
                     }
                 }
                 else
@@ -180,9 +185,12 @@ namespace Cocos2D
 {
     public class CCScheduler
     {
-        public const uint kCCRepeatForever = uint.MaxValue - 1;
+        public const uint kCCRepeatForever = uint.MaxValue;
         public const int kCCPrioritySystem = int.MinValue;
         public const int kCCPriorityNonSystemMin = kCCPrioritySystem + 1;
+
+        private static HashTimeEntry[] s_pTmpHashSelectorArray = new HashTimeEntry[128];
+        private static ICCSelectorProtocol[] s_pTmpSelectorArray = new ICCSelectorProtocol[128];
 
         private readonly Dictionary<ICCSelectorProtocol, HashTimeEntry> m_pHashForTimers =
             new Dictionary<ICCSelectorProtocol, HashTimeEntry>();
@@ -201,8 +209,25 @@ namespace Cocos2D
 
         public float TimeScale = 1.0f;
 
-        private static HashTimeEntry[] s_pTmpHashSelectorArray = new HashTimeEntry[128];
-        private static ICCSelectorProtocol[] s_pTmpSelectorArray = new ICCSelectorProtocol[128];
+        public event Action<Exception> OnUnhandledException;
+
+        private void UpdateTarget(ICCSelectorProtocol target, float dt)
+        {
+            if (OnUnhandledException == null)
+            {
+                target.Update(dt);
+                return;
+            }
+
+            try
+            {
+                target.Update(dt);
+            }
+            catch (Exception exception)
+            {
+                OnUnhandledException(exception);
+            }
+        }
 
         internal void update(float dt)
         {
@@ -224,7 +249,7 @@ namespace Cocos2D
                     next = node.Next;
                     if (!node.Value.Paused && !node.Value.MarkedForDeletion)
                     {
-                        node.Value.Target.Update(dt);
+                        UpdateTarget(node.Value.Target, dt);
                     }
                 }
 
@@ -235,7 +260,7 @@ namespace Cocos2D
                     next = node.Next;
                     if (!node.Value.Paused && !node.Value.MarkedForDeletion)
                     {
-                        node.Value.Target.Update(dt);
+                        UpdateTarget(node.Value.Target, dt);
                     }
                 }
 
@@ -245,7 +270,7 @@ namespace Cocos2D
                     next = node.Next;
                     if (!node.Value.Paused && !node.Value.MarkedForDeletion)
                     {
-                        node.Value.Target.Update(dt);
+                        UpdateTarget(node.Value.Target, dt);
                     }
                 }
 
@@ -260,7 +285,7 @@ namespace Cocos2D
                 for (int i = 0; i < count; i++)
                 {
                     ICCSelectorProtocol key = s_pTmpSelectorArray[i];
-                    if (!m_pHashForTimers.ContainsKey(key))
+					if (key == null || !m_pHashForTimers.ContainsKey(key))
                     {
                         continue;
                     }
@@ -269,7 +294,7 @@ namespace Cocos2D
                     m_pCurrentTarget = elt;
                     m_bCurrentTargetSalvaged = false;
 
-                    if (!m_pCurrentTarget.Paused)
+                    if (elt != null && !m_pCurrentTarget.Paused)
                     {
                         // The 'timers' array may change while inside this loop
                         for (elt.TimerIndex = 0; elt.TimerIndex < elt.Timers.Count; ++elt.TimerIndex)
@@ -277,10 +302,8 @@ namespace Cocos2D
                             elt.CurrentTimer = elt.Timers[elt.TimerIndex];
 							if(elt.CurrentTimer != null) {
 	                            elt.CurrentTimerSalvaged = false;
-
-	                            elt.CurrentTimer.Update(dt);
-
-	                            elt.CurrentTimer = null;
+                                UpdateTarget(elt.CurrentTimer, dt);
+                                elt.CurrentTimer = null;
 							}
                         }
                     }
@@ -474,7 +497,10 @@ namespace Cocos2D
                 for (int i = 0; i < element.Timers.Count; i++)
                 {
                     var timer = element.Timers[i];
-
+                    if (timer == null)
+                    {
+                        continue;
+                    }
                     if (selector == timer.Selector)
                     {
                         if (timer == element.CurrentTimer && (!element.CurrentTimerSalvaged))

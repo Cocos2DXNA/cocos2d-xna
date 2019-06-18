@@ -3,14 +3,21 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8216229C-FF49-4ECC-A4D9-6ADAA3B3DEE6}</ProjectGuid>
-    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>$safeprojectname$</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>$safeprojectname$</AssemblyName>
+    <MonoGamePlatform>iOS</MonoGamePlatform>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <PublishUrl>publish\</PublishUrl>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,6 +51,7 @@
     <ConsolePause>false</ConsolePause>
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -53,6 +61,8 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchArch>ARMv7,ARMv7s,ARM64</MtouchArch>
+    <MtouchSdkVersion>3.0</MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>
@@ -72,6 +82,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Distribution</CodesignKey>
+    <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -93,11 +104,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Reference Include="box2diOS">
-      <HintPath>..\..\..\..\..\cocos2d\bin\iPhone\Release\box2diOS.dll</HintPath>
+    <Reference Include="box2d">
+      <HintPath>..\..\..\..\..\cocos2d\bin\iPhone\Release\box2d.dll</HintPath>
     </Reference>
-    <Reference Include="cocos2d-xna.iOS">
-      <HintPath>..\..\..\..\..\cocos2d\bin\iPhone\Release\cocos2d-xna.iOS.dll</HintPath>
+    <Reference Include="cocos2d-xna">
+      <HintPath>..\..\..\..\..\cocos2d\bin\iPhone\Release\cocos2d-xna.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\..\..\..\cocos2d\bin\iPhone\Release\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -108,13 +119,14 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>..\..\..\..\..\cocos2d\bin\iPhone\Release\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.iOS"/>
+    <Reference Include="OpenTK-1.0" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="monotouch" />
     <Reference Include="zlib.net">
       <HintPath>..\..\..\..\..\cocos2d\bin\iPhone\Release\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

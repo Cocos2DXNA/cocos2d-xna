@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework.Media;
+using MediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
 #if WINDOWS_PHONE8
 using Microsoft.Phone.Shell;
 #endif
@@ -35,7 +36,7 @@ namespace CocosDenshion
         public CCMusicPlayer()
         {
             m_nSoundId = 0;
-            if (MediaPlayer.State == MediaState.Playing)
+            if (Microsoft.Xna.Framework.Media.MediaPlayer.State == MediaState.Playing)
             {
                 SaveMediaState();
             }
@@ -44,14 +45,14 @@ namespace CocosDenshion
         public float Volume
         {
             get { 
-                return MediaPlayer.Volume; 
+                return Microsoft.Xna.Framework.Media.MediaPlayer.Volume; 
             }
 
             set
             {
                 if (value >= 0.0f && value <= 1.0f)
                 {
-                    MediaPlayer.Volume = value;
+                    Microsoft.Xna.Framework.Media.MediaPlayer.Volume = value;
                 }
             }
         }
@@ -66,13 +67,13 @@ namespace CocosDenshion
             try
             {
                 // User is playing a song, so remember the song state.
-                m_SongToPlayAfterClose = MediaPlayer.Queue.ActiveSong;
-                m_VolumeAfterClose = MediaPlayer.Volume;
+                m_SongToPlayAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Queue.ActiveSong;
+                m_VolumeAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.Volume;
 #if !NETFX_CORE
-                m_PlayPositionAfterClose = MediaPlayer.PlayPosition;
+                m_PlayPositionAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.PlayPosition;
 #endif
-                m_IsRepeatingAfterClose = MediaPlayer.IsRepeating;
-                m_IsShuffleAfterClose = MediaPlayer.IsShuffled;
+                m_IsRepeatingAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating;
+                m_IsShuffleAfterClose = Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled;
             }
             catch (Exception ex)
             {
@@ -87,10 +88,10 @@ namespace CocosDenshion
             {
                 try
                 {
-                MediaPlayer.IsShuffled = m_IsShuffleAfterClose;
-                MediaPlayer.IsRepeating = m_IsRepeatingAfterClose;
-                MediaPlayer.Volume = m_VolumeAfterClose;
-                MediaPlayer.Play(m_SongToPlayAfterClose);
+                    Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled = m_IsShuffleAfterClose;
+                    Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating = m_IsRepeatingAfterClose;
+                    Microsoft.Xna.Framework.Media.MediaPlayer.Volume = m_VolumeAfterClose;
+                    Microsoft.Xna.Framework.Media.MediaPlayer.Play(m_SongToPlayAfterClose);
             }
                 catch (Exception ex)
                 {
@@ -131,8 +132,8 @@ namespace CocosDenshion
         {
             if (null != m_music)
             {
-                MediaPlayer.IsRepeating = bLoop;
-                MediaPlayer.Play(m_music);
+                Microsoft.Xna.Framework.Media.MediaPlayer.IsRepeating = bLoop;
+                Microsoft.Xna.Framework.Media.MediaPlayer.Play(m_music);
                 m_didPlayGameSong = true;
             }
         }
@@ -156,7 +157,7 @@ namespace CocosDenshion
         /// </summary>
         public void Pause()
         {
-            MediaPlayer.Pause();
+            Microsoft.Xna.Framework.Media.MediaPlayer.Pause();
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace CocosDenshion
         /// </summary>
         public void Resume()
         {
-            MediaPlayer.Resume();
+            Microsoft.Xna.Framework.Media.MediaPlayer.Resume();
         }
 
         /// <summary>
@@ -172,7 +173,7 @@ namespace CocosDenshion
         /// </summary>
         public void Stop()
         {
-            MediaPlayer.Stop();
+            Microsoft.Xna.Framework.Media.MediaPlayer.Stop();
         }
 
         /// <summary>
@@ -180,17 +181,17 @@ namespace CocosDenshion
         /// </summary>
         public void Rewind()
         {
-            Song s = MediaPlayer.Queue.ActiveSong;
+            Song s = Microsoft.Xna.Framework.Media.MediaPlayer.Queue.ActiveSong;
 
             Stop();
 
             if (null != m_music)
             {
-                MediaPlayer.Play(m_music);
+                Microsoft.Xna.Framework.Media.MediaPlayer.Play(m_music);
             }
             else if (s != null)
             {
-                MediaPlayer.Play(s);
+                Microsoft.Xna.Framework.Media.MediaPlayer.Play(s);
             }
         }
 
@@ -201,7 +202,7 @@ namespace CocosDenshion
         /// <returns></returns>
         public bool IsPlaying()
         {
-            if (MediaState.Playing == MediaPlayer.State)
+            if (MediaState.Playing == Microsoft.Xna.Framework.Media.MediaPlayer.State)
             {
                 return true;
             }
@@ -219,7 +220,7 @@ namespace CocosDenshion
             {
                 return (false);
             }
-            if (MediaState.Playing == MediaPlayer.State)
+            if (MediaState.Playing == Microsoft.Xna.Framework.Media.MediaPlayer.State)
             {
                 return true;
             }

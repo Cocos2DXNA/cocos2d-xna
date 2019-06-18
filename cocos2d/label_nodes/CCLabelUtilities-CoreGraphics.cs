@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 using System.Runtime.InteropServices;
-using System.Drawing;
+using CoreGraphics;
 using System.IO;
 
 #if MACOS
@@ -12,11 +12,11 @@ using MonoMac.CoreText;
 using MonoMac.ImageIO;
 
 #else
-using MonoTouch.CoreGraphics;
-using MonoTouch.UIKit;
-using MonoTouch.Foundation;
-using MonoTouch.CoreText;
-using MonoTouch.ImageIO;
+using CoreGraphics;
+using UIKit;
+using Foundation;
+using CoreText;
+using ImageIO;
 #endif
 
 namespace Cocos2D
@@ -47,10 +47,10 @@ namespace Cocos2D
 			NSUrl url = NSUrl.FromFilename (fileName);
 
 			// Create an image destination that saves into the imgData 
-			CGImageDestination dest = CGImageDestination.FromUrl (url, typeIdentifier, 1);
+            CGImageDestination dest = CGImageDestination.Create (url, typeIdentifier, 1);
 
 			// Add an image to the destination
-			dest.AddImage(bitmap.GetImage(), null);
+            dest.AddImage(bitmap.GetImage(), (NSDictionary)null);
 
 			// Finish the export
 			bool success = dest.Close ();
@@ -95,31 +95,31 @@ namespace Cocos2D
 			                                     bitmapInfo);
 
 			// This works for now but we need to look into initializing the memory area itself
-			bitmapContext.ClearRect (new RectangleF (0,0,width,height));
+			bitmapContext.ClearRect (new CGRect (0,0,width,height));
 
 			return bitmapContext;
 
 		}
 
 		internal static CGImage GetImage (this CGBitmapContext bitmapContext)
-		{
-			var provider = new CGDataProvider (bitmapContext.Data, bitmapContext.BytesPerRow * bitmapContext.Height, true);
+        {
+            var provider = new CGDataProvider (bitmapContext.Data, (int)(bitmapContext.BytesPerRow * bitmapContext.Height), true);
 
-			var NativeCGImage = new CGImage (bitmapContext.Width, 
-			                                 bitmapContext.Height, 
-			                                 bitmapContext.BitsPerComponent, 
-			                                 bitmapContext.BitsPerPixel, 
-			                                 bitmapContext.BytesPerRow, 
-			                                 bitmapContext.ColorSpace,  
-			                                 (CGBitmapFlags)bitmapContext.BitmapInfo,
-			                                 provider, 
-			                                 null, 
-			                                 false, 
-			                                 CGColorRenderingIntent.Default);
-			return NativeCGImage;
-		}
+            var NativeCGImage = new CGImage ((int)bitmapContext.Width, 
+                                        (int)bitmapContext.Height, 
+                (int)bitmapContext.BitsPerComponent, 
+                (int)bitmapContext.BitsPerPixel, 
+                (int)bitmapContext.BytesPerRow, 
+                                        bitmapContext.ColorSpace,  
+                                        (CGBitmapFlags)bitmapContext.BitmapInfo,
+                                        provider, 
+                                        null, 
+                                        false, 
+                                        CGColorRenderingIntent.Default);
+            return NativeCGImage;
+        }
 
-		internal static void NativeDrawString (CGBitmapContext bitmapContext, string s, CTFont font, CCColor4B brush, RectangleF layoutRectangle)
+		internal static void NativeDrawString (CGBitmapContext bitmapContext, string s, CTFont font, CCColor4B brush, CGRect layoutRectangle)
 		{
 			if (font == null)
 				throw new ArgumentNullException ("font");
@@ -138,16 +138,16 @@ namespace Cocos2D
 			var attributedString = buildAttributedString(s, font, brush);
 
 			// Work out the geometry
-			RectangleF insetBounds = layoutRectangle;
+			CGRect insetBounds = layoutRectangle;
 
-			PointF textPosition = new PointF(insetBounds.X,
+			CGPoint textPosition = new CGPoint(insetBounds.X,
 			                                 insetBounds.Y);
 
-			float boundsWidth = insetBounds.Width;
+            float boundsWidth = (float)insetBounds.Width;
 
 			// Calculate the lines
-			int start = 0;
-			int length = attributedString.Length;
+			nint start = 0;
+            nint length = attributedString.Length;
 
 			var typesetter = new CTTypesetter(attributedString);
 
@@ -157,15 +157,17 @@ namespace Cocos2D
 			// are using anything but Top
 			if (vertical != CCVerticalTextAlignment.Top) {
 				while (start < length) {
-					int count = typesetter.SuggestLineBreak (start, boundsWidth);
-					var line = typesetter.GetLine (new NSRange(start, count));
+
+                    nint count = typesetter.SuggestLineBreak((int)start, (double)boundsWidth);
+
+                    var line = typesetter.GetLine (new NSRange(start, count));
 
 					// Create and initialize some values from the bounds.
-					float ascent;
-					float descent;
-					float leading;
-					line.GetTypographicBounds (out ascent, out descent, out leading);
-					baselineOffset += (float)Math.Ceiling (ascent + descent + leading + 1); // +1 matches best to CTFramesetter's behavior  
+					nfloat ascent;
+					nfloat descent;
+					nfloat leading;
+                    line.GetTypographicBounds(out ascent, out descent, out leading);
+                    baselineOffset += (float)Math.Ceiling ((float)(ascent + descent + leading + 1)); // +1 matches best to CTFramesetter's behavior  
 					line.Dispose ();
 					start += count;
 				}
@@ -179,13 +181,13 @@ namespace Cocos2D
 				// Now we ask the typesetter to break off a line for us.
 				// This also will take into account line feeds embedded in the text.
 				//  Example: "This is text \n with a line feed embedded inside it"
-				int count = typesetter.SuggestLineBreak(start, boundsWidth);
+                nint count = typesetter.SuggestLineBreak((int)start, (double)boundsWidth);
 				var line = typesetter.GetLine(new NSRange(start, count));
 
 				// Create and initialize some values from the bounds.
-				float ascent;
-				float descent;
-				float leading;
+				nfloat ascent;
+				nfloat descent;
+				nfloat leading;
 				line.GetTypographicBounds(out ascent, out descent, out leading);
 
 				// Calculate the string format if need be
@@ -244,12 +246,12 @@ namespace Cocos2D
 			// for now just a line not sure if this is going to work
 			CTLine line = new CTLine(atts);
 
-			float ascent;
-			float descent;
-			float leading;
+			nfloat ascent;
+			nfloat descent;
+			nfloat leading;
 			abc = new ABCFloat[1];
 			abc[0].abcfB = (float)line.GetTypographicBounds(out ascent, out descent, out leading);
-			abc [0].abcfB += leading;
+            abc [0].abcfB += (float)leading;
 		}
 
 		internal static CCSize MeasureString (string textg, CTFont font, CCRect rect)
@@ -261,12 +263,12 @@ namespace Cocos2D
 			CTLine line = new CTLine(atts);
 
 			// Create and initialize some values from the bounds.
-			float ascent;
-			float descent;
-			float leading;
+			nfloat ascent;
+			nfloat descent;
+			nfloat leading;
 			double lineWidth = line.GetTypographicBounds(out ascent, out descent, out leading);
 
-			var measure = new CCSize((float)lineWidth + leading, ascent + descent);
+            var measure = new CCSize((float)(lineWidth + leading), (float)(ascent + descent));
 
 			return measure;
 		}
@@ -457,10 +459,10 @@ namespace Cocos2D
 				return 0;
 
 			// Get the ascent from the font, already scaled for the font's size
-			lineHeight += font.AscentMetric;
+            lineHeight += (float)font.AscentMetric;
 
 			// Get the descent from the font, already scaled for the font's size
-			lineHeight += font.DescentMetric;
+            lineHeight += (float)font.DescentMetric;
 
 			// Get the leading from the font, already scaled for the font's size
 			//lineHeight += font.LeadingMetric;

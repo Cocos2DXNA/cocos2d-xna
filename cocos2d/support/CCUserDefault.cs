@@ -101,6 +101,12 @@ namespace Cocos2D
     	}
 
     #if NETFX_CORE
+        /// <summary>
+        /// This verifies that the save file is created. An AggregateException can be thrown
+        /// in the inner async method that creates the save file. If that occurs, it means the file
+        /// could not be created.
+        /// </summary>
+        /// <returns></returns>
         private StorageDevice CheckStorageDevice() {
             if(myDevice != null) {
                 return(myDevice);
@@ -111,7 +117,7 @@ namespace Cocos2D
             myDevice = StorageDevice.EndShowSelector(result);
             if(myDevice != null) {
                 result =
-                    myDevice.BeginOpenContainer("Save Your Game...", null, null);
+                    myDevice.BeginOpenContainer(XML_FILE_NAME, null, null);
                 // Wait for the WaitHandle to become signaled.
                 result.AsyncWaitHandle.WaitOne();
                 myIsolatedStorage = myDevice.EndOpenContainer(result);
@@ -167,7 +173,7 @@ namespace Cocos2D
     #endif
         }
 
-    	public void PurgeSharedUserDefault()
+    	public static void PurgeSharedUserDefault()
     	{
     		m_spUserDefault = null;
     	}

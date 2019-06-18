@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Content;
+using System.IO;
+using System.Text;
 
 namespace Cocos2D
 {
 #if IOS
-    [MonoTouch.Foundation.Preserve (AllMembers = true)]
+    [Foundation.Preserve (AllMembers = true)]
 #endif
     public class CCBMFontConfiguration
     {
@@ -71,6 +73,20 @@ namespace Cocos2D
                 }
             }
             return null;
+        }
+
+        public static CCBMFontConfiguration Create(Stream fntFile, string fntFileName)
+        {
+            var pRet = new CCBMFontConfiguration();
+            using (StreamReader sr = new StreamReader(fntFile))
+            {
+                string contents = sr.ReadToEnd();
+                if (pRet.InitWithString(contents, fntFileName))
+                {
+                    return pRet;
+                }
+            }
+            return (null);
         }
 
         protected virtual bool InitWithFNTFile(string fntFile)
@@ -176,9 +192,74 @@ namespace Cocos2D
         {
             //////////////////////////////////////////////////////////////////////////
             // line to parse:
-            // char id=32   x=0     y=0     width=0     height=0     xoffset=0     yoffset=44    xadvance=14     page=0  chnl=0 
+            // char id=32   x=0     y=0     width=0     height=0     xoffset=0     yoffset=44    xadvance=14     page=0  chnl=0 letter=\"f\"\r
             //////////////////////////////////////////////////////////////////////////
 
+            StringBuilder sbuf = new StringBuilder();
+            string token = null;
+            string value = null;
+            int mode = 0; // 0 = token, 1 = value, 2 = munger
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+                if (c == '=' && mode == 0)
+                {
+                    token = sbuf.ToString();
+                    sbuf.Length = 0;
+                    mode = 1; // expecting a value now
+                }
+                else if ((char.IsWhiteSpace(c) || i == (line.Length-1)) && mode == 1)
+                {
+                    // End of value, save it
+                    value = sbuf.ToString();
+                    sbuf.Length = 0;
+                    mode = 2; // expecting to munge noise
+                    // Process the token/value
+                    switch (token)
+                    {
+                        case "char id":
+                            characterDefinition.charID = Cocos2D.CCUtils.CCParseInt(value);
+                            break;
+                        case "x":
+                            characterDefinition.rect.Origin.X = Cocos2D.CCUtils.CCParseFloat(value);
+                            break;
+                        case "y":
+                            characterDefinition.rect.Origin.Y = Cocos2D.CCUtils.CCParseFloat(value);
+                            break;
+                        case "width":
+                            characterDefinition.rect.Size.Width = Cocos2D.CCUtils.CCParseFloat(value);
+                            break;
+                        case "height":
+                            characterDefinition.rect.Size.Height = Cocos2D.CCUtils.CCParseFloat(value);
+                            break;
+                        case "xoffset":
+                            characterDefinition.xOffset = Cocos2D.CCUtils.CCParseInt(value);
+                            break;
+                        case "yoffset":
+                            characterDefinition.yOffset = Cocos2D.CCUtils.CCParseInt(value);
+                            break;
+                        case "xadvance":
+                            characterDefinition.xAdvance = Cocos2D.CCUtils.CCParseInt(value);
+                            break;
+                        case "page":
+                            break;
+                        case "chnl":
+                            break;
+                        case "letter":
+                            break;
+                    }
+                }
+                else if (mode == 2 && !char.IsWhiteSpace(c))
+                {
+                    mode = 0; // token time
+                    sbuf.Append(c);
+                }
+                else if (mode == 0 || mode == 1)
+                {
+                    sbuf.Append(c);
+                }
+            }
+            /*
             // Character ID
             int index = line.IndexOf("id=");
             int index2 = line.IndexOf(' ', index);
@@ -227,6 +308,7 @@ namespace Cocos2D
             index2 = line.IndexOf(' ', index);
             value = line.Substring(index, index2 - index);
             characterDefinition.xAdvance = Cocos2D.CCUtils.CCParseInt(value.Replace("xadvance=", ""));
+             */
         }
 
         // info face

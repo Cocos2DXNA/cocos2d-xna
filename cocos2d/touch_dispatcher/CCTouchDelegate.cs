@@ -7,20 +7,24 @@ namespace Cocos2D
     {
         protected Dictionary<int, string> m_pEventTypeFuncMap;
 
-        /// <summary>
-        /// ! call the release() in child(layer or menu)
-        /// </summary>
-        public virtual void Destroy()
+        public virtual int TouchPriority
         {
+            get
+            {
+                return (0);
+            }
         }
-
-        /// <summary>
-        /// ! call the retain() in child (layer or menu)
-        /// </summary>
-        public virtual void Keep()
+        public virtual bool VisibleForTouches
         {
+            get
+            {
+                return (true);
+            }
+            set
+            {
+                // do nothing
+            }
         }
-
         /// <summary>
         /// functions for script call back
         /// </summary>
@@ -34,7 +38,7 @@ namespace Cocos2D
             (m_pEventTypeFuncMap)[eventType] = pszScriptFunctionName;
         }
 
-        public bool IsScriptHandlerExist(int eventType)
+        public bool DoesScriptHandlerExist(int eventType)
         {
             if (m_pEventTypeFuncMap != null)
             {

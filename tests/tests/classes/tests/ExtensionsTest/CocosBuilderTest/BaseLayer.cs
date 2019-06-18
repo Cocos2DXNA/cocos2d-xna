@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Cocos2D;
 using ValueType = Cocos2D.CCBValueType;
@@ -99,7 +99,7 @@ namespace tests.Extensions
 
         #region CCBSelectorResolver Members
 
-		public Action<object> OnResolveCCBCCMenuItemSelector(object target, string pSelectorName)
+		public Action<CCMenuItem> OnResolveCCBCCMenuItemSelector(object target, string pSelectorName)
         {
             MethodInfo methodInfo = GetType().GetMethod(pSelectorName);
             if (methodInfo == null)
@@ -109,9 +109,9 @@ namespace tests.Extensions
             if (methodInfo != null)
             {
 #if NETFX_CORE
-				return (Action<object>)methodInfo.CreateDelegate(typeof(Action<object>), this);
+				return (Action<CCMenuItem>)methodInfo.CreateDelegate(typeof(Action<CCMenuItem>), this);
 #else
-                return (Action<object>)Delegate.CreateDelegate(typeof(Action<object>), this, methodInfo);
+                return (Action<CCMenuItem>)Delegate.CreateDelegate(typeof(Action<CCMenuItem>), this, methodInfo);
 #endif
             }
             else

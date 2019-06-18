@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,6 +13,9 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>TestWin8Store_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <TargetFrameworkVersion />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>ARM</PlatformTarget>
@@ -36,7 +39,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\WindowsStore\ARM\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_STOREAPP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
@@ -46,7 +49,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_STOREAPP</DefineConstants>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
@@ -80,7 +83,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\WindowsStore\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINRT</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -814,6 +817,9 @@
     <Compile Include="..\tests\tests\classes\tests\Box2DTestBet\Tests\SensorTest.cs">
       <Link>classes\tests\Box2DTestBet\Tests\SensorTest</Link>
     </Compile>
+    <Compile Include="..\tests\tests\classes\tests\MotionStreakTest\LightningStreakTest.cs">
+      <Link>classes\tests\MotionStreakTest\LightningStreakTest.cs</Link>
+    </Compile>
     <Compile Include="..\tests\tests\classes\tests\MultiTouchTest\MultiTouchTest.cs">
       <Link>classes\tests\MultiTouchTest\MultiTouchTest.cs</Link>
     </Compile>
@@ -1293,6 +1299,9 @@
     </Compile>
     <Compile Include="..\tests\tests\classes\tests\ParallaxTest\Parallax1.cs">
       <Link>classes\tests\ParallaxTest\Parallax1</Link>
+    </Compile>
+    <Compile Include="..\tests\tests\classes\tests\ParallaxTest\ParallaxScrollTest.cs">
+      <Link>classes\tests\ParallaxTest\ParallaxScrollTest</Link>
     </Compile>
     <Compile Include="..\tests\tests\classes\tests\ParallaxTest\Parallax2.cs">
       <Link>classes\tests\ParallaxTest\Parallax2</Link>
@@ -1775,8 +1784,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
-    <VisualStudioVersion>11.0</VisualStudioVersion>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

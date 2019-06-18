@@ -44,7 +44,7 @@ namespace Cocos2D
         private readonly List<CCScene> m_pobScenesStack = new List<CCScene>();
         private bool m_bNextDeltaTimeZero;
         private bool m_bPaused;
-        protected bool m_bPurgeDirecotorInNextLoop; // this flag will be set to true in end()
+        protected bool m_bPurgeDirectorInNextLoop; // this flag will be set to true in end()
         private bool m_bSendCleanupToScene;
         protected double m_dAnimationInterval;
         protected double m_dOldAnimationInterval;
@@ -333,6 +333,9 @@ namespace Cocos2D
             set { m_pProjectionDelegate = value; }
         }
 
+        /// <summary>
+        /// Calls SetViewPortInPoints found in CCDrawManager. This will setup the project viewport.
+        /// </summary>
         public void SetViewport()
         {
             CCDrawManager.SetViewPortInPoints(0, 0, (int)m_obWinSizeInPoints.Width, (int)m_obWinSizeInPoints.Height);
@@ -367,7 +370,7 @@ namespace Cocos2D
                         CCDrawManager.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                             MathHelper.Pi / 3.0f,
                             size.Width / size.Height,
-                            0.1f, 1500 //ZEye * 2f
+                            0.1f, Math.Max(size.Width,size.Height)*2f // 1500 //ZEye * 2f
                             );
 
                         CCDrawManager.ViewMatrix = Matrix.CreateLookAt(
@@ -463,13 +466,21 @@ namespace Cocos2D
             get { return m_bDisplayStats; }
             set
             {
-                m_bDisplayStats = value;
-                if (value)
+                if (value != m_bDisplayStats)
                 {
                     m_pStopwatch.Reset();
                     m_pStopwatch.Start();
                 }
+                m_bDisplayStats = value;
             }
+        }
+
+        public void ResetStats()
+        {
+            m_pStopwatch.Reset();
+            m_pStopwatch.Start();
+            m_fAccumDt = 0.0f;
+            m_uTotalFrames = 0;
         }
 
         public bool IsPaused
@@ -540,7 +551,7 @@ namespace Cocos2D
             m_bPaused = false;
 
             // purge ?
-            m_bPurgeDirecotorInNextLoop = false;
+            m_bPurgeDirectorInNextLoop = false;
 
             m_obWinSizeInPoints = CCSize.Zero;
 
@@ -567,34 +578,34 @@ namespace Cocos2D
 #if !PSM &&!NETFX_CORE
             m_pAccelerometer = new CCAccelerometer();
 #endif
-            // create autorelease pool
-            //CCPoolManager::sharedPoolManager()->push();
 
             m_NeedsInit = false;
             return true;
         }
 
         private bool m_GamePadEnabled = false;
+
         /// <summary>
         /// Set to true if this platform has a game pad connected.
         /// </summary>
         public bool GamePadEnabled
         {
-            get { return (m_GamePadEnabled); }
+            get { 
+                return (m_GamePadEnabled); 
+            }
             set {
                 m_GamePadEnabled = value;
             }
         }
 
-        internal void SetGlDefaultValues()
+        /// <summary>
+        /// Enables alpha transparency, disables the depth stencil and sets the initial projection.
+        /// </summary>
+        internal void SetRenderDefaultValues()
         {
             SetAlphaBlending(true);
             SetDepthTest(false);
-
             Projection = m_eProjection;
-
-            // set other opengl default values
-            //ClearColor = new Color(0, 0, 0, 255);
         }
 
         protected void SetDefaultValues()
@@ -642,6 +653,8 @@ namespace Cocos2D
             }
         }
 
+        public int GraphIndex { get; set; }
+
         /// <summary>
         /// Draw the scene.
         /// This method is called every frame. Don't call it manually.
@@ -665,6 +678,7 @@ namespace Cocos2D
             // draw the scene
             if (m_pRunningScene != null)
             {
+                GraphIndex = 0;
                 m_pRunningScene.Visit();
             }
 
@@ -674,7 +688,8 @@ namespace Cocos2D
                 NotificationNode.Visit();
             }
 
-            ShowStats();
+            if(m_bDisplayStats)
+                ShowStats();
 
             CCDrawManager.PopMatrix();
 
@@ -695,10 +710,12 @@ namespace Cocos2D
             // set size
             m_obWinSizeInPoints = CCDrawManager.DesignResolutionSize;
 
-            CreateStatsLabel();
+            SetRenderDefaultValues();
+            EnableTouchDispatcher();
+        }
 
-            SetGlDefaultValues();
-
+        public void EnableTouchDispatcher()
+        {
             CCApplication.SharedApplication.TouchDelegate = m_pTouchDispatcher;
             m_pTouchDispatcher.IsDispatchEvents = true;
         }
@@ -762,7 +779,7 @@ namespace Cocos2D
 
         public void End()
         {
-            m_bPurgeDirecotorInNextLoop = true;
+            m_bPurgeDirectorInNextLoop = true;
         }
 
         protected void PurgeDirector()
@@ -797,12 +814,12 @@ namespace Cocos2D
             CCAnimationCache.PurgeSharedAnimationCache();
             CCSpriteFrameCache.PurgeSharedSpriteFrameCache();
             CCTextureCache.PurgeSharedTextureCache();
-            //CCFileUtils.purgeFileUtils();
-            //CCConfiguration.purgeConfiguration();
+            // CCFileUtils.PurgeFileUtils();
+            // CCConfiguration.purgeConfiguration();
 
             // cocos2d-x specific data structures
-            //CCUserDefault.purgeSharedUserDefault();
-            //CCNotificationCenter.purgeNotificationCenter();
+            CCUserDefault.PurgeSharedUserDefault();
+            // CCNotificationCenter.purgeNotificationCenter();
 
             CCDrawManager.PurgeDrawManager();
 
@@ -1182,6 +1199,9 @@ namespace Cocos2D
                     _GCCount++;
                     _wk = new WeakReference(new object());
                 }
+
+                if (m_pFPSLabel == null)
+                    CreateStatsLabel();
 
                 if (m_pFPSLabel != null && m_pUpdateTimeLabel != null && m_pDrawsLabel != null)
                 {

@@ -273,7 +273,7 @@ namespace Cocos2D
 
         public void RemoveActionByTag(int tag, CCNode target)
         {
-            Debug.Assert((tag != (int) CCActionTag.Invalid));
+            Debug.Assert((tag != CCAction.kInvalidTag));
             Debug.Assert(target != null);
 
             HashElement element;
@@ -300,7 +300,7 @@ namespace Cocos2D
 
         public CCAction GetActionByTag(int tag, CCNode target)
         {
-            Debug.Assert(tag != (int) CCActionTag.Invalid);
+            Debug.Assert(tag != CCAction.kInvalidTag);
 
             HashElement element;
             if (m_pTargets.TryGetValue(target, out element))

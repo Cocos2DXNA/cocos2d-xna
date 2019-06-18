@@ -1,4 +1,4 @@
-﻿/*
+/*
  * C# Version Ported by Matt Bettcher and Ian Qvist 2009-2010
  * 
  * Original C++ Version Copyright (c) 2007 Eric Jordan

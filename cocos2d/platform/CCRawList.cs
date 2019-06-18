@@ -602,31 +602,34 @@ namespace Cocos2D
             }
         }
 
-        public virtual void RemoveRange(int index, int count)
+        public virtual void RemoveRange(int index, int rangeCount)
         {
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException("index");
             }
-            if (count < 0)
+            if (rangeCount < 0)
             {
                 throw new ArgumentOutOfRangeException("count");
             }
-            if (this.count - index < count)
+            if (this.count - index < rangeCount)
             {
                 throw new ArgumentException("index");
             }
-            if (count > 0)
+            if (this.count > 0)
             {
                 int i = this.count;
-                this.count -= count;
-                if (index < this.count)
+                this.count -= rangeCount;
+                if (this.count > 0)
                 {
-                    Array.Copy(this.Elements, index + count, this.Elements, index, this.count - index);
-                }
-                while (i > this.count)
-                {
-                    this.Elements[--i] = default(T);
+                    if ((index + rangeCount) < this.count)
+                    {
+                        Array.Copy(this.Elements, index + rangeCount, this.Elements, index, this.count - index);
+                    }
+                    while (i > this.count)
+                    {
+                        this.Elements[--i] = default(T);
+                    }
                 }
             }
         }

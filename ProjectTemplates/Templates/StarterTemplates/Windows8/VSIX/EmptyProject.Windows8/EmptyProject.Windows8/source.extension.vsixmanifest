@@ -3,7 +3,7 @@
 	<Identifier Id="EmptyProject.9CBDB754-7668-4FA1-B917-B46722DE906E">
 		<Name>Cocos2D-XNA Empty Game for Windows Store</Name>
 		<Author>Cocos2D-XNA</Author>
-		<Version>1.3</Version>
+		<Version>1.6</Version>
 		<Description xml:space="preserve">Official Cocos2D-XNA for The Windows Store minimal skeleton game solution and project to get you up and running fast. Your project will include pre-packaged libraries of MonoGame for The Windows Store.</Description>
 		<Locale>1033</Locale>
 		<Icon>powered.ico</Icon>

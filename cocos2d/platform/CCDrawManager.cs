@@ -304,7 +304,15 @@ namespace Cocos2D
             pp.BackBufferHeight = manager.PreferredBackBufferHeight;
             pp.BackBufferFormat = manager.PreferredBackBufferFormat;
             pp.DepthStencilFormat = manager.PreferredDepthStencilFormat;
-            pp.RenderTargetUsage = RenderTargetUsage.DiscardContents; //??? DiscardContents fast
+            pp.RenderTargetUsage = m_presentationParameters.RenderTargetUsage;
+            if (manager.PreferMultiSampling && pp.MultiSampleCount == 0)
+            {
+                pp.MultiSampleCount = 4;
+            }
+            else if (!manager.PreferMultiSampling)
+            {
+                pp.MultiSampleCount = 0;
+            }
         }
 
         public static void InitializeDisplay(Game game, GraphicsDeviceManager graphics, DisplayOrientation supportedOrientations)
@@ -328,11 +336,11 @@ namespace Cocos2D
             m_graphicsService = service;
             m_presentationParameters = new PresentationParameters()
             {
-                RenderTargetUsage = RenderTargetUsage.DiscardContents,
+                RenderTargetUsage = RenderTargetUsage.PreserveContents,
                 DepthStencilFormat = DepthFormat.Depth24Stencil8,
                 BackBufferFormat = SurfaceFormat.Color
             };
-
+            
             service.DeviceCreated += GraphicsDeviceDeviceCreated;
 
             var manager = service as GraphicsDeviceManager;
@@ -364,7 +372,8 @@ namespace Cocos2D
             gdipp.RenderTargetUsage = pp.RenderTargetUsage;
             gdipp.DepthStencilFormat = pp.DepthStencilFormat;
             gdipp.BackBufferFormat = pp.BackBufferFormat;
-            
+            gdipp.MultiSampleCount = pp.MultiSampleCount;
+
             //if (graphicsDevice == null)
             {
                 // Only set the buffer dimensions when the device was not created
@@ -582,12 +591,12 @@ namespace Cocos2D
 
         private static bool m_bHasStencilBuffer = true;
 
-        public static void BeginDraw()
+        public static bool BeginDraw()
         {
             if (graphicsDevice == null || graphicsDevice.IsDisposed)
             {
                 // We are existing the game
-                return;
+                return(false);
             }
 
             if (m_bNeedReinitResources)
@@ -615,6 +624,7 @@ namespace Cocos2D
                 Clear(Color.Black);
             }
             DrawCount = 0;
+            return (true);
         }
 
         public static void EndDraw()
@@ -738,6 +748,10 @@ namespace Cocos2D
             for (int i = 0; i < passes.Count; i++)
             {
                 passes[i].Apply();
+                if (count > 65535)
+                {
+                    count = 65535; // Hard limit for XNA
+                }
                 graphicsDevice.DrawUserPrimitives(type, vertices, offset, count);
             }
 
@@ -879,6 +893,11 @@ namespace Cocos2D
             return new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Color);
         }
 
+        /// <summary>
+        /// Sets the render target for all drawing to the given texture's core texture. The texture
+        /// must be a RenderTarget2D or else you will get an assert/exception.
+        /// </summary>
+        /// <param name="pTexture">The target of future drawing, which must be a RenderTarget2D</param>
         public static void SetRenderTarget(CCTexture2D pTexture)
         {
             if (pTexture == null)
@@ -892,6 +911,24 @@ namespace Cocos2D
             }
         }
 
+        /// <summary>
+        /// Resets the default render target to be the display render target (null)
+        /// </summary>
+        public static void ResetToDisplayRenderTarget()
+        {
+            if (graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
+            {
+                graphicsDevice.SetRenderTarget(null);
+                graphicsDevice.Viewport = m_savedViewport;
+            }
+            m_currRenderTarget = null;
+        }
+
+        /// <summary>
+        /// Sets the render target to the given target. This is where your drawing will happen 
+        /// if the given parameter is not null.
+        /// </summary>
+        /// <param name="renderTarget"></param>
         public static void SetRenderTarget(RenderTarget2D renderTarget)
         {
             if (graphicsDevice.GraphicsDeviceStatus == GraphicsDeviceStatus.Normal)
@@ -910,10 +947,17 @@ namespace Cocos2D
             m_currRenderTarget = renderTarget;
         }
 
+        /// <summary>
+        /// Returns the current render target. If this is null, then your drawing
+        /// is set to draw directly to the display frame buffer.
+        /// </summary>
+        /// <returns></returns>
         public static RenderTarget2D GetRenderTarget()
         {
             return m_currRenderTarget;
         }
+
+        #region Quad Buffer Integrity Checks
 
         private static void CheckQuadsIndexBuffer(int capacity)
         {
@@ -972,6 +1016,10 @@ namespace Cocos2D
                 }
             }
         }
+
+        #endregion
+
+        #region Drawing Vertices and Quads
 
         public static void DrawQuad(ref CCV3F_C4B_T2F_Quad quad)
         {
@@ -1069,6 +1117,10 @@ namespace Cocos2D
             DrawCount++;
         }
 
+        #endregion
+
+        #region Blanking The Display
+
         public static void Clear(ClearOptions options, Color color, float depth, int stencil)
         {
             graphicsDevice.Clear(options, color, depth, stencil);
@@ -1088,6 +1140,8 @@ namespace Cocos2D
         {
             graphicsDevice.Clear(color);
         }
+
+        #endregion
 
         /// <summary>
         /// Set zoom factor for frame. This method is for debugging big resolution (e.g.new ipad) app on
@@ -1190,9 +1244,11 @@ namespace Cocos2D
 
             // reset director's member variables to fit visible rect
             CCDirector.SharedDirector.m_obWinSizeInPoints = DesignResolutionSize;
-
-            CCDirector.SharedDirector.CreateStatsLabel();
-            CCDirector.SharedDirector.SetGlDefaultValues();
+            if (CCConfiguration.SharedConfiguration.DisplayStats)
+            {
+                CCDirector.SharedDirector.CreateStatsLabel();
+            }
+            CCDirector.SharedDirector.SetRenderDefaultValues();
         }
 
         public static void SetOrientation(DisplayOrientation supportedOrientations)

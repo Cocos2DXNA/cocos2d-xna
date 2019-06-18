@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Cocos2D</RootNamespace>
     <AssemblyName>cocos2d-xna</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProductVersion>12.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -34,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,6 +46,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,6 +57,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BitMiracle.LibTiff.NET">
@@ -64,11 +68,11 @@
     </Reference>
     <Reference Include="SharpDX, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\MonoGame\ThirdParty\Libs\SharpDX\Windows\SharpDX.dll</HintPath>
+      <HintPath>..\MonoGame\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\MonoGame\ThirdParty\Libs\SharpDX\Windows\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\MonoGame\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -84,6 +88,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="label_nodes\CCLabel-Windows.cs" />
+    <Compile Include="Math\CCLightningTrack.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
     <Compile Include="sprite_nodes\CCMaskedSprite.cs" />
     <Compile Include="actions\action\CCAction.cs" />
     <Compile Include="actions\action\CCFiniteTimeAction.cs" />
@@ -107,6 +113,7 @@
     <Compile Include="actions\action_ease\CCEaseExponentialIn.cs" />
     <Compile Include="actions\action_ease\CCEaseExponentialInOut.cs" />
     <Compile Include="actions\action_ease\CCEaseExponentialOut.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="actions\action_ease\CCEaseIn.cs" />
     <Compile Include="actions\action_ease\CCEaseInOut.cs" />
     <Compile Include="actions\action_ease\CCEaseOut.cs" />
@@ -332,6 +339,8 @@
     <Compile Include="misc_nodes\CCRenderTexture.cs" />
     <Compile Include="misc_nodes\CCClippingNode.cs" />
     <Compile Include="misc_nodes\CCDrawNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="particle_nodes\CCParticleBatchNode.cs" />
     <Compile Include="particle_nodes\CCParticleExamples.cs" />
     <Compile Include="particle_nodes\CCParticleSystem.cs" />
@@ -382,7 +391,7 @@
     <Compile Include="platform\Zlib\ZOutputStream.cs" />
     <Compile Include="platform\Zlib\ZStream.cs" />
     <Compile Include="platform\Zlib\ZStreamException.cs" />
-    <Compile Include="predefine\CCMacros.cs" />
+    <Compile Include="predefine\CocosMacros.cs" />
     <Compile Include="predefine\CCProtocols.cs" />
     <Compile Include="predefine\CCTouch.cs" />
     <Compile Include="predefine\ccTypes.cs" />
@@ -456,13 +465,13 @@
       <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
       <Name>box2d.WindowsDX</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.Windows.csproj">
+      <Project>{87a71215-7cac-4b80-9d43-1700decfb828}</Project>
+      <Name>MonoGame.Framework.Net.Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows.csproj">
       <Project>{7de47032-a904-4c29-bd22-2d235e8d91ba}</Project>
       <Name>MonoGame.Framework.Windows</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
-      <Project>{ae483c29-042e-4226-ba52-d247ce7676da}</Project>
-      <Name>Lidgren.Network.Windows</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

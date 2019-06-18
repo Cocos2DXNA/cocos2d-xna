@@ -38,7 +38,7 @@
 	<WizardData>
 		<packages repository="extension"
 			  repositoryId="EmptyProject.88C4DCC4-5957-4DE9-869F-CE0A0D11B578">
-			<package id="Cocos2D-XNA.WindowsDX" version="1.3.0.2" />
+			<package id="Cocos2D-XNA.WindowsDX" version="1.6.0.0" />
 		</packages>
 	</WizardData>
 </VSTemplate>

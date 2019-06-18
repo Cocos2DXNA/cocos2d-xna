@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ExternalProject Name="box2d">
+
+  <Platform Type="iOS">
+    <Reference Include="System.Core" />
+    <Reference Include="monotouch" />
+  </Platform>
+
+  <Platform Type="XBox360">
+    <Reference Include="System.Core" />
+    <Reference Include="mscorlib" />
+  </Platform>
+
+  <Platform Type="Linux">
+    <Reference Include="System.Core" />
+  </Platform>
+
+  <Platform Type="MacOS">
+    <Reference Include="System.Core" />
+  </Platform>
+
+  <Platform Type="Android">
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+  </Platform>
+
+  <Platform Type="Ouya">
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+  </Platform>
+
+  <Platform Type="PSM">
+    <Reference Include="System.Core" />
+  </Platform>
+
+  <Platform Type="Windows">
+    <Reference Include="System.Core" />
+    <Reference Include="mscorlib" />
+  </Platform>
+
+  <Platform Type="WindowsDX">
+    <Reference Include="System.Core" />
+    <Reference Include="mscorlib" />
+  </Platform>
+
+  <Platform Type="Windows8">
+    <Reference Include="System.Core" />
+  </Platform>
+
+  <Platform Type="WindowsGL">
+    <Reference Include="System.Core" />
+  </Platform>
+
+  <Platform Type="Angle">
+    <Reference Include="System.Core" />
+  </Platform>
+
+  <Platform Type="WindowsPhone">
+    <Reference Include="System.Core" />
+  </Platform>
+
+  <Platform Type="WindowsPhone7">
+    <Reference Include="System.Core" />
+  </Platform>
+
+</ExternalProject>

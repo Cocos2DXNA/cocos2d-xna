@@ -2,14 +2,12 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{4EF34363-1190-4444-9F4B-7A262B397EE8}</ProjectGuid>
-    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <OutputType>Exe</OutputType>
     <RootNamespace>tests</RootNamespace>
     <MonoGamePlatform>iOS</MonoGamePlatform>
-    <ProductVersion>10.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,6 +23,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -44,7 +44,8 @@
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <MtouchProfiling>True</MtouchProfiling>
     <AssemblyName>cocos2dTests</AssemblyName>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchExtraArgs>--linkskip=MonoGame.Framework</MtouchExtraArgs>
   </PropertyGroup>
@@ -71,11 +72,14 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <IpaPackageName />
-    <MtouchI18n />
+    <IpaPackageName>
+    </IpaPackageName>
+    <MtouchI18n>
+    </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
     <AssemblyName>cocos2dtests</AssemblyName>
-    <CrashReportingApiKey />
+    <CrashReportingApiKey>
+    </CrashReportingApiKey>
     <MtouchLink>None</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -88,8 +92,9 @@
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchI18n />
-    <MtouchArch>ARMv7, ARMv7s</MtouchArch>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
     <AssemblyName>cocos2d.tests</AssemblyName>
     <MtouchSdkVersion>3.0</MtouchSdkVersion>
   </PropertyGroup>
@@ -97,8 +102,8 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="monotouch" />
-    <Reference Include="OpenTK" />
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="OpenTK-1.0" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ball-hd.mask" />
@@ -1014,6 +1019,8 @@
     <Compile Include="classes\tests\SpriteTest\SpriteTestScene.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="classes\tests\MotionStreakTest\LightningStreakTest.cs" />
+    <Compile Include="classes\tests\ParallaxTest\ParallaxScrollTest.cs" />
     <Compile Include="classes\tests\SpriteTest\SpriteZOrder.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1630,6 +1637,10 @@
       <Project>{DB8508BB-9849-4CC2-BC0F-8EB5DACB3C47}</Project>
       <Name>MonoGame.Framework.iOS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.iOS.csproj">
+      <Project>{D4838656-8545-4DC5-8822-D4AD313E17AC}</Project>
+      <Name>MonoGame.Framework.Net.iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -1643,8 +1654,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" Condition="'$(windir)' != '' " />
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
@@ -1671,4 +1680,5 @@
   <ItemGroup>
     <Folder Include="classes\tests\Box2DTestBet%28Box2D%29\" />
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

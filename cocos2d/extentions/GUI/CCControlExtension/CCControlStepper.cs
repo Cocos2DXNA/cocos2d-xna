@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using System;
 
 namespace Cocos2D
 {
@@ -11,6 +12,9 @@ namespace Cocos2D
 
     public class CCControlStepper : CCControl
     {
+        public event Action<CCControl, float> OnStep;
+        public event Action<CCControl, float> OnValueChanged;
+
         private const string ControlStepperLabelFont = "Arial";
         private const float kAutorepeatDeltaTime = 0.15f;
         private const int kAutorepeatIncreaseTimeIncrement = 12;
@@ -217,6 +221,10 @@ namespace Cocos2D
             if (send)
             {
                 SendActionsForControlEvents(CCControlEvent.ValueChanged);
+                if (OnValueChanged != null)
+                {
+                    OnValueChanged(this, _value);
+                }
             }
         }
 
@@ -304,9 +312,13 @@ namespace Cocos2D
             if (IsTouchInside(pTouch))
             {
                 CCPoint location = GetTouchLocation(pTouch);
-
-                Value = _value +
-                        ((location.X < _minusSprite.ContentSize.Width) ? (0.0f - _stepValue) : _stepValue);
+                bool isDownStep = (location.X < _minusSprite.ContentSize.Width);
+                float stepValue = (isDownStep ? (0.0f - _stepValue) : _stepValue);
+                Value = _value + stepValue;
+                if (OnStep != null)
+                {
+                    OnStep(this, stepValue);
+                }
             }
         }
 

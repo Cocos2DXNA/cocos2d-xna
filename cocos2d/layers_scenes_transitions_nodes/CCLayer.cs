@@ -104,6 +104,7 @@ namespace Cocos2D
                 return;
             }
 
+            UpdateGraphIndex();
             CCDrawManager.PushMatrix();
 
             if (m_pGrid != null && m_pGrid.Active)

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -14,6 +14,10 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkVersion>
+    </TargetFrameworkVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,6 +49,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\WindowsStore\ARM\Release\</OutputPath>
@@ -56,6 +61,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -67,6 +73,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\WindowsStore\x64\Release\</OutputPath>
@@ -82,13 +89,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\WindowsStore\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;MONOGAME</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;MONOGAME</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\WindowsStore\x86\Release\</OutputPath>
@@ -100,11 +108,16 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <None Include="label_nodes\CCLabel-Gdi.cs" />
     <Compile Include="label_nodes\CCLabel-Windows.cs" />
     <Compile Include="label_nodes\CCLabel.cs" />
+    <Compile Include="Math\CCLightningTrack.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="sprite_nodes\CCMaskedSprite.cs" />
     <Compile Include=".\actions\action\CCAction.cs">
       <LogicalName>actions\action\CCAction</LogicalName>
@@ -235,6 +248,7 @@
     <Compile Include=".\actions\action_grid\CCGrid3DAction.cs">
       <LogicalName>actions\action_grid\CCGrid3DAction</LogicalName>
     </Compile>
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include=".\actions\action_grid\CCGridAction.cs">
       <LogicalName>actions\action_grid\CCGridAction</LogicalName>
     </Compile>
@@ -960,7 +974,7 @@
     <Compile Include=".\platform\Zlib\ZStreamException.cs">
       <LogicalName>platform\Zlib\ZStreamException</LogicalName>
     </Compile>
-    <Compile Include=".\predefine\CCMacros.cs">
+    <Compile Include=".\predefine\CocosMacros.cs">
       <LogicalName>predefine\ccMacros</LogicalName>
     </Compile>
     <Compile Include=".\predefine\CCProtocols.cs">
@@ -1179,6 +1193,10 @@
       <Project>{b81b6701-7a78-4846-bf6f-04e0591f0f38}</Project>
       <Name>box2d.Windows8</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.Windows8.csproj">
+      <Project>{a65b8326-1ddd-4e5d-8130-e74f70919e81}</Project>
+      <Name>MonoGame.Framework.Net.Windows8</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.Windows8.csproj">
       <Project>{0518563c-acca-4a14-8c5d-ddbe93e2605f}</Project>
       <Name>MonoGame.Framework.Windows8</Name>
@@ -1191,16 +1209,16 @@
       <HintPath>external lib\XBox360\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\MonoGame\ThirdParty\Libs\SharpDX\Windows 8 Metro\SharpDX.dll</HintPath>
+      <HintPath>..\MonoGame\ThirdParty\Dependencies\SharpDX\Windows 8 Metro\SharpDX.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\MonoGame\ThirdParty\Libs\SharpDX\Windows 8 Metro\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\MonoGame\ThirdParty\Dependencies\SharpDX\Windows 8 Metro\SharpDX.Direct2D1.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
-    <VisualStudioVersion>11.0</VisualStudioVersion>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

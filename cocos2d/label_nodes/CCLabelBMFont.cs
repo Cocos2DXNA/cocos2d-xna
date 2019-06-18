@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace Cocos2D
 {
@@ -933,7 +934,7 @@ namespace Cocos2D
         }
 
 
-        private static CCBMFontConfiguration FNTConfigLoadFile(string file)
+        public static CCBMFontConfiguration FNTConfigLoadFile(string file)
         {
             CCBMFontConfiguration pRet;
 
@@ -946,7 +947,20 @@ namespace Cocos2D
             return pRet;
         }
 
-        public override void Draw()
+        public static CCBMFontConfiguration FNTConfigLoadFile(string fntName, Stream src)
+        {
+            CCBMFontConfiguration pRet;
+
+            if (!s_pConfigurations.TryGetValue(fntName, out pRet))
+            {
+                pRet = CCBMFontConfiguration.Create(src, fntName);
+                s_pConfigurations.Add(fntName, pRet);
+            }
+
+            return pRet;
+        }
+
+        public override void Visit()
         {
             if (m_bLabelDirty)
             {
@@ -954,7 +968,7 @@ namespace Cocos2D
                 m_bLabelDirty = false;
             }
 
-            base.Draw();
+            base.Visit();
         }
     }
 }

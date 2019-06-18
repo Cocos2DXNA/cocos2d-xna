@@ -58,7 +58,7 @@
   <WizardData>
     <packages repository="extension"
           repositoryId="EmptyProject.E349F769-76FD-4DAD-BA07-5317A99F619D">
-      <package id="Cocos2D-XNA.WindowsPhone8" version="1.3.0.2" />
+      <package id="Cocos2D-XNA.WindowsPhone8" version="1.6.0.0" />
     </packages>
   </WizardData>
 </VSTemplate>

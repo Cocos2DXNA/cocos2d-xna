@@ -24,6 +24,15 @@ namespace Cocos2D
         protected CCFollow(CCFollow follow) : base(follow)
         {
             m_nTag = follow.m_nTag;
+            m_bBoundaryFullyCovered = follow.m_bBoundaryFullyCovered;
+            m_bBoundarySet = follow.m_bBoundarySet;
+            m_fBottomBoundary = follow.m_fBottomBoundary;
+            m_fLeftBoundary = follow.m_fLeftBoundary;
+            m_fRightBoundary = follow.m_fRightBoundary;
+            m_fTopBoundary = follow.m_fTopBoundary;
+            m_obFullScreenSize = follow.m_obFullScreenSize;
+            m_obHalfScreenSize = follow.m_obHalfScreenSize;
+            m_pobFollowedNode = follow.m_pobFollowedNode;
         }
 
         /// <summary>

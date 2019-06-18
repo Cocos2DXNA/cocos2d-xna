@@ -1,4 +1,5 @@
-﻿#if ANDROID
+using Microsoft.Xna.Framework;
+#if ANDROID
 using Android.App;
 using Android.Util;
 #endif
@@ -19,8 +20,7 @@ namespace Cocos2D
             if (_dpi == 0)
             {
 #if ANDROID
-                var contex = (Activity)CCApplication.SharedApplication.Game.Window.Context;
-                var display = contex.WindowManager.DefaultDisplay;
+                var display = Game.Activity.WindowManager.DefaultDisplay;
                 var metrics = new DisplayMetrics();
             
                 display.GetMetrics(metrics);

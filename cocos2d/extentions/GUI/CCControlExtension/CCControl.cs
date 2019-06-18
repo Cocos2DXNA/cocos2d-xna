@@ -94,15 +94,15 @@ namespace Cocos2D
         private bool _isOpacityModifyRGB;
 
         /** Changes the priority of the button. The lower the number, the higher the priority. */
-        private int _defaultTouchPriority;
+//        private int _defaultTouchPriority;
         protected Dictionary<CCControlEvent, CCRawList<CCInvocation>> _dispatchTable;
 
-        public int DefaultTouchPriority
+  /*      public int DefaultTouchPriority
         {
             get { return _defaultTouchPriority; }
             set { _defaultTouchPriority = value; }
         }
-
+        */
         /** The current control state constant. */
 
         public CCControlState State
@@ -185,26 +185,17 @@ namespace Cocos2D
         {
             if (base.Init())
             {
-                //this->setTouchEnabled(true);
-                //m_bIsTouchEnabled=true;
-                // Initialise instance variables
                 _state = CCControlState.Normal;
                 Enabled = true;
                 Selected = false;
                 Highlighted = false;
 
-                // Set the touch dispatcher priority by default to 1
-                DefaultTouchPriority = 1;
+                TouchMode = CCTouchMode.OneByOne; // So we use a targeted delegate.
                 // Initialise the tables
                 _dispatchTable = new Dictionary<CCControlEvent, CCRawList<CCInvocation>>();
                 return true;
             }
             return false;
-        }
-
-        public override void RegisterWithTouchDispatcher()
-        {
-            CCDirector.SharedDirector.TouchDispatcher.AddTargetedDelegate(this, _defaultTouchPriority, true);
         }
 
         /**

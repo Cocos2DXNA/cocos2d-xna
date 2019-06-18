@@ -126,6 +126,7 @@ namespace Cocos2D
                 return;
             }
 
+            UpdateGraphIndex();
             //kmGLPushMatrix();
             CCDrawManager.PushMatrix();
 
@@ -214,12 +215,29 @@ namespace Cocos2D
             m_pobTextureAtlas.RemoveAllQuads();
         }
 
+        public override int Compare(CCNode n1, CCNode n2)
+        {
+            CCSprite s1 = (CCSprite)n1;
+            CCSprite s2 = (CCSprite)n2;
+            if (n1.m_nZOrder < n2.m_nZOrder || (s1.m_nZOrder == s2.m_nZOrder && s1.AtlasIndex < s2.AtlasIndex))
+            {
+                return -1;
+            }
+
+            if (n1 == n2)
+            {
+                return 0;
+            }
+
+            return 1;
+        }
+
         //override sortAllChildren
         public override void SortAllChildren()
         {
             if (m_bReorderChildDirty)
             {
-                int j = 0, count = m_pChildren.count;
+                int count = m_pChildren.count;
                 CCNode[] elements = m_pChildren.Elements;
 
                 Array.Sort(elements, 0, count, this);
@@ -512,7 +530,7 @@ namespace Cocos2D
             }
         }
 
-        public void InsertChild(CCSprite pobSprite, int uIndex)
+        private void InsertChildAt(CCSprite pobSprite, int uIndex)
         {
             pobSprite.BatchNode = this;
             pobSprite.AtlasIndex = uIndex;
@@ -544,7 +562,7 @@ namespace Cocos2D
                 {
                     var pChild = (CCSprite) elements[j];
                     uIndex = AtlasIndexForChild(pChild, pChild.ZOrder);
-                    InsertChild(pChild, uIndex);
+                    InsertChildAt(pChild, uIndex);
                 }
             }
         }

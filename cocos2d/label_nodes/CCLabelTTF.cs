@@ -164,13 +164,13 @@ namespace Cocos2D
             }
         }
 
-        [Obsolete("Use Label Property")]
+        [Obsolete("Use Text Property")]
         public void SetString(string label)
         {
             Text = label;
         }
         
-        [Obsolete("Use Label Property")]
+        [Obsolete("Use Text Property")]
         public string GetString() 
         {
             return Text;
@@ -230,7 +230,9 @@ namespace Cocos2D
             // Dump the old one
             if (Texture != null)
             {
-                Texture.Dispose();
+                CCTexture2D tmp = Texture;
+                Texture = null;
+                tmp.Dispose();
             }
 
             // let system compute label's width or height when its value is 0
@@ -259,11 +261,14 @@ namespace Cocos2D
 //				                                           new CCColor4B(Microsoft.Xna.Framework.Color.White) );
 //			}
 //#endif
-            Texture = tex;
+            if (result)
+            {
+                Texture = tex;
 
-            CCRect rect = CCRect.Zero;
-            rect.Size = m_pobTexture.ContentSize;
-            SetTextureRect(rect);
+                CCRect rect = CCRect.Zero;
+                rect.Size = m_pobTexture.ContentSize;
+                SetTextureRect(rect);
+            }
         }
     }
 }

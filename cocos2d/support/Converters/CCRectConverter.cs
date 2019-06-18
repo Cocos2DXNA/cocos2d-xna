@@ -8,6 +8,8 @@ namespace Cocos2D
 #if !NETFX_CORE
 	public class CCRectConverter : TypeConverter
 	{
+        public CCRectConverter() { }
+
 		// Overrides the CanConvertFrom method of TypeConverter.
 		// The ITypeDescriptorContext interface provides the context for the
 		// conversion. Typically, this interface is used at design time to 

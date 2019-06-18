@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -42,41 +42,41 @@ namespace Cocos2D
 
             // .FNT Reader
             ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.DictionaryReader`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Cocos2D.CCBMFontConfiguration+CCBMFontDef, cocos2d-xna, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null]]",
+                "Microsoft.Xna.Framework.Content.DictionaryReader`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Cocos2D.CCBMFontConfiguration+CCBMFontDef, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
                 () => new DictionaryReader<Int32, CCBMFontConfiguration.CCBMFontDef>()
 
                 );
 
             ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.DictionaryReader`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Cocos2D.CCBMFontConfiguration+CCKerningHashElement, cocos2d-xna, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null]]",
+                "Microsoft.Xna.Framework.Content.DictionaryReader`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Cocos2D.CCBMFontConfiguration+CCKerningHashElement, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
                 () => new DictionaryReader<Int32, CCBMFontConfiguration.CCKerningHashElement>()
 
                 );
             ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCRect, cocos2d-xna, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null]]",
+                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCRect, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
                 () => new CCRectReader()
 
                 );
 
             ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCPoint, cocos2d-xna, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null]]",
+                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCPoint, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
                 () => new CCPointReader()
 
                 );
             ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCSize, cocos2d-xna, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null]]",
+                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCSize, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
                 () => new CCSizeReader()
 
                 );
 
             ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCBMFontConfiguration+CCKerningHashElement, cocos2d-xna, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null]]",
+                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCBMFontConfiguration+CCKerningHashElement, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
                 () => new KerningHashElementReader()
 
                 );
 
             ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCBMFontConfiguration+CCBMFontPadding, cocos2d-xna, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null]]",
+                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCBMFontConfiguration+CCBMFontPadding, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
                 () => new CCBMFontPaddingtReader()
 
                 );
@@ -137,7 +137,7 @@ namespace Cocos2D
         private List<string> _searchPaths = new List<string>();
         private List<string> _searchResolutionsOrder = new List<string>(); 
 
-        private Dictionary<string, string> _failedAssets = new Dictionary<string, string>();
+        private Dictionary<Tuple<string, Type>, string> _failedAssets = new Dictionary<Tuple<string, Type>, string>();
 
         public CCContentManager(IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -156,7 +156,8 @@ namespace Cocos2D
 
         public T TryLoad<T>(string assetName, bool weakReference)
         {
-            if (_failedAssets.ContainsKey(assetName))
+            var assetKey = Tuple.Create(assetName, typeof(T));
+            if (_failedAssets.ContainsKey(assetKey))
             {
                 return default(T);
             }
@@ -167,7 +168,7 @@ namespace Cocos2D
             }
             catch (Exception)
             {
-                _failedAssets[assetName] = null;
+                _failedAssets[assetKey] = null;
                 
                 return default(T);
             }
@@ -175,7 +176,8 @@ namespace Cocos2D
 
         public override T Load<T>(string assetName)
         {
-            if (_failedAssets.ContainsKey(assetName))
+            var assetKey = Tuple.Create(assetName, typeof(T));
+            if (_failedAssets.ContainsKey(assetKey))
             {
                 throw new ContentLoadException("Failed to load the asset file from " + assetName);
             }
@@ -186,14 +188,14 @@ namespace Cocos2D
             }
             catch (Exception)
             {
-                _failedAssets[assetName] = null;
+                _failedAssets[assetKey] = null;
 
                 throw;
             }
         }
 
         public T Load<T>(string assetName, bool weakReference)
-        {
+        {            
             if (string.IsNullOrEmpty(assetName))
             {
                 throw new ArgumentNullException("assetName");

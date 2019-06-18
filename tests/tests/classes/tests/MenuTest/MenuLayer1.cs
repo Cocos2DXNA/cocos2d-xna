@@ -74,6 +74,10 @@ namespace tests
             CCMenuItemFont.FontName = "arial";
             CCMenuItemFont item6 = new CCMenuItemFont("Priority Test", menuCallbackPriorityTest);
 
+            // Toggle Button
+            CCMenuItemFont.FontName = "arial";
+            CCMenuItemFont item61 = new CCMenuItemFont("Toggle Menu Spacing", menuCallbackToggleTest);
+
             // Font Item
             CCMenuItemFont item7 = new CCMenuItemFont("Quit", this.onQuit);
 
@@ -82,7 +86,7 @@ namespace tests
             CCFiniteTimeAction seq = new CCSequence(color_action, color_back);
             item7.RunAction(new CCRepeatForever((CCActionInterval) seq));
 
-            CCMenu menu = new CCMenu(item1, item2, item3, item4, item5, item6, item7);
+            CCMenu menu = new CCMenu(item1, item2, item3, item4, item5, item6, item61, item7);
             menu.AlignItemsVertically();
 
             // elastic effect
@@ -117,6 +121,11 @@ namespace tests
             AddChild(menu);
         }
 
+
+        private void menuCallbackToggleTest(object pSender)
+        {
+            ((CCLayerMultiplex)m_pParent).SwitchTo(5);
+        }
 
         private void menuCallbackPriorityTest(object pSender)
         {

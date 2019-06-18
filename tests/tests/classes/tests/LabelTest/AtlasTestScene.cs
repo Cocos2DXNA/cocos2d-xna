@@ -9,7 +9,7 @@ namespace tests
     public class AtlasTestScene : TestScene
     {
         static int sceneIdx = -1;
-        static readonly int MAX_LAYER = 26;
+        static readonly int MAX_LAYER = 31;
 
         protected override void NextTestCase()
         {
@@ -83,6 +83,11 @@ namespace tests
                 case 23: return new TTFFontInit();
                 case 24: return new Issue1343();
                 case 25: return new GitHubIssue5();
+                case 26: return new LabelBMFontHDMemoryLeak();
+                case 27: return new LabelBMFontHDMemoryLeak2();
+                case 28: return new LabelBMFontHDMemoryLeak3();
+                case 29: return new LabelBMFontHDMemoryLeak4();
+                case 30: return (new ScrollViewLabelTest());
                 default:
                     break;
             }

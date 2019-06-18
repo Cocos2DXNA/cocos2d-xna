@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Cocos2D
 {
-    public class CCTextureCache : IDisposable, ICCSelectorProtocol
+    public partial class CCTextureCache : IDisposable, ICCSelectorProtocol
     {
         struct AsyncStruct
         {
@@ -120,16 +120,28 @@ namespace Cocos2D
             }
         }
 
+        /// <summary>
+        /// Create the dictionary key for this texture. Duplicate assets using different compression are not supported.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private string CreateAssetKey(string file)
+        {
+            var assetName = file;
+            if (Path.HasExtension(assetName))
+            {
+                assetName = CCFileUtils.RemoveExtension(assetName);
+            }
+            return (assetName);
+        }
+
         public CCTexture2D AddImage(string fileimage)
 		{
 			Debug.Assert (!String.IsNullOrEmpty (fileimage), "TextureCache: fileimage MUST not be NULL");
 
 			CCTexture2D texture = null;
 
-			var assetName = fileimage;
-			if (Path.HasExtension (assetName)) {
-				assetName = CCFileUtils.RemoveExtension (assetName);
-			}
+            var assetName = CreateAssetKey(fileimage);
 
 			lock (m_pDictLock) {
 				m_pTextures.TryGetValue (assetName, out texture);
@@ -139,13 +151,14 @@ namespace Cocos2D
 
 				if (texture.InitWithFile (fileimage)) {
 					lock (m_pDictLock) {
-						m_pTextures[assetName] = texture;
+						m_pTextures [assetName] = texture;
 					}
 				} else {
 					return null;
 				}
+			} else if (!texture.IsTextureDefined) {
+				texture.Reinit ();
 			}
-                
 			return texture;
 		}
 
@@ -221,11 +234,7 @@ namespace Cocos2D
             CCTexture2D texture = null;
             try
             {
-                if (Path.HasExtension(key))
-                {
-                    key = CCFileUtils.RemoveExtension(key);
-                }
-
+                key = CreateAssetKey(key);
                 m_pTextures.TryGetValue(key, out texture);
             }
             catch (ArgumentNullException)
@@ -251,18 +260,39 @@ namespace Cocos2D
                 {
                     tmp.Add(pair.Key, new WeakReference(pair.Value));
                 }
-
+#if DEBUG
+                int original = m_pTextures.Count;
+#endif
                 m_pTextures.Clear();
 
                 GC.Collect();
 
+#if DEBUG
+                int culled = 0;
+                long memory = 0L;
+#endif
                 foreach (var pair in tmp)
                 {
                     if (pair.Value.IsAlive)
                     {
-                        m_pTextures.Add(pair.Key, (CCTexture2D) pair.Value.Target);
+                        CCTexture2D tex = (CCTexture2D) pair.Value.Target;
+                        m_pTextures.Add(pair.Key, tex);
+#if DEBUG
+                        memory += (long)tex.TotalBytes;
+                        CCLog.Log("CCTextureCache: RemoveUnusedTextures, saving {0}", tex.ToString());
+#endif
                     }
+#if DEBUG
+                    else {
+                        culled++;
+                    }
+#endif
                 }
+#if DEBUG
+                memory = memory >> 10; // KB
+                memory = memory >> 10; // MB
+                CCLog.Log("CCTextureCache: RemoveUnusedTextures removed {0} out of {1} textures for {2} MB.", culled, original, memory);
+#endif
             }
         }
 
@@ -296,12 +326,7 @@ namespace Cocos2D
             {
                 return;
             }
-
-            if (Path.HasExtension(textureKeyName))
-            {
-                textureKeyName = CCFileUtils.RemoveExtension(textureKeyName);
-            }
-
+            textureKeyName = CreateAssetKey(textureKeyName);
             m_pTextures.Remove(textureKeyName);
         }
 
@@ -318,7 +343,7 @@ namespace Cocos2D
 
                 if (texture != null)
                 {
-                    var bytes = texture.Width * texture.Height * 4;
+                    var bytes = texture.Width * texture.Height * (int)pair.Value.BytesPerPixelForFormat;
                     CCLog.Log("{0} {1} x {2} => {3} KB.", pair.Key, texture.Width, texture.Height, bytes / 1024);
                     total += bytes;
                 }

@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2011      Zynga Inc.
@@ -91,6 +91,25 @@ namespace Cocos2D
         public static implicit operator Color(CCColor3B point)
         {
             return new Color(point.R, point.G, point.B);
+        }
+
+        public CCColor4B AsColor4B()
+        {
+            return (new CCColor4B(R, G, B, 255));
+        }
+
+        public CCColor4B AsColor4B(byte alpha)
+        {
+            return (new CCColor4B(R, G, B, alpha));
+        }
+
+        public CCColor4F AsColor4F()
+        {
+            return (new CCColor4F(R/255f, G/255f, B/255f, 1f));
+        }
+        public CCColor4F AsColor4F(float alpha)
+        {
+            return (new CCColor4F(R/255f, G/255f, B/255f, alpha));
         }
     }
 
@@ -236,12 +255,66 @@ namespace Cocos2D
         public static CCColor4F Parse(string s)
         {
             string[] f = s.Split(',');
-            return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), float.Parse(f[3])));
+            if (f.Length == 4)
+            {
+                return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), float.Parse(f[3])));
+            }
+            return (new CCColor4F(float.Parse(f[0]), float.Parse(f[1]), float.Parse(f[2]), 1f));
         }
 
         public static implicit operator Color(CCColor4F point)
         {
             return new Color(point.R, point.G, point.B, point.A);
+        }
+
+        public static implicit operator CCColor3B(CCColor4F point)
+        {
+            return new CCColor3B((byte)(point.R * point.A * 255f), (byte)(point.G*point.A*255f), (byte)(point.B*point.A*255));
+        }
+
+        public static implicit operator CCColor4F(CCColor3B point)
+        {
+            return new CCColor4F((float)point.R/255f, (float)point.G/255f, (float)point.B/255f, 1f);
+        }
+
+        public static CCColor4F operator +(CCColor4F c, float amt)
+        {
+            CCColor4F nc = new CCColor4F(c.R + amt, c.G + amt, c.B + amt, c.A);
+            return (nc);
+        }
+
+        public static CCColor4F operator *(CCColor4F c, float amt) 
+        {
+            CCColor4F nc = new CCColor4F(c.R * amt, c.G * amt, c.B * amt, c.A);
+            return (nc);
+        }
+
+        public static CCColor4F operator /(CCColor4F c, float amt)
+        {
+            CCColor4F nc = new CCColor4F(c.R / amt, c.G / amt, c.B / amt, c.A);
+            return (nc);
+        }
+
+        public static CCColor4F Lerp(CCColor4F value1, CCColor4F value2, float amount)
+        {
+            CCColor4F color;
+
+            color.A = (value1.A + ((value2.A - value1.A) * amount));
+            color.R = (value1.R + ((value2.R - value1.R) * amount));
+            color.G = (value1.G + ((value2.G - value1.G) * amount));
+            color.B = (value1.B + ((value2.B - value1.B) * amount));
+
+            return color;
+        }
+
+        public static bool operator ==(CCColor4F p1, CCColor4F p2)
+        {
+            return p1.R == p2.R && p1.G == p2.G && p1.B == p2.B && p1.A == p2.A;
+        }
+
+        public static bool operator !=(CCColor4F p1, CCColor4F p2)
+        {
+            return p1.R != p2.R || p1.G != p2.G || p1.B != p2.B || p1.A != p2.A;
         }
     }
 
@@ -412,6 +485,14 @@ namespace Cocos2D
             return (int)Math.Sqrt(hside * hside + vside * vside);
         }
 
+        public int DistanceSQ(ref CCPointI p)
+        {
+            var hside = X - p.X;
+            var vside = Y - p.Y;
+
+            return hside * hside + vside * vside;
+        }
+
         public bool Equals(ref CCPointI p)
         {
             return X == p.X && Y == p.Y;
@@ -516,7 +597,7 @@ namespace Cocos2D
             MinX = Math.Min(MinX, x - radius);
             MinY = Math.Min(MinY, y - radius);
             MaxX = Math.Max(MaxX, x + radius);
-            MaxY = Math.Max(MaxY, x + radius);
+            MaxY = Math.Max(MaxY, y + radius);
         }
 
         public void ExpandToCircle(ref CCPointI point, int radius)
@@ -545,6 +626,11 @@ namespace Cocos2D
             MaxY = Math.Max(MaxY, r.MaxY);
         }
 
+        public bool ContainsPoint(int x, int y)
+        {
+            return x >= MinX && x <= MaxX && y >= MinY && y <= MaxY;
+        }
+
         public bool Intersects(ref CCBoundingBoxI rect)
         {
             return !(MaxX < rect.MinX || rect.MaxX < MinX || MaxY < rect.MinY || rect.MaxY < MinY);
@@ -558,7 +644,7 @@ namespace Cocos2D
             MaxY = CCMathHelper.Lerp(a.MaxY, b.MaxY, ratio);
         }
 
-        public CCBoundingBoxI Transform(CCAffineTransform matrix)
+        public CCBoundingBoxI Transform(ref CCAffineTransform matrix)
         {
             var top = MinY;
             var left = MinX;
@@ -571,7 +657,7 @@ namespace Cocos2D
             var bottomRight = new CCPointI(right, bottom);
 
             matrix.Transform(ref topLeft.X, ref topLeft.Y);
-            matrix.Transform(ref topRight.Y, ref topRight.Y);
+            matrix.Transform(ref topRight.X, ref topRight.Y);
             matrix.Transform(ref bottomLeft.X, ref bottomLeft.Y);
             matrix.Transform(ref bottomRight.X, ref bottomRight.Y);
 
@@ -586,6 +672,16 @@ namespace Cocos2D
         public static implicit operator CCRect(CCBoundingBoxI box)
         {
             return new CCRect(box.MinX, box.MinY, box.MaxX - box.MinX, box.MaxY - box.MinY);
+        }
+
+        public static bool operator ==(CCBoundingBoxI b1, CCBoundingBoxI b2)
+        {
+            return b1.MinX == b2.MinX && b1.MaxX == b2.MaxX && b1.MinY == b2.MinY && b1.MaxY == b2.MaxY;
+        }
+
+        public static bool operator !=(CCBoundingBoxI b1, CCBoundingBoxI b2)
+        {
+            return b1.MinX != b2.MinX || b1.MaxX != b2.MaxX || b1.MinY != b2.MinY || b1.MaxY != b2.MaxY;
         }
     }
 
@@ -947,6 +1043,25 @@ namespace Cocos2D
         {
             CCGridSize v = new CCGridSize(x, y);
             return v;
+        }
+
+        // Make a color from hue, saturation and value parameters. Hue should be
+        // between 0 and 6, while saturation and value should be between 0 and 1.
+        public static CCColor4F HSVToColor(float h, float s, float v)
+        {
+            if (h == 0 && s == 0)
+                return new CCColor4F(v, v, v, 1f);
+
+            float c = s * v;
+            float x = c * (1 - Math.Abs(h % 2 - 1));
+            float m = v - c;
+
+            if (h < 1) return new CCColor4F(c + m, x + m, m, 1f);
+            else if (h < 2) return new CCColor4F(x + m, c + m, m, 1f);
+            else if (h < 3) return new CCColor4F(m, c + m, x + m, 1f);
+            else if (h < 4) return new CCColor4F(m, x + m, c + m, 1f);
+            else if (h < 5) return new CCColor4F(x + m, m, c + m, 1f);
+            else return new CCColor4F(c + m, m, x + m,1f);
         }
     }
 

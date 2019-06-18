@@ -1,4 +1,4 @@
-﻿namespace Cocos2D
+namespace Cocos2D
 {
     public class CCBlink : CCActionInterval
     {

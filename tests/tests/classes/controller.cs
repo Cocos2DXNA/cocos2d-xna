@@ -55,6 +55,8 @@ namespace tests
             {
                 var label = new CCLabelTTF(Tests.g_aTestNames[i], "arial", 24);
                 var pMenuItem = new CCMenuItemLabel(label, menuCallback);
+                pMenuItem.Color = CCColor3B.White;
+                label.Color = CCColor3B.White;
 
                 pMenuItem.UserData = i;
                 m_pItemMenu.AddChild(pMenuItem, 10000);
@@ -63,6 +65,9 @@ namespace tests
 #else
                 pMenuItem.Position = new CCPoint(s.Width / 2, (s.Height - (i + 1) * LINE_SPACE));
 #endif
+
+                CCLog.Log("Label {0} at {1}", Tests.g_aTestNames[i], pMenuItem.Position);
+
                 _Items.Add(pMenuItem);
             }
 
@@ -198,7 +203,7 @@ namespace tests
         {
         }
 
-        public void menuCallback(object pSender)
+        public void menuCallback(CCMenuItem pSender)
         {
             // get the userdata, it's the index of the menu item clicked
             CCMenuItem pMenuItem = (CCMenuItem)(pSender);
@@ -217,7 +222,9 @@ namespace tests
         public void closeCallback(object pSender)
         {
             CCDirector.SharedDirector.End();
+#if (WINDOWS && !WINRT) || WINDOWSGL || WINDOWSDX || MACOS
             CCApplication.SharedApplication.Game.Exit();
+#endif
         }
 
         public override void TouchesBegan(List<CCTouch> pTouches)

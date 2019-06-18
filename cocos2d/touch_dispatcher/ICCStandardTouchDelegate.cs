@@ -4,6 +4,9 @@ using System.Collections.Generic;
 namespace Cocos2D
 {
 
+    /// <summary>
+    /// Delegates that implement this interface handle groups of touches in a single pass.
+    /// </summary>
     public interface ICCStandardTouchDelegate : ICCTouchDelegate
     {
         // optional

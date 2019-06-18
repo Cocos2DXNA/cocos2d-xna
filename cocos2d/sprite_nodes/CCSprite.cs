@@ -106,13 +106,19 @@ namespace Cocos2D
             private set { m_obOffsetPosition = value; }
         }
 
+        public override void SetPosition(float x, float y)
+        {
+            base.SetPosition(x, y);
+            SetBatchNodeDirty();
+        }
+
         public override CCPoint Position
         {
             get { return base.Position; }
             set
             {
                 base.Position = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -125,7 +131,7 @@ namespace Cocos2D
             set
             {
                 base.Rotation = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -138,7 +144,7 @@ namespace Cocos2D
             set
             {
                 base.RotationX = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -151,7 +157,7 @@ namespace Cocos2D
             set
             {
                 base.RotationY = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -162,7 +168,7 @@ namespace Cocos2D
             set
             {
                 base.SkewX = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -172,7 +178,7 @@ namespace Cocos2D
             set
             {
                 base.SkewY = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -187,7 +193,7 @@ namespace Cocos2D
             float sy = size.Height / content.Height;
             base.ScaleX = sx;
             base.ScaleY = sy;
-            SET_DIRTY_RECURSIVELY();
+            SetBatchNodeDirty();
         }
 
         public override float ScaleX
@@ -196,7 +202,7 @@ namespace Cocos2D
             set
             {
                 base.ScaleX = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -206,7 +212,7 @@ namespace Cocos2D
             set
             {
                 base.ScaleY = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -216,7 +222,7 @@ namespace Cocos2D
             set
             {
                 base.Scale = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -226,7 +232,7 @@ namespace Cocos2D
             set
             {
                 base.VertexZ = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -236,7 +242,7 @@ namespace Cocos2D
             set
             {
                 base.AnchorPoint = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -247,7 +253,7 @@ namespace Cocos2D
             {
                 Debug.Assert(m_pobBatchNode == null, "ignoreAnchorPointForPosition is invalid in CCSprite");
                 base.IgnoreAnchorPointForPosition = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -257,7 +263,7 @@ namespace Cocos2D
             set
             {
                 base.Visible = value;
-                SET_DIRTY_RECURSIVELY();
+                SetBatchNodeDirty();
             }
         }
 
@@ -1022,7 +1028,7 @@ namespace Cocos2D
             }
         }
 
-        private void SET_DIRTY_RECURSIVELY()
+        private void SetBatchNodeDirty()
         {
             if (m_pobBatchNode != null && !m_bRecursiveDirty)
             {

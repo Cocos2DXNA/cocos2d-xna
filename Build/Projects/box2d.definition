@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Name="box2d" Path="box2d" Type="Library" Platforms="Android,Angle,iOS,Linux,MacOS,Ouya,PSM,WindowsDX,XBox360,Windows,Windows8,WindowsGL,WindowsPhone7,WindowsPhone">
+
+  <ProjectGuids>
+	<Platform Name="Android">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="Angle">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="iOS">7877D4F9-F781-465A-9C1F-D113F246A994</Platform>
+	<Platform Name="Linux">A84510D8-7AED-411E-9616-DCFEA180969E</Platform>
+	<Platform Name="MacOS">A84510D8-7AED-411E-9616-DCFEA180969E</Platform>
+	<Platform Name="Ouya">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="PSM">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="Windows">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="WindowsDX">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="Windows8">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="WindowsGL">B81B6701-7A78-4846-BF6F-04E0591F0F38</Platform>
+	<Platform Name="WindowsPhone">1F6DEC85-9C75-45CF-BECA-BD3187A398B1</Platform>
+	<Platform Name="WindowsPhone7">8165599E-6F37-41B7-91CD-C7C66232B5F2</Platform>
+	<Platform Name="XBox360">2429512B-C898-49C5-84BE-E4A659FC1647</Platform>
+  </ProjectGuids>
+
+
+  <!-- Common assembly references -->
+  <References>
+    <Reference Include="System" />
+    <!-- See FrameworkReferences.definition for the platform specific references -->
+    <Reference Include="box2dReferences" />
+  </References>
+
+  <Properties>
+    
+    <NoWarn>1591,0436</NoWarn>
+
+    <RootNamespace>Box2D</RootNamespace>
+	<RemoveXnaAssembliesOnWP8>True</RemoveXnaAssembliesOnWP8>
+    <PlatformSpecificOutputFolder>True</PlatformSpecificOutputFolder>
+
+    <FrameworkVersions>
+      <Platform Name="Android">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="Angle">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="iOS">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="Linux">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="MacOS">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="Ouya">
+        <Version>4.1</Version>
+      </Platform>
+      <Platform Name="PSM">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="Windows">
+        <Version>v4.0</Version>
+        <Profile>Client</Profile>
+      </Platform>
+      <Platform Name="WindowsDX">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="Windows8">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="WindowsGL">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="WindowsPhone">
+        <Version>v4.0</Version>
+      </Platform>
+      <Platform Name="WindowsPhone7">
+        <Version>v4.0</Version>
+        <Profile>Client</Profile>
+      </Platform>
+      <Platform Name="XBox360">
+        <Version>v4.0</Version>
+        <Profile>Client</Profile>
+      </Platform>
+    </FrameworkVersions>
+    <CustomDefinitions>
+      <Platform Name="Android">TRACE;ANDROID;GLES;OPENGL;NET</Platform>
+      <Platform Name="Angle">TRACE;ANGLE;GLES;OPENGL;OPENAL;NET</Platform>
+      <Platform Name="iOS">IOS;GLES;OPENGL;OPENAL;NET</Platform>
+      <Platform Name="Linux">TRACE;LINUX;OPENGL;OPENAL;NET</Platform>
+      <Platform Name="MacOS">MONOMAC;MACOS;OPENGL;OPENAL;NET</Platform>
+      <Platform Name="Ouya">TRACE;ANDROID;GLES;OPENGL;OUYA;NET</Platform>
+      <Platform Name="PSM">PSM;NET</Platform>
+      <Platform Name="Windows">TRACE;WINDOWS</Platform>
+      <Platform Name="WindowsDX">TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION;NET</Platform>
+      <Platform Name="Windows8">TRACE;NETFX_CORE;WINRT;WINDOWS_STOREAPP;DIRECTX;DIRECTX11_1;WINDOWS_MEDIA_ENGINE;NET</Platform>
+      <Platform Name="WindowsGL">TRACE;WINDOWS;OPENGL;OPENAL;NET</Platform>
+      <Platform Name="WindowsPhone">TRACE;SILVERLIGHT;WINDOWS_PHONE;WINDOWS_PHONE8;MONOGAME</Platform>
+      <Platform Name="WindowsPhone7">TRACE;WINDOWS_PHONE</Platform>
+      <Platform Name="XBox360">TRACE;XBOX;XBOX360</Platform>
+    </CustomDefinitions>
+
+  </Properties>
+
+  <Files>
+
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    
+    <Compile Include="b2FlagExtensions.cs" />
+    <Compile Include="Collision\b2AABB.cs" />
+    <Compile Include="Collision\b2BroadPhase.cs" />
+    <Compile Include="Collision\b2Collision.cs" />
+    <Compile Include="Collision\b2ContactFeature.cs" />
+    <Compile Include="Collision\b2Distance.cs" />
+    <Compile Include="Collision\b2DistanceProxy.cs" />
+    <Compile Include="Collision\b2DynamicTree.cs" />
+    <Compile Include="Collision\b2EPCollider.cs" />
+    <Compile Include="Collision\b2Manifold.cs" />
+    <Compile Include="Collision\b2TimeOfImpact.cs" />
+    <Compile Include="Collision\Shapes\b2ChainShape.cs" />
+    <Compile Include="Collision\Shapes\b2CircleShape.cs" />
+    <Compile Include="Collision\Shapes\b2EdgeShape.cs" />
+    <Compile Include="Collision\Shapes\b2PolygonShape.cs" />
+    <Compile Include="Collision\Shapes\b2Shape.cs" />
+    <Compile Include="Common\b2Color.cs" />
+    <Compile Include="Common\b2Draw.cs" />
+    <Compile Include="Common\b2Mat22.cs" />
+    <Compile Include="Common\b2Mat33.cs" />
+    <Compile Include="Common\b2Math.cs" />
+    <Compile Include="Common\b2Rot.cs" />
+    <Compile Include="Common\b2Settings.cs" />
+    <Compile Include="Common\b2Sweep.cs" />
+    <Compile Include="Common\b2Timer.cs" />
+    <Compile Include="Common\b2Transform.cs" />
+    <Compile Include="Common\b2Vec2.cs" />
+    <Compile Include="Common\b2Vec3.cs" />
+    <Compile Include="Dynamics\b2Body.cs" />
+    <Compile Include="Dynamics\b2BodyDef.cs" />
+    <Compile Include="Dynamics\b2ContactFilter.cs" />
+    <Compile Include="Dynamics\b2ContactListener.cs" />
+    <Compile Include="Dynamics\b2ContactManager.cs" />
+    <Compile Include="Dynamics\b2DestructionListener.cs" />
+    <Compile Include="Dynamics\b2Fixture.cs" />
+    <Compile Include="Dynamics\b2FixtureDef.cs" />
+    <Compile Include="Dynamics\b2Island.cs" />
+    <Compile Include="Dynamics\b2QueryCallback.cs" />
+    <Compile Include="Dynamics\b2RayCastCallback.cs" />
+    <Compile Include="Dynamics\b2TimeStep.cs" />
+    <Compile Include="Dynamics\b2World.cs" />
+    <Compile Include="Dynamics\b2WorldQueryWrapper.cs" />
+    <Compile Include="Dynamics\b2WorldRayCastWrapper.cs" />
+    <Compile Include="Dynamics\Contacts\b2ChainAndCircleContact.cs" />
+    <Compile Include="Dynamics\Contacts\b2ChainAndPolygonContact.cs" />
+    <Compile Include="Dynamics\Contacts\b2CircleContact.cs" />
+    <Compile Include="Dynamics\Contacts\b2Contact.cs" />
+    <Compile Include="Dynamics\Contacts\b2ContactSolver.cs" />
+    <Compile Include="Dynamics\Contacts\b2EdgeAndCircleContact.cs" />
+    <Compile Include="Dynamics\Contacts\b2EdgeAndPolygonContact.cs" />
+    <Compile Include="Dynamics\Contacts\b2PolygonAndCircleContact.cs" />
+    <Compile Include="Dynamics\Contacts\b2PolygonContact.cs" />
+    <Compile Include="Dynamics\Ib2QueryCallback.cs" />
+    <Compile Include="Dynamics\Ib2RayCastCallback.cs" />
+    <Compile Include="Dynamics\Joints\b2DistanceJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2DistanceJointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2FrictionJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2FrictionJointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2GearJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2GearJointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2Joint.cs" />
+    <Compile Include="Dynamics\Joints\b2JointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2MouseJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2MouseJointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2PrismaticJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2PrismaticJointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2PulleyJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2PullyJointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2RevoluteJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2RevoluteJointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2RopeJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2RopeJointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2WeldJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2WeldJointDef.cs" />
+    <Compile Include="Dynamics\Joints\b2WheelJoint.cs" />
+    <Compile Include="Dynamics\Joints\b2WheelJointDef.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rope\b2Rope.cs" />
+    <Compile Include="Rope\b2RopeDef.cs" />
+    <Compile Include="b2InternalClasses.cs">
+      <Platforms>XBox360</Platforms>
+    </Compile>
+  </Files>
+</Project>

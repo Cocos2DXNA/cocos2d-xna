@@ -45,7 +45,7 @@
 	<WizardData>
 		<packages repository="extension"
 			  repositoryId="EmptyProject.9CBDB754-7668-4FA1-B917-B46722DE906E">
-			<package id="Cocos2D-XNA.Windows8" version="1.3.0.2" />
+			<package id="Cocos2D-XNA.Windows8" version="1.6.0.0" />
 		</packages>
 	</WizardData>
 

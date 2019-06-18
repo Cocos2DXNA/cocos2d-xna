@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Cocos2D</RootNamespace>
     <AssemblyName>cocos2d-xna</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProductVersion>12.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -34,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,6 +46,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,6 +57,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
@@ -61,7 +65,7 @@
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\MonoGame\ThirdParty\Libs\OpenTK.dll</HintPath>
+      <HintPath>..\MonoGame\ThirdParty\Dependencies\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -76,6 +80,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Math\CCLightningTrack.cs" />
+    <Compile Include="misc_nodes\CCLightningStreak.cs" />
     <Compile Include="sprite_nodes\CCMaskedSprite.cs" />
     <Compile Include="actions\action\CCAction.cs" />
     <Compile Include="actions\action\CCFiniteTimeAction.cs" />
@@ -120,6 +126,7 @@
     <Compile Include="actions\action_grid\CCAccelDeccelAmplitude.cs" />
     <Compile Include="actions\action_grid\CCDeccelAmplitude.cs" />
     <Compile Include="actions\action_grid\CCGrid3DAction.cs" />
+    <Compile Include="misc_nodes\CCLightning.cs" />
     <Compile Include="actions\action_grid\CCGridAction.cs" />
     <Compile Include="actions\action_grid\CCTiledGrid3DAction.cs" />
     <Compile Include="actions\action_instants\callfunc\CCCallFunc.cs" />
@@ -265,10 +272,9 @@
     <Compile Include="extentions\GUI\CCScrollView\CCTableViewCell.cs" />
     <Compile Include="keypad_dispatcher\ICCKeypadDelegate.cs" />
     <Compile Include="keypad_dispatcher\CCKeypadDispatcher.cs" />
-	  <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
-	  <Compile Include="keyboard_dispatcher\CCKeyboardDispatcher.cs" />
-
-	  <Compile Include="label_nodes\CCBMFontConfiguration.cs" />
+    <Compile Include="keyboard_dispatcher\ICCKeyboardDelegate.cs" />
+    <Compile Include="keyboard_dispatcher\CCKeyboardDispatcher.cs" />
+    <Compile Include="label_nodes\CCBMFontConfiguration.cs" />
     <Compile Include="label_nodes\CCLabelAtlas.cs" />
     <Compile Include="label_nodes\CCLabelBMFont.cs" />
     <Compile Include="layers_scenes_transitions_nodes\CCLayer.cs" />
@@ -326,6 +332,8 @@
     <Compile Include="misc_nodes\CCRenderTexture.cs" />
     <Compile Include="misc_nodes\CCClippingNode.cs" />
     <Compile Include="misc_nodes\CCDrawNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollNode.cs" />
+    <Compile Include="misc_nodes\CCParallaxScrollOffset.cs" />
     <Compile Include="particle_nodes\CCParticleBatchNode.cs" />
     <Compile Include="particle_nodes\CCParticleExamples.cs" />
     <Compile Include="particle_nodes\CCParticleSystem.cs" />
@@ -376,7 +384,7 @@
     <Compile Include="platform\Zlib\ZOutputStream.cs" />
     <Compile Include="platform\Zlib\ZStream.cs" />
     <Compile Include="platform\Zlib\ZStreamException.cs" />
-    <Compile Include="predefine\CCMacros.cs" />
+    <Compile Include="predefine\CocosMacros.cs" />
     <Compile Include="predefine\CCProtocols.cs" />
     <Compile Include="predefine\CCTouch.cs" />
     <Compile Include="predefine\ccTypes.cs" />
@@ -446,13 +454,13 @@
     <Compile Include="touch_dispatcher\ICCTouchDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MonoGame\MonoGame.Framework.Net\MonoGame.Framework.Net.WindowsGL.csproj">
+      <Project>{bd9cdabf-d5ac-bc9b-97b4-d6d0e4d8bebb}</Project>
+      <Name>MonoGame.Framework.Net.WindowsGL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj">
       <Project>{7DE47032-A904-4C29-BD22-2D235E8D91BA}</Project>
       <Name>MonoGame.Framework.WindowsGL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
-      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
-      <Name>Lidgren.Network.Windows</Name>
     </ProjectReference>
     <ProjectReference Include="..\box2d\box2d.WindowsGL.csproj">
       <Project>{B81B6701-7A78-4846-BF6F-04E0591F0F38}</Project>
