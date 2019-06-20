@@ -39,7 +39,7 @@ namespace Cocos2D
             {
                 return;
             }
-
+            /*
             // .FNT Reader
             ContentTypeReaderManager.AddTypeCreator(
                 "Microsoft.Xna.Framework.Content.DictionaryReader`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Cocos2D.CCBMFontConfiguration+CCBMFontDef, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
@@ -80,7 +80,7 @@ namespace Cocos2D
                 () => new CCBMFontPaddingtReader()
 
                 );
-
+                */
             s_readersInited = true;
         }
 #endif

@@ -43,7 +43,12 @@ namespace tests
 #if NETFX_CORE
             CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().GetAssemblyName().Version.ToString(), "arial", 12);
 #else
+#if IOS
+            CCLabelBMFont versionLabel = new CCLabelBMFont("v" + this.GetType().Assembly.GetName().Version.ToString(), "fonts/arial-unicode-26.fnt", 12);
+
+#else
             CCLabelTTF versionLabel = new CCLabelTTF("v" + this.GetType().Assembly.GetName().Version.ToString(), "arial", 12);
+#endif
 #endif
             versionLabel.Position = new CCPoint(versionLabel.ContentSizeInPixels.Width/2f, s.Height - 18f);
             versionLabel.HorizontalAlignment = CCTextAlignment.Left;
@@ -53,7 +58,11 @@ namespace tests
             m_pItemMenu = new CCMenu();
             for (int i = 0; i < (int)(TestCases.TESTS_COUNT); ++i)
             {
+#if IOS
+                var label = new CCLabelBMFont(Tests.g_aTestNames[i], "fonts/arial-unicode-26.fnt", 24);
+#else
                 var label = new CCLabelTTF(Tests.g_aTestNames[i], "arial", 24);
+#endif
                 var pMenuItem = new CCMenuItemLabel(label, menuCallback);
                 pMenuItem.Color = CCColor3B.White;
                 label.Color = CCColor3B.White;
