@@ -1177,9 +1177,13 @@ namespace Cocos2D
                 // draw children zOrder < 0
                 for (; i < count; ++i)
                 {
-                    if (elements[i].m_bVisible && elements[i].m_nZOrder < 0)
+                    if(elements[i].m_nZOrder < 0)
                     {
-                        elements[i].Visit();
+                        // don't break loop on invisible children
+                        if (elements[i].m_bVisible)
+                        {
+                            elements[i].Visit();
+                        }
                     }
                     else
                     {
