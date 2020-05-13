@@ -1,96 +1,62 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 
 namespace Cocos2D
 {
     public class CCContentManager : ContentManager
     {
-        public static CCContentManager SharedContentManager;
+        #region Asset entry private class
 
-        internal static void Initialize(IServiceProvider serviceProvider, string rootDirectory)
-        {
-            SharedContentManager = new CCContentManager(serviceProvider, rootDirectory);
-#if IOS || WINDOWS_PHONE8
-            InitializeContentTypeReaders();
-#endif
-        }
-
-#if IOS || WINDOWS_PHONE8
-        private static bool s_readersInited;
-
-        private static void InitializeContentTypeReaders()
-        {
-            // Please read the following discussions for the reasons of this.
-            // http://monogame.codeplex.com/discussions/393775
-            // http://monogame.codeplex.com/discussions/396792
-            // 
-            // https://github.com/mono/MonoGame/pull/726
-            //
-            // Also search Google for -> ContentTypeReaderManager.AddTypeCreator
-
-            if (s_readersInited)
-            {
-                return;
-            }
-
-            // .FNT Reader
-            ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.DictionaryReader`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Cocos2D.CCBMFontConfiguration+CCBMFontDef, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
-                () => new DictionaryReader<Int32, CCBMFontConfiguration.CCBMFontDef>()
-
-                );
-
-            ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.DictionaryReader`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Cocos2D.CCBMFontConfiguration+CCKerningHashElement, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
-                () => new DictionaryReader<Int32, CCBMFontConfiguration.CCKerningHashElement>()
-
-                );
-            ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCRect, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
-                () => new CCRectReader()
-
-                );
-
-            ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCPoint, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
-                () => new CCPointReader()
-
-                );
-            ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCSize, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
-                () => new CCSizeReader()
-
-                );
-
-            ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCBMFontConfiguration+CCKerningHashElement, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
-                () => new KerningHashElementReader()
-
-                );
-
-            ContentTypeReaderManager.AddTypeCreator(
-                "Microsoft.Xna.Framework.Content.ReflectiveReader`1[[Cocos2D.CCBMFontConfiguration+CCBMFontPadding, cocos2d-xna, Version=2.2.4.0, Culture=neutral, PublicKeyToken=null]]",
-                () => new CCBMFontPaddingtReader()
-
-                );
-
-            s_readersInited = true;
-        }
-#endif
-
-        private class AssetEntry
+        class AssetEntry
         {
             public readonly string AssetFileName;
             public readonly bool WeakReference;
             public readonly bool UseContentReader;
-            private object _asset;
+            object asset;
+
+
+            #region Properties
+
+            public object Asset
+            {
+                get
+                {
+                    if (WeakReference)
+                    {
+                        if (((WeakReference)asset).IsAlive)
+                        {
+                            return ((WeakReference)asset).Target;
+                        }
+                        return null;
+                    }
+                    else
+                    {
+                        return asset;
+                    }
+                }
+
+                set
+                {
+                    if (WeakReference)
+                    {
+                        asset = new WeakReference(value);
+                    }
+                    else
+                    {
+                        asset = value;
+                    }
+                }
+            }
+
+            #endregion Properties
+
+
+            #region Constructors
 
             public AssetEntry(object asset, string assetFileName, bool weakReference, bool useContentReader)
             {
@@ -100,64 +66,55 @@ namespace Cocos2D
                 Asset = asset;
             }
 
-            public object Asset
-            {
-                set
-                {
-                    if (WeakReference)
-                    {
-                        _asset = new WeakReference(value);
-                    }
-                    else
-                    {
-                        _asset = value;
-                    }
-                }
-                get
-                {
-                    if (WeakReference)
-                    {
-                        if (((WeakReference)_asset).IsAlive)
-                        {
-                            return ((WeakReference)_asset).Target;
-                        }
-                        return null;
-                    }
-                    else
-                    {
-                        return _asset;
-                    }
-                }
-            }
+            #endregion Constructors
         }
 
-        private Dictionary<string, AssetEntry> _loadedAssets;
-        
-        private Dictionary<string, string> _assetLookupDict = new Dictionary<string, string>();
-        private List<string> _searchPaths = new List<string>();
-        private List<string> _searchResolutionsOrder = new List<string>(); 
+        #endregion Asset entry private class
 
-        private Dictionary<Tuple<string, Type>, string> _failedAssets = new Dictionary<Tuple<string, Type>, string>();
+
+        public static CCContentManager SharedContentManager;
+
+        Dictionary<string, AssetEntry> loadedAssets;
+        Dictionary<string, string> assetLookupDict = new Dictionary<string, string>();
+        Dictionary<Tuple<string, Type>, string> failedAssets = new Dictionary<Tuple<string, Type>, string>();
+
+        List<string> searchPaths = new List<string>();
+        List<string> searchResolutionsOrder = new List<string>();
+
+
+        #region Constructors
 
         public CCContentManager(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            _loadedAssets = new Dictionary<string, AssetEntry>();
+            loadedAssets = new Dictionary<string, AssetEntry>();
         }
 
         public CCContentManager(IServiceProvider serviceProvider, string rootDirectory) : base(serviceProvider, rootDirectory)
         {
-            _loadedAssets = new Dictionary<string, AssetEntry>();
+            loadedAssets = new Dictionary<string, AssetEntry>();
         }
 
-        public T TryLoad<T>(string assetName)
+        #endregion Constructors
+
+
+        internal static void Initialize(IServiceProvider serviceProvider, string rootDirectory)
         {
-            return TryLoad<T>(assetName, false);
+            SharedContentManager = new CCContentManager(serviceProvider, rootDirectory);
         }
 
-        public T TryLoad<T>(string assetName, bool weakReference)
+        string GetRealName(string assetName)
+        {
+            if (assetLookupDict.ContainsKey(assetName))
+            {
+                return assetLookupDict[assetName];
+            }
+            return assetName;
+        }
+
+        public T TryLoad<T>(string assetName, bool weakReference = false)
         {
             var assetKey = Tuple.Create(assetName, typeof(T));
-            if (_failedAssets.ContainsKey(assetKey))
+            if (failedAssets.ContainsKey(assetKey))
             {
                 return default(T);
             }
@@ -168,8 +125,8 @@ namespace Cocos2D
             }
             catch (Exception)
             {
-                _failedAssets[assetKey] = null;
-                
+                failedAssets[assetKey] = null;
+
                 return default(T);
             }
         }
@@ -177,25 +134,25 @@ namespace Cocos2D
         public override T Load<T>(string assetName)
         {
             var assetKey = Tuple.Create(assetName, typeof(T));
-            if (_failedAssets.ContainsKey(assetKey))
+            if (failedAssets.ContainsKey(assetKey))
             {
                 throw new ContentLoadException("Failed to load the asset file from " + assetName);
             }
-                
+
             try
             {
                 return Load<T>(assetName, false);
             }
             catch (Exception)
             {
-                _failedAssets[assetKey] = null;
+                failedAssets[assetKey] = null;
 
                 throw;
             }
         }
 
         public T Load<T>(string assetName, bool weakReference)
-        {            
+        {
             if (string.IsNullOrEmpty(assetName))
             {
                 throw new ArgumentNullException("assetName");
@@ -203,7 +160,7 @@ namespace Cocos2D
 
             // Check for a previously loaded asset first
             AssetEntry entry;
-            if (_loadedAssets.TryGetValue(assetName, out entry))
+            if (loadedAssets.TryGetValue(assetName, out entry))
             {
                 if (entry.Asset is T)
                 {
@@ -217,12 +174,12 @@ namespace Cocos2D
 
             var realName = GetRealName(assetName);
 
-            CheckDefaultPath(_searchPaths);
-            CheckDefaultPath(_searchResolutionsOrder);
+            CheckDefaultPath(searchPaths);
+            CheckDefaultPath(searchResolutionsOrder);
 
-            foreach (var searchPath in _searchPaths)
+            foreach (var searchPath in searchPaths)
             {
-                foreach (string resolutionOrder  in _searchResolutionsOrder)
+                foreach (string resolutionOrder in searchResolutionsOrder)
                 {
                     var path = Path.Combine(Path.Combine(searchPath, resolutionOrder), realName);
 
@@ -241,23 +198,14 @@ namespace Cocos2D
             throw new ContentLoadException("Failed to load the asset file from " + assetName);
         }
 
-        private string GetRealName(string assetName)
-        {
-            if (_assetLookupDict.ContainsKey(assetName))
-            {
-                return _assetLookupDict[assetName];
-            }
-            return assetName;
-        }
-
         public override void Unload()
         {
             base.Unload();
 
-            _loadedAssets.Clear();
+            loadedAssets.Clear();
         }
 
-        private T InternalLoad<T>(string assetName, string path, bool weakReference)
+        T InternalLoad<T>(string assetName, string path, bool weakReference)
         {
             T result = default(T);
 
@@ -266,11 +214,11 @@ namespace Cocos2D
             try
             {
                 //Special types
-                if (typeof (T) == typeof (string))
+                if (typeof(T) == typeof(string))
                 {
                     //TODO: No need CCContent, use TileContainer
                     var content = ReadAsset<CCContent>(path, null);
-                    result = (T) (object) content.Content;
+                    result = (T)(object)content.Content;
 
                     useContentReader = false;
                 }
@@ -292,7 +240,7 @@ namespace Cocos2D
                         {
                             using (StreamReader reader = new StreamReader(streamContent, Encoding.UTF8))
                             {
-                                result = (T)(object) reader.ReadToEnd();
+                                result = (T)(object)reader.ReadToEnd();
                             }
                         }
                         useContentReader = false;
@@ -303,14 +251,14 @@ namespace Cocos2D
                         {
                             using (var streamContent = TitleContainer.OpenStream(assetPath))
                             {
-                                result = (T) (object) new PlistDocument(streamContent);
+                                result = (T)(object)new PlistDocument(streamContent);
                             }
                         }
                         catch (Exception)
                         {
                             //TODO: Remove This
                             var content = ReadAsset<CCContent>(path, null);
-                            result = (T) (object) new PlistDocument(content.Content);
+                            result = (T)(object)new PlistDocument(content.Content);
                         }
 
                         useContentReader = false;
@@ -342,7 +290,7 @@ namespace Cocos2D
 
             var assetEntry = new AssetEntry(result, path, weakReference, useContentReader);
 
-            _loadedAssets[assetName] = assetEntry;
+            loadedAssets[assetName] = assetEntry;
 
             if (result is GraphicsResource)
             {
@@ -352,13 +300,13 @@ namespace Cocos2D
             return result;
         }
 
-        private void AssetDisposing(object sender, EventArgs e)
+        void AssetDisposing(object sender, EventArgs e)
         {
-            foreach (var loadedAsset in _loadedAssets)
+            foreach (var loadedAsset in loadedAssets)
             {
                 if (loadedAsset.Value.Asset == sender)
                 {
-                    _loadedAssets.Remove(loadedAsset.Key);
+                    loadedAssets.Remove(loadedAsset.Key);
                     return;
                 }
             }
@@ -367,7 +315,7 @@ namespace Cocos2D
 #if MONOGAME
         protected override void ReloadGraphicsAssets()
         {
-            foreach (var pair in _loadedAssets)
+            foreach (var pair in loadedAssets)
             {
                 if (pair.Value.UseContentReader && pair.Value.Asset != null)
                 {
@@ -379,21 +327,21 @@ namespace Cocos2D
 
             foreach (var pair in LoadedAssets)
             {
-                foreach (var pair2 in _loadedAssets)
+                foreach (var pair2 in loadedAssets)
                 {
                     if (pair2.Value.AssetFileName == pair.Key)
                     {
-                        _loadedAssets[pair2.Key].Asset = pair.Value;
+                        loadedAssets[pair2.Key].Asset = pair.Value;
                     }
                 }
             }
-            
+
             LoadedAssets.Clear();
         }
 #else
         public void ReloadGraphicsAssets()
         {
-            foreach (var asset in _loadedAssets)
+            foreach (var asset in loadedAssets)
             {
                 asset.Value.Asset = null;
             }
@@ -404,12 +352,12 @@ namespace Cocos2D
         {
             var realName = GetRealName(assetName);
 
-            CheckDefaultPath(_searchPaths);
-            CheckDefaultPath(_searchResolutionsOrder);
+            CheckDefaultPath(searchPaths);
+            CheckDefaultPath(searchResolutionsOrder);
 
-            foreach (var searchPath in _searchPaths)
+            foreach (var searchPath in searchPaths)
             {
-                foreach (string resolutionOrder in _searchResolutionsOrder)
+                foreach (string resolutionOrder in searchResolutionsOrder)
                 {
                     var path = Path.Combine(Path.Combine(RootDirectory, Path.Combine(searchPath, resolutionOrder)), realName);
 
@@ -428,29 +376,21 @@ namespace Cocos2D
             throw new ContentLoadException("Failed to load the asset stream from " + assetName);
         }
 
-        public virtual void LoadFilenameLookupDictionaryFromFile(string filename)
-        {
-            var document = Load<PlistDocument>(filename, true);
-            
-            SetFilenameLookupDictionary(document.Root as PlistDictionary);
-        }
-
-        public virtual void SetFilenameLookupDictionary(PlistDictionary filenameLookupDict)
-        {
-            //TODO: Load lookup names from PlistDictionary
-        }
-
         public List<string> SearchResolutionsOrder
         {
-            get { return _searchResolutionsOrder; }
+            get { return searchResolutionsOrder; }
+
+            internal set { searchResolutionsOrder = value; }
         }
 
         public List<string> SearchPaths
         {
-            get { return _searchPaths; }
+            get { return searchPaths; }
+
+            internal set { searchPaths = value; }
         }
 
-        private void CheckDefaultPath(List<string> paths)
+        void CheckDefaultPath(List<string> paths)
         {
             for (int i = paths.Count - 1; i >= 0; i--)
             {

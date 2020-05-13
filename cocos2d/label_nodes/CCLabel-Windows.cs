@@ -14,7 +14,7 @@ using SharpDX.WIC;
 using Factory = SharpDX.Direct2D1.Factory;
 using FactoryWrite = SharpDX.DirectWrite.Factory;
 using FactoryImaging = SharpDX.WIC.ImagingFactory;
-
+using SharpDX.Mathematics.Interop;
 
 namespace Cocos2D
 {
@@ -200,8 +200,9 @@ namespace Cocos2D
             glyphRun.FontFace = fontFace;
             glyphRun.FontSize = _currentDIP;
 
-            var BrushColor = SharpDX.Color.White;
             /*
+            var BrushColor = new RawColor3(1.0f, 1.0f, 1.0f);
+            
             SharpDX.DirectWrite.Matrix mtrx = new SharpDX.DirectWrite.Matrix();
             mtrx.M11 = 1F;
             mtrx.M12 = 0;
@@ -300,7 +301,7 @@ namespace Cocos2D
 
                     if (_brush == null)
                     {
-                        _brush = new SolidColorBrush(_renderTarget, new Color4(new Color3(1, 1, 1), 1.0f));
+                        _brush = new SolidColorBrush(_renderTarget, new RawColor4(1.0f, 1.0f, 1.0f, 1.0f));
                     }
 
                 }
@@ -338,7 +339,7 @@ namespace Cocos2D
         }
 
         GCHandle pinnedArray;
-        private static Color4 TransparentColor = new Color4(new Color3(1, 1.0f, 1.0f), 0.0f);
+        private static RawColor4 TransparentColor = new RawColor4(1, 1.0f, 1.0f, 0.0f);
 
         private unsafe byte* GetBitmapData(string s, out int stride)
         {
@@ -357,7 +358,7 @@ namespace Cocos2D
             _renderTarget.Clear(TransparentColor);
             _renderTarget.AntialiasMode = AntialiasMode.Aliased;
             textFormat.TextAlignment = TextAlignment.Center;
-            _renderTarget.DrawText(s, textFormat, new RectangleF(0, 0, w, h), _brush);
+            _renderTarget.DrawText(s, textFormat, new RawRectangleF(0, 0, w, h), _brush);
 
             _renderTarget.EndDraw();
 

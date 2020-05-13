@@ -415,25 +415,25 @@ namespace Cocos2D
                 DepthBufferEnable = false
             };
 #if !WINDOWS_PHONE && !XBOX && !WINDOWS &&!NETFX_CORE && !PSM
-            List<string> extensions = CCUtils.GetGLExtensions();
-            foreach(string s in extensions) 
-            {
-                switch(s) 
-                {
-                    case "GL_OES_depth24":
-                        m_PlatformDepthFormat = DepthFormat.Depth24;
-                        break;
-                    case "GL_IMG_texture_npot":
-                        m_AllowNonPower2Textures = true;
-                        break;
-                    case "GL_NV_depth_nonlinear": // nVidia Depth 16 non-linear
-                        m_PlatformDepthFormat = DepthFormat.Depth16;
-                        break;
-                    case "GL_NV_texture_npot_2D_mipmap": // nVidia - nPot textures and mipmaps
-                        m_AllowNonPower2Textures = true;
-                        break;
-                }
-            }
+            //List<string> extensions = CCUtils.GetGLExtensions();
+            //foreach(string s in extensions) 
+            //{
+            //    switch(s) 
+            //    {
+            //        case "GL_OES_depth24":
+            //            m_PlatformDepthFormat = DepthFormat.Depth24;
+            //            break;
+            //        case "GL_IMG_texture_npot":
+            //            m_AllowNonPower2Textures = true;
+            //            break;
+            //        case "GL_NV_depth_nonlinear": // nVidia Depth 16 non-linear
+            //            m_PlatformDepthFormat = DepthFormat.Depth16;
+            //            break;
+            //        case "GL_NV_texture_npot_2D_mipmap": // nVidia - nPot textures and mipmaps
+            //            m_AllowNonPower2Textures = true;
+            //            break;
+            //    }
+            //}
 #endif
             PresentationParameters pp = graphicsDevice.PresentationParameters;
             //pp.RenderTargetUsage = RenderTargetUsage.PreserveContents;

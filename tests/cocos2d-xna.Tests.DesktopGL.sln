@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cocos2d.WindowsGL", "..\cocos2d\cocos2d.WindowsGL.csproj", "{0C0AFDFF-A4E4-49F4-B6DB-A761B0DB64A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests.WindowsGL", "tests\tests.WindowsGL.csproj", "{4EF34363-1190-4444-9F4B-7A262B397EE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "box2d.WindowsGL", "..\box2d\box2d.WindowsGL.csproj", "{B81B6701-7A78-4846-BF6F-04E0591F0F38}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C0AFDFF-A4E4-49F4-B6DB-A761B0DB64A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C0AFDFF-A4E4-49F4-B6DB-A761B0DB64A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C0AFDFF-A4E4-49F4-B6DB-A761B0DB64A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C0AFDFF-A4E4-49F4-B6DB-A761B0DB64A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EF34363-1190-4444-9F4B-7A262B397EE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EF34363-1190-4444-9F4B-7A262B397EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EF34363-1190-4444-9F4B-7A262B397EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EF34363-1190-4444-9F4B-7A262B397EE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B81B6701-7A78-4846-BF6F-04E0591F0F38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B81B6701-7A78-4846-BF6F-04E0591F0F38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B81B6701-7A78-4846-BF6F-04E0591F0F38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B81B6701-7A78-4846-BF6F-04E0591F0F38}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B345B467-F11D-496A-9DB6-A8EF184C9A03}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = cocos2d\cocos2d.WindowsGL.csproj
+	EndGlobalSection
+EndGlobal
